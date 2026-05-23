@@ -1,38 +1,57 @@
 package co.edu.usco.peerlink.service;
 
-import co.edu.usco.peerlink.dto.UsuarioRegistroDTO;
-import co.edu.usco.peerlink.model.Usuario;
+import co.edu.usco.peerlink.dto.UsuarioDTO;
+import co.edu.usco.peerlink.model.*;
 import co.edu.usco.peerlink.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
-    @Transactional
-    public Usuario registrarUsuario(UsuarioRegistroDTO registroDTO) {
+    public UsuarioDTO crearUsuario(UsuarioDTO dto) {
+        Usuario usuario = new Usuario();
 
-        // 1. Validación: Verificar si el correo ya existe en la base de datos
-        if (usuarioRepository.findByCorreo(registroDTO.getCorreo()).isPresent()) {
-            throw new RuntimeException("Error: El correo ingresado ya se encuentra registrado.");
-        }
+        UsuarioNombre nombre = new UsuarioNombre();
+        nombre.setNombreCompleto(dto.getNombreCompleto());
+        nombre.setUsuario(usuario);
+        usuario.setUsuarioNombre(nombre);
 
-        // 2. Transformación: Convertir el DTO a la Entidad y encriptar la contraseña
-        Usuario nuevoUsuario = Usuario.builder()
-                .nombreCompleto(registroDTO.getNombreCompleto())
-                .correo(registroDTO.getCorreo())
-                .password(passwordEncoder.encode(registroDTO.getPassword())) // <-- Aplicación de Bcrypt
-                .rol("ESTUDIANTE") // Se asigna el rol base por defecto
-                .build();
+        UsuarioCorreo correo = new UsuarioCorreo();
+        correo.setCorreo(dto.getCorreo());
+        correo.setUsuario(usuario);
+        usuario.setUsuarioCorreo(correo);
 
-        // 3. Persistencia: Guardar en PostgreSQL
-        return usuarioRepository.save(nuevoUsuario);
+        UsuarioPassword password = new UsuarioPassword();
+        password.setPassword(dto.getPassword());
+        password.setUsuario(usuario);
+        usuario.setUsuarioPassword(password);
+
+        UsuarioRol rol = new UsuarioRol();
+        rol.setRol(dto.getRol());
+        rol.setUsuario(usuario);
+        usuario.setUsuarioRol(rol);
+
+        Usuario guardado = usuarioRepository.save(usuario);
+        dto.setId(guardado.getId());
+        return dto;
+    }
+
+    @Override
+    public List<UsuarioDTO> obtenerTodos() {
+        return usuarioRepository.findAll().stream().map(u -> {
+            UsuarioDTO dto = new UsuarioDTO();
+            dto.setId(u.getId());
+            if (u.getUsuarioNombre() != null) dto.setNombreCompleto(u.getUsuarioNombre().getNombreCompleto());
+            if (u.getUsuarioCorreo() != null) dto.setCorreo(u.getUsuarioCorreo().getCorreo());
+            if (u.getUsuarioRol() != null) dto.setRol(u.getUsuarioRol().getRol());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

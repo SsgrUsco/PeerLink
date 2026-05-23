@@ -1,19 +1,17 @@
 package co.edu.usco.peerlink.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "materias")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Materia {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "nombre", unique = true, nullable = false)
     private String nombre;
 }

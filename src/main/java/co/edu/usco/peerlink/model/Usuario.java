@@ -1,28 +1,30 @@
 package co.edu.usco.peerlink.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "usuarios")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "nombre_completo", nullable = false)
-    private String nombreCompleto;
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private UsuarioNombre usuarioNombre;
 
-    @Column(nullable = false, unique = true)
-    private String correo;
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private UsuarioCorreo usuarioCorreo;
 
-    @Column(nullable = false)
-    private String password;
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private UsuarioPassword usuarioPassword;
 
-    @Column(nullable = false)
-    private String rol;
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private UsuarioRol usuarioRol;
 }

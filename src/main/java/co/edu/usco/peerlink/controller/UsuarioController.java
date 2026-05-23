@@ -1,27 +1,26 @@
 package co.edu.usco.peerlink.controller;
 
-import co.edu.usco.peerlink.dto.UsuarioRegistroDTO;
-import co.edu.usco.peerlink.model.Usuario;
+import co.edu.usco.peerlink.dto.UsuarioDTO;
 import co.edu.usco.peerlink.service.UsuarioService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@RequiredArgsConstructor
 public class UsuarioController {
-
-    private final UsuarioService usuarioService;
+    @Autowired
+    private UsuarioService usuarioService;
 
     @PostMapping("/registro")
-    public ResponseEntity<?> registrarUsuario(@RequestBody UsuarioRegistroDTO registroDTO) {
-        try {
-            Usuario usuarioRegistrado = usuarioService.registrarUsuario(registroDTO);
-            return new ResponseEntity<>(usuarioRegistrado, HttpStatus.CREATED);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<UsuarioDTO> registrar(@RequestBody UsuarioDTO dto) {
+        return new ResponseEntity<>(usuarioService.crearUsuario(dto), HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> listar() {
+        return ResponseEntity.ok(usuarioService.obtenerTodos());
     }
 }

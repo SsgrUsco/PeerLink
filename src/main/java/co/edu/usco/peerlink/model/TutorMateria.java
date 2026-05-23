@@ -1,24 +1,23 @@
 package co.edu.usco.peerlink.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "tutores_materias")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class TutorMateria {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tutor_id", nullable = false)
+    @EmbeddedId
+    private TutorMateriaId id = new TutorMateriaId();
+
+    @ManyToOne
+    @MapsId("tutorId")
+    @JoinColumn(name = "tutor_id")
     private Usuario tutor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "materia_id", nullable = false)
+    @ManyToOne
+    @MapsId("materiaId")
+    @JoinColumn(name = "materia_id")
     private Materia materia;
 }
