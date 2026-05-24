@@ -1,0 +1,144 @@
+:root {
+    --app-bg: #eef4f1;
+    --hero-start: #103b2d;
+    --hero-end: #25553f;
+    --console-bg: #101417;
+}
+
+body.peerlink-body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(16, 59, 45, 0.16), transparent 22rem),
+        radial-gradient(circle at bottom right, rgba(37, 85, 63, 0.14), transparent 20rem),
+        linear-gradient(180deg, #f7faf8, var(--app-bg));
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(10px);
+}
+
+.auth-shell {
+    min-height: 100vh;
+}
+
+.hero-card {
+    color: #f5fbf7;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(135deg, var(--hero-start), var(--hero-end));
+}
+
+.hero-card .lead,
+.hero-card .text-secondary,
+.hero-card code,
+.hero-card li,
+.hero-card p {
+    color: rgba(245, 251, 247, 0.88) !important;
+}
+
+.lang-btn.active {
+    color: #fff !important;
+    background-color: var(--bs-success) !important;
+    border-color: var(--bs-success) !important;
+}
+
+.console-output {
+    min-height: 220px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--console-bg);
+    color: #bbf7d0;
+    font-family: "Cascadia Code", "Consolas", monospace;
+    font-size: 0.92rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.table-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.weekly-calendar {
+    overflow-x: auto;
+}
+
+.weekly-calendar-grid {
+    display: grid;
+    grid-template-columns: 96px repeat(7, minmax(150px, 1fr));
+    min-width: 1120px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.weekly-calendar-cell {
+    min-height: 96px;
+    padding: 0.75rem;
+    border-right: 1px solid rgba(15, 23, 42, 0.08);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.weekly-calendar-cell.header {
+    min-height: auto;
+    font-weight: 600;
+    background: #f8fafc;
+}
+
+.weekly-calendar-cell.hour {
+    font-weight: 600;
+    color: #475569;
+    background: #f8fafc;
+}
+
+.weekly-slot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.weekly-slot {
+    border-radius: 0.9rem;
+    padding: 0.65rem 0.75rem;
+    background: linear-gradient(135deg, rgba(22, 163, 74, 0.12), rgba(15, 118, 110, 0.1));
+    border: 1px solid rgba(22, 163, 74, 0.16);
+}
+
+.weekly-slot-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: #14532d;
+}
+
+.weekly-slot-meta {
+    font-size: 0.8rem;
+    color: #334155;
+}
+
+.weekly-calendar-empty {
+    padding: 1rem;
+    text-align: center;
+    color: #64748b;
+}
+
+@media (max-width: 768px) {
+    .hero-card {
+        padding: 1.5rem !important;
+    }
+
+    .weekly-calendar-grid {
+        grid-template-columns: 84px repeat(7, minmax(130px, 1fr));
+    }
+}

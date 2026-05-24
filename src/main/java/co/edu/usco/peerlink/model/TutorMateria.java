@@ -20,4 +20,12 @@ public class TutorMateria {
     @MapsId("materiaId")
     @JoinColumn(name = "materia_id")
     private Materia materia;
+
+    @OneToOne(mappedBy = "tutorMateria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private TutorMateriaIdioma tutorMateriaIdioma;
+
+    @OneToOne(mappedBy = "tutorMateria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private TutorMateriaFacultad tutorMateriaFacultad;
 }
