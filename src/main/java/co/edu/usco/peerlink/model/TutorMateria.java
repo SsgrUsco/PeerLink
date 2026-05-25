@@ -28,4 +28,8 @@ public class TutorMateria {
     @OneToOne(mappedBy = "tutorMateria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private TutorMateriaFacultad tutorMateriaFacultad;
+
+    @OneToOne(mappedBy = "tutorMateria", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private TutorMateriaFecha tutorMateriaFecha;
 }

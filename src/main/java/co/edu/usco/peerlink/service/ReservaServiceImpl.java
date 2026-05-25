@@ -69,8 +69,15 @@ public class ReservaServiceImpl implements ReservaService {
         reservaTutorMateria.setReserva(reserva);
         reserva.setReservaTutorMateria(reservaTutorMateria);
 
+        LocalDateTime fechaHoraReserva = dto.getFechaHora() != null
+                ? dto.getFechaHora()
+                : tutorMateria.getTutorMateriaFecha() == null ? null : tutorMateria.getTutorMateriaFecha().getFechaHora();
+        if (fechaHoraReserva == null) {
+            throw new BusinessException("error.reserva.tutorMateriaInvalida", HttpStatus.BAD_REQUEST);
+        }
+
         ReservaFecha reservaFecha = new ReservaFecha();
-        reservaFecha.setFechaHora(dto.getFechaHora());
+        reservaFecha.setFechaHora(fechaHoraReserva);
         reservaFecha.setReserva(reserva);
         reserva.setReservaFecha(reservaFecha);
 
@@ -80,12 +87,12 @@ public class ReservaServiceImpl implements ReservaService {
         reserva.setReservaEstado(reservaEstado);
 
         ReservaIdioma reservaIdioma = new ReservaIdioma();
-        reservaIdioma.setIdioma(tutorMateria.getTutorMateriaIdioma().getIdioma());
+        reservaIdioma.setIdioma(tutorMateria.getMateria().getMateriaIdioma().getIdioma());
         reservaIdioma.setReserva(reserva);
         reserva.setReservaIdioma(reservaIdioma);
 
         ReservaFacultad reservaFacultad = new ReservaFacultad();
-        reservaFacultad.setFacultad(tutorMateria.getTutorMateriaFacultad().getFacultad());
+        reservaFacultad.setFacultad(tutorMateria.getMateria().getMateriaFacultad().getFacultad());
         reservaFacultad.setReserva(reserva);
         reserva.setReservaFacultad(reservaFacultad);
 

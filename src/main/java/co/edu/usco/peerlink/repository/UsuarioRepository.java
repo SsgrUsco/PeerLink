@@ -16,5 +16,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     })
     Optional<Usuario> findByUsuarioCorreoCorreoIgnoreCase(String correo);
 
+    @EntityGraph(attributePaths = {
+            "usuarioNombre",
+            "usuarioCorreo",
+            "usuarioPassword",
+            "usuarioRol"
+    })
+    Optional<Usuario> findDetailedById(Integer id);
+
     boolean existsByUsuarioCorreoCorreoIgnoreCase(String correo);
+
+    boolean existsByUsuarioCorreoCorreoIgnoreCaseAndIdNot(String correo, Integer id);
 }

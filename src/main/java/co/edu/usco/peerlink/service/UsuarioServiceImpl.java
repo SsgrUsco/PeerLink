@@ -2,6 +2,8 @@ package co.edu.usco.peerlink.service;
 
 import co.edu.usco.peerlink.dto.UsuarioDTO;
 import co.edu.usco.peerlink.dto.UsuarioGestionDTO;
+import co.edu.usco.peerlink.dto.UsuarioPasswordUpdateDTO;
+import co.edu.usco.peerlink.dto.UsuarioPerfilUpdateDTO;
 import co.edu.usco.peerlink.dto.UsuarioRegistroDTO;
 import co.edu.usco.peerlink.exception.BusinessException;
 import co.edu.usco.peerlink.model.Usuario;
@@ -12,7 +14,9 @@ import co.edu.usco.peerlink.model.UsuarioRol;
 import co.edu.usco.peerlink.repository.ReservaRepository;
 import co.edu.usco.peerlink.repository.TutorMateriaRepository;
 import co.edu.usco.peerlink.repository.UsuarioRepository;
+import co.edu.usco.peerlink.security.AuthenticatedUser;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,6 +111,38 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioRepository.delete(usuario);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UsuarioDTO obtenerPerfilActual() {
+        return toDto(getCurrentUserEntity());
+    }
+
+    @Override
+    @Transactional
+    public UsuarioDTO actualizarPerfilActual(UsuarioPerfilUpdateDTO dto) {
+        Usuario usuario = getCurrentUserEntity();
+        String correoNormalizado = dto.getCorreo().trim().toLowerCase();
+        if (usuarioRepository.existsByUsuarioCorreoCorreoIgnoreCaseAndIdNot(correoNormalizado, usuario.getId())) {
+            throw new BusinessException("error.usuario.correoDuplicado", HttpStatus.CONFLICT);
+        }
+
+        usuario.getUsuarioNombre().setNombreCompleto(dto.getNombreCompleto().trim());
+        usuario.getUsuarioCorreo().setCorreo(correoNormalizado);
+        return toDto(usuarioRepository.save(usuario));
+    }
+
+    @Override
+    @Transactional
+    public void actualizarPasswordActual(UsuarioPasswordUpdateDTO dto) {
+        Usuario usuario = getCurrentUserEntity();
+        if (!passwordEncoder.matches(dto.getPasswordActual(), usuario.getUsuarioPassword().getPassword())) {
+            throw new BusinessException("error.usuario.passwordActualInvalida", HttpStatus.BAD_REQUEST);
+        }
+
+        usuario.getUsuarioPassword().setPassword(passwordEncoder.encode(dto.getPasswordNueva()));
+        usuarioRepository.save(usuario);
+    }
+
     private UsuarioDTO toDto(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setId(usuario.getId());
@@ -120,5 +156,11 @@ public class UsuarioServiceImpl implements UsuarioService {
             dto.setRol(usuario.getUsuarioRol().getRol());
         }
         return dto;
+    }
+
+    private Usuario getCurrentUserEntity() {
+        AuthenticatedUser currentUser = (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return usuarioRepository.findDetailedById(currentUser.getId())
+                .orElseThrow(() -> new BusinessException("error.usuario.noEncontrado", HttpStatus.NOT_FOUND));
     }
 }

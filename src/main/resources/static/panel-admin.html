@@ -16,7 +16,7 @@
         <div class="d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-3">
             <div>
                 <h1 class="display-6 fw-bold mb-3" data-i18n="admin_hero_title">Gestion de Materias</h1>
-                <p class="lead mb-0" data-i18n="admin_hero_desc">Crea, edita, elimina materias y asigna tutores a cada una.</p>
+                <p class="lead mb-0" data-i18n="admin_hero_desc">Administra materias, asignaciones de tutores y usuarios desde secciones separadas.</p>
             </div>
             <div class="text-lg-end">
                 <a href="/swagger-ui/index.html" target="_blank" rel="noopener" class="btn btn-light btn-lg fw-semibold" data-i18n="action_open_swagger">Abrir Swagger</a>
@@ -25,141 +25,209 @@
         </div>
     </section>
 
-    <section class="card border-0 shadow-sm mb-4">
-        <div class="card-body p-4">
-            <div class="row g-4">
-                <div class="col-xl-5">
-                    <h2 class="h4 mb-3" data-i18n="admin_subject_form">Formulario de materia</h2>
-                    <form id="materiaForm" class="row g-3">
-                        <input id="materiaId" type="hidden">
-                        <div class="col-12">
-                            <label for="materiaNombre" class="form-label" data-i18n="admin_subject_name">Nombre de la materia</label>
-                            <input id="materiaNombre" type="text" class="form-control" required>
-                        </div>
-                        <div class="col-sm-6 d-grid">
-                            <button type="submit" class="btn btn-success" data-i18n="admin_save_subject">Agregar / Guardar</button>
-                        </div>
-                        <div class="col-sm-6 d-grid">
-                            <button id="cancelMateriaEdit" type="button" class="btn btn-outline-secondary" data-i18n="admin_cancel_edit">Cancelar edicion</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-xl-7">
-                    <h2 class="h4 mb-3" data-i18n="admin_assign_title">Asignar tutor a materia</h2>
-                    <form id="asignacionForm" class="row g-3">
-                        <div class="col-md-3">
-                            <label for="asignacionTutorId" class="form-label" data-i18n="table_tutor">Tutor</label>
-                            <select id="asignacionTutorId" class="form-select" required></select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="asignacionMateriaId" class="form-label" data-i18n="table_subject">Materia</label>
-                            <select id="asignacionMateriaId" class="form-select" required></select>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="asignacionIdioma" class="form-label" data-i18n="label_language">Idioma</label>
-                            <select id="asignacionIdioma" class="form-select" required></select>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="asignacionFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
-                            <select id="asignacionFacultad" class="form-select" required></select>
-                        </div>
-                        <div class="col-md-2 d-grid">
-                            <label class="form-label invisible">Accion</label>
-                            <button type="submit" class="btn btn-outline-success" data-i18n="admin_assign_action">Asignar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <button id="adminMateriasTabBtn" type="button" class="btn btn-success" data-i18n="admin_tab_subjects">Materias</button>
+        <button id="adminTutoresTabBtn" type="button" class="btn btn-outline-success" data-i18n="admin_tab_tutors">Tutores</button>
+        <button id="adminUsuariosTabBtn" type="button" class="btn btn-outline-success" data-i18n="admin_tab_users">Usuarios</button>
+    </div>
+
+    <section id="adminMateriasTab">
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <button id="adminMateriaCrearTabBtn" type="button" class="btn btn-success" data-i18n="admin_subject_create_tab">Crear materia</button>
+            <button id="adminMateriaBuscarTabBtn" type="button" class="btn btn-outline-success" data-i18n="admin_subject_search_tab">Buscar materias</button>
         </div>
+
+        <section id="adminMateriaCrearSection" class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4">
+                <h2 class="h4 mb-0" data-i18n="admin_subject_form">Formulario de materia</h2>
+            </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <form id="materiaForm" class="row g-3">
+                    <input id="materiaId" type="hidden">
+                    <div class="col-12 col-lg-5">
+                        <label for="materiaNombre" class="form-label" data-i18n="admin_subject_name">Nombre de la materia</label>
+                        <input id="materiaNombre" type="text" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <label for="materiaIdioma" class="form-label">Idioma</label>
+                        <select id="materiaIdioma" class="form-select" required></select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <label for="materiaFacultad" class="form-label">Facultad</label>
+                        <select id="materiaFacultad" class="form-select" required></select>
+                    </div>
+                    <div class="col-sm-6 d-grid">
+                        <button type="submit" class="btn btn-success" data-i18n="admin_save_subject">Agregar / Guardar</button>
+                    </div>
+                    <div class="col-sm-6 d-grid">
+                        <button id="cancelMateriaEdit" type="button" class="btn btn-outline-secondary" data-i18n="admin_cancel_edit">Cancelar edicion</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="adminMateriaBuscarSection" class="card border-0 shadow-sm mb-4 hidden">
+            <div class="card-header bg-white border-0 p-4">
+                <h2 class="h4 mb-1" data-i18n="admin_search_subjects_title">Buscar materias</h2>
+                <p class="text-secondary mb-0" data-i18n="admin_search_subjects_desc">Usa filtros, revisa coincidencias y haz clic en una materia para desplegar su menu de edicion o eliminacion.</p>
+            </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <form id="materiasSearchForm" class="row g-3 mb-4">
+                    <div class="col-lg-4">
+                        <label for="materiasFilterInput" class="form-label" data-i18n="label_search">Busqueda</label>
+                        <input id="materiasFilterInput" type="search" class="form-control" data-i18n-placeholder="placeholder_subject_name" placeholder="Nombre, idioma o facultad">
+                    </div>
+                    <div class="col-lg-3">
+                        <label for="materiasIdiomaFilter" class="form-label" data-i18n="label_language">Idioma</label>
+                        <select id="materiasIdiomaFilter" class="form-select"></select>
+                    </div>
+                    <div class="col-lg-3">
+                        <label for="materiasFacultadFilter" class="form-label" data-i18n="label_faculty">Facultad</label>
+                        <select id="materiasFacultadFilter" class="form-select"></select>
+                    </div>
+                    <div class="col-sm-6 col-lg-1 d-grid">
+                        <label class="form-label invisible" data-i18n="action_search">Buscar</label>
+                        <button type="submit" class="btn btn-outline-success" data-i18n="action_search">Buscar</button>
+                    </div>
+                    <div class="col-sm-6 col-lg-1 d-grid">
+                        <label class="form-label invisible" data-i18n="action_clear">Limpiar</label>
+                        <button id="clearMateriasSearchBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear">Limpiar</button>
+                    </div>
+                </form>
+                <div id="materiasMatchesContainer" class="row g-3"></div>
+            </div>
+        </section>
     </section>
 
-    <section class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white border-0 p-4">
-            <h2 class="h4 mb-0" data-i18n="admin_subject_table">Tabla de materias</h2>
-        </div>
-        <div class="card-body pt-0 px-4 pb-4">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                    <tr>
-                        <th data-i18n="table_name">Nombre</th>
-                        <th data-i18n="table_actions">Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody id="materiasTableBody"></tbody>
-                </table>
+    <section id="adminTutoresTab" class="hidden">
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4">
+                <h2 class="h4 mb-1" data-i18n="admin_assign_title">Asignar tutores a materias</h2>
+                <p class="text-secondary mb-0" data-i18n="admin_assign_desc">Filtra tutores y materias para crear asignaciones con mas rapidez.</p>
             </div>
-        </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <form id="asignacionForm" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="tutorSearch" class="form-label" data-i18n="table_tutor">Buscar tutor</label>
+                        <input id="tutorSearch" type="search" class="form-control" data-i18n-placeholder="placeholder_tutor_name" placeholder="Nombre o correo">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="materiaSearch" class="form-label" data-i18n="table_subject">Buscar materia</label>
+                        <input id="materiaSearch" type="search" class="form-control" data-i18n-placeholder="placeholder_subject_name" placeholder="Nombre, idioma o facultad">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="asignacionTutorId" class="form-label" data-i18n="table_tutor">Tutor</label>
+                        <select id="asignacionTutorId" class="form-select" required></select>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="asignacionMateriaId" class="form-label" data-i18n="table_subject">Materia</label>
+                        <select id="asignacionMateriaId" class="form-select" required></select>
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <label class="form-label invisible">Accion</label>
+                        <button type="submit" class="btn btn-outline-success" data-i18n="admin_assign_action">Asignar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <h2 class="h4 mb-0" data-i18n="admin_assignments_table">Asignaciones tutor - materia</h2>
+                <div class="d-flex gap-2">
+                    <input id="asignacionesFilterInput" type="search" class="form-control form-control-sm" data-i18n-placeholder="placeholder_assignment_search" placeholder="Buscar asignaciones">
+                    <button id="refreshTutorMateriasBtn" type="button" class="btn btn-outline-primary btn-sm" data-i18n="action_refresh">Refrescar</button>
+                </div>
+            </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th data-i18n="table_tutor">Tutor</th>
+                            <th data-i18n="table_email">Correo</th>
+                            <th data-i18n="table_subject">Materia</th>
+                            <th data-i18n="table_language">Idioma</th>
+                            <th data-i18n="table_faculty">Facultad</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tutorMateriasTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
     </section>
 
-    <section class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
-            <h2 class="h4 mb-0" data-i18n="admin_assignments_table">Asignaciones tutor - materia</h2>
-            <button id="refreshTutorMateriasBtn" type="button" class="btn btn-outline-primary btn-sm" data-i18n="action_refresh">Refrescar</button>
-        </div>
-        <div class="card-body pt-0 px-4 pb-4">
-            <div class="table-responsive">
-                <table class="table table-striped align-middle">
-                    <thead class="table-light">
-                    <tr>
-                        <th data-i18n="table_tutor">Tutor</th>
-                        <th data-i18n="table_email">Correo</th>
-                        <th data-i18n="table_subject">Materia</th>
-                        <th data-i18n="table_language">Idioma</th>
-                        <th data-i18n="table_faculty">Facultad</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tutorMateriasTableBody"></tbody>
-                </table>
+    <section id="adminUsuariosTab" class="hidden">
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4">
+                <h2 class="h4 mb-0" data-i18n="admin_users_title">Usuarios</h2>
             </div>
-        </div>
-    </section>
-
-    <section class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white border-0 p-4">
-            <h2 class="h4 mb-0" data-i18n="admin_users_title">Usuarios</h2>
-        </div>
-        <div class="card-body pt-0 px-4 pb-4">
-            <form id="usuarioForm" class="row g-3 mb-4">
-                <div class="col-lg-3">
-                    <label for="usuarioNombre" class="form-label" data-i18n="label_full_name">Nombre completo</label>
-                    <input id="usuarioNombre" type="text" class="form-control" required>
+            <div class="card-body pt-0 px-4 pb-4">
+                <form id="usuarioForm" class="row g-3 mb-4">
+                    <div class="col-lg-3">
+                        <label for="usuarioNombre" class="form-label" data-i18n="label_full_name">Nombre completo</label>
+                        <input id="usuarioNombre" type="text" class="form-control" required>
+                    </div>
+                    <div class="col-lg-3">
+                        <label for="usuarioCorreo" class="form-label" data-i18n="label_email">Correo</label>
+                        <input id="usuarioCorreo" type="email" class="form-control" required>
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="usuarioPassword" class="form-label" data-i18n="label_password">Contrasena</label>
+                        <input id="usuarioPassword" type="password" class="form-control" required>
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="usuarioRol" class="form-label" data-i18n="label_role">Rol</label>
+                        <select id="usuarioRol" class="form-select" required>
+                            <option value="ESTUDIANTE">ESTUDIANTE</option>
+                            <option value="TUTOR">TUTOR</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 d-grid">
+                        <label class="form-label invisible">Accion</label>
+                        <button type="submit" class="btn btn-success" data-i18n="admin_save_user">Agregar usuario</button>
+                    </div>
+                </form>
+                <form id="usuariosSearchForm" class="row g-3 mb-4">
+                    <div class="col-lg-8">
+                        <label for="usuariosFilterInput" class="form-label" data-i18n="label_search">Buscador</label>
+                        <input id="usuariosFilterInput" type="search" class="form-control" data-i18n-placeholder="admin_users_search_placeholder" placeholder="Buscar por nombre, correo o rol">
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="usuariosRolFilter" class="form-label" data-i18n="label_role">Rol</label>
+                        <select id="usuariosRolFilter" class="form-select">
+                            <option value="" data-i18n="role_all">Todos</option>
+                            <option value="ESTUDIANTE">ESTUDIANTE</option>
+                            <option value="TUTOR">TUTOR</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6 col-lg-1 d-grid">
+                        <label class="form-label invisible" data-i18n="action_search">Buscar</label>
+                        <button type="submit" class="btn btn-outline-success" data-i18n="action_search">Buscar</button>
+                    </div>
+                    <div class="col-sm-6 col-lg-1 d-grid">
+                        <label class="form-label invisible" data-i18n="action_clear">Limpiar</label>
+                        <button id="clearUsuariosSearchBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear">Limpiar</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th data-i18n="table_name">Nombre</th>
+                            <th data-i18n="table_email">Correo</th>
+                            <th data-i18n="label_role">Rol</th>
+                            <th data-i18n="table_actions">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="usuariosTableBody"></tbody>
+                    </table>
                 </div>
-                <div class="col-lg-3">
-                    <label for="usuarioCorreo" class="form-label" data-i18n="label_email">Correo</label>
-                    <input id="usuarioCorreo" type="email" class="form-control" required>
-                </div>
-                <div class="col-lg-2">
-                    <label for="usuarioPassword" class="form-label" data-i18n="label_password">Contrasena</label>
-                    <input id="usuarioPassword" type="password" class="form-control" required>
-                </div>
-                <div class="col-lg-2">
-                    <label for="usuarioRol" class="form-label" data-i18n="label_role">Rol</label>
-                    <select id="usuarioRol" class="form-select" required>
-                        <option value="ESTUDIANTE">ESTUDIANTE</option>
-                        <option value="TUTOR">TUTOR</option>
-                        <option value="ADMIN">ADMIN</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 d-grid">
-                    <label class="form-label invisible">Accion</label>
-                    <button type="submit" class="btn btn-success" data-i18n="admin_save_user">Agregar usuario</button>
-                </div>
-            </form>
-            <div class="table-responsive">
-                <table class="table table-striped align-middle">
-                    <thead class="table-light">
-                    <tr>
-                        <th data-i18n="table_name">Nombre</th>
-                        <th data-i18n="table_email">Correo</th>
-                        <th data-i18n="label_role">Rol</th>
-                        <th data-i18n="table_actions">Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody id="usuariosTableBody"></tbody>
-                </table>
             </div>
-        </div>
+        </section>
     </section>
 
     <section class="card border-0 shadow-sm">
@@ -172,6 +240,15 @@
 }</pre>
         </div>
     </section>
+    <footer class="page-footer d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+        <p class="text-secondary" data-i18n="landing_footer">Construido para coordinar tutorias con claridad, trazabilidad y buena experiencia de uso.</p>
+        <div class="page-footer-links">
+            <a href="/ayuda.html" class="link-secondary" data-i18n="navbar_help">Ayuda</a>
+            <a href="/perfil.html" class="link-secondary" data-i18n="navbar_profile">Perfil</a>
+            <a href="/terminos.html" class="link-secondary" data-i18n="legal_terms_heading">Terminos y condiciones</a>
+            <a href="/privacidad.html" class="link-secondary" data-i18n="legal_privacy_heading">Politica de privacidad</a>
+        </div>
+    </footer>
 </main>
 <script src="/js/common.js"></script>
 <script src="/js/panel-admin.js"></script>

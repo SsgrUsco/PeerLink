@@ -3,6 +3,8 @@ package co.edu.usco.peerlink.controller;
 import co.edu.usco.peerlink.dto.UsuarioGestionDTO;
 import co.edu.usco.peerlink.dto.UsuarioDTO;
 import co.edu.usco.peerlink.dto.UsuarioRegistroDTO;
+import co.edu.usco.peerlink.dto.UsuarioPasswordUpdateDTO;
+import co.edu.usco.peerlink.dto.UsuarioPerfilUpdateDTO;
 import co.edu.usco.peerlink.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,7 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,6 +84,25 @@ public class UsuarioController {
     })
     public ResponseEntity<List<UsuarioDTO>> listar() {
         return ResponseEntity.ok(usuarioService.obtenerTodos());
+    }
+
+    @GetMapping("/me")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<UsuarioDTO> miPerfil() {
+        return ResponseEntity.ok(usuarioService.obtenerPerfilActual());
+    }
+
+    @PutMapping("/me")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<UsuarioDTO> actualizarMiPerfil(@Valid @RequestBody UsuarioPerfilUpdateDTO dto) {
+        return ResponseEntity.ok(usuarioService.actualizarPerfilActual(dto));
+    }
+
+    @PatchMapping("/me/password")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<Void> actualizarMiPassword(@Valid @RequestBody UsuarioPasswordUpdateDTO dto) {
+        usuarioService.actualizarPasswordActual(dto);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

@@ -14,4 +14,12 @@ public class Materia {
 
     @Column(name = "nombre", unique = true, nullable = false)
     private String nombre;
+
+    @OneToOne(mappedBy = "materia", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private MateriaIdioma materiaIdioma;
+
+    @OneToOne(mappedBy = "materia", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private MateriaFacultad materiaFacultad;
 }

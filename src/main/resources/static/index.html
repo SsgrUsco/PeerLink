@@ -2,10 +2,125 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=/login.html">
-    <title>PeerLink</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerLink | Plataforma de tutorias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/app.css">
 </head>
-<body>
-<p>Redirigiendo a <a href="/login.html">login</a>...</p>
+<body class="peerlink-body" data-i18n-title="landing_title">
+<main class="container-xxl py-4 py-lg-5">
+    <header class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <a class="navbar-brand fw-bold text-success-emphasis fs-3 text-decoration-none" href="/">PeerLink</a>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Language selector">
+                <button class="btn btn-outline-success lang-btn" data-lang="es" type="button">ES</button>
+                <button class="btn btn-outline-success lang-btn" data-lang="en" type="button">EN</button>
+                <button class="btn btn-outline-success lang-btn" data-lang="pt" type="button">PT</button>
+            </div>
+            <a id="landingLoginBtn" class="btn btn-outline-success" href="/login.html" data-i18n="landing_primary_cta">Iniciar sesion</a>
+            <a id="landingRegisterBtn" class="btn btn-success" href="/registro.html" data-i18n="landing_secondary_cta">Crear cuenta</a>
+            <a id="landingPanelBtn" class="btn btn-light hidden" href="/panel-estudiante.html" data-i18n="landing_panel_cta">Ir a mi panel</a>
+        </div>
+    </header>
+
+    <section class="hero-card rounded-4 shadow-sm p-4 p-lg-5 mb-5">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-7">
+                <span class="badge text-bg-light border mb-3" data-i18n="landing_badge">Tutoria universitaria organizada</span>
+                <h1 class="display-4 fw-bold mb-3" data-i18n="landing_heading">Conecta estudiantes y tutores en un solo flujo claro.</h1>
+                <p class="lead mb-4" data-i18n="landing_desc">PeerLink centraliza materias, reservas, solicitudes y horarios semanales para que la experiencia academica sea simple, visible y ordenada.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a id="landingLoginHeroBtn" class="btn btn-light btn-lg fw-semibold" href="/login.html" data-i18n="landing_primary_cta">Iniciar sesion</a>
+                    <a id="landingRegisterHeroBtn" class="btn btn-outline-light btn-lg fw-semibold" href="/registro.html" data-i18n="landing_secondary_cta">Crear cuenta</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <section class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <h2 class="h4 mb-3" data-i18n="landing_section_features">Lo esencial, sin desorden</h2>
+                        <div class="d-grid gap-3">
+                            <div class="p-3 rounded-4 border bg-white bg-opacity-75">
+                                <p class="mb-0" data-i18n="landing_feature_filters">Filtros por texto, idioma, facultad, fecha y hora para llegar rapido a la coincidencia correcta.</p>
+                            </div>
+                            <div class="p-3 rounded-4 border bg-white bg-opacity-75">
+                                <p class="mb-0" data-i18n="landing_feature_calendar">Horarios semanales por horas para ver claramente reservas, tutorias y disponibilidad.</p>
+                            </div>
+                            <div class="p-3 rounded-4 border bg-white bg-opacity-75">
+                                <p class="mb-0" data-i18n="landing_feature_i18n">Interfaz preparada para espanol, ingles y portugues con claves consistentes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
+            <div>
+                <h2 class="h2 fw-bold mb-2" data-i18n="landing_section_roles">Una experiencia para cada rol</h2>
+                <p class="text-secondary mb-0" data-i18n="landing_section_roles_desc">Cada panel prioriza lo importante segun el trabajo real de estudiantes, tutores y administradores.</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <article class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <span class="badge text-bg-success-subtle border border-success-subtle mb-3" data-i18n="landing_role_student">Estudiantes</span>
+                        <h3 class="h4 mb-3" data-i18n="landing_role_student">Estudiantes</h3>
+                        <p class="text-secondary mb-0" data-i18n="landing_role_student_desc">Buscan tutorias, filtran coincidencias, solicitan apoyo y consultan su horario en calendario o lista.</p>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4">
+                <article class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <span class="badge text-bg-success-subtle border border-success-subtle mb-3" data-i18n="landing_role_tutor">Tutores</span>
+                        <h3 class="h4 mb-3" data-i18n="landing_role_tutor">Tutores</h3>
+                        <p class="text-secondary mb-0" data-i18n="landing_role_tutor_desc">Publican tutorias, gestionan solicitudes recibidas y mantienen visible su agenda semanal.</p>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4">
+                <article class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4">
+                        <span class="badge text-bg-success-subtle border border-success-subtle mb-3" data-i18n="landing_role_admin">Administracion</span>
+                        <h3 class="h4 mb-3" data-i18n="landing_role_admin">Administracion</h3>
+                        <p class="text-secondary mb-0" data-i18n="landing_role_admin_desc">Controla materias, asignaciones, usuarios y documentacion tecnica protegida desde un solo lugar.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <footer class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 pt-4 border-top border-light-subtle">
+        <p class="text-secondary mb-0" data-i18n="landing_footer">Construido para coordinar tutorias con claridad, trazabilidad y buena experiencia de uso.</p>
+        <div class="d-flex flex-wrap gap-3 small">
+            <a class="link-secondary" href="/ayuda.html" data-i18n="navbar_help">Ayuda</a>
+            <a class="link-secondary" href="/terminos.html" data-i18n="legal_terms_heading">Terminos y condiciones</a>
+            <a class="link-secondary" href="/privacidad.html" data-i18n="legal_privacy_heading">Politica de privacidad</a>
+        </div>
+    </footer>
+</main>
+<script src="/js/common.js"></script>
+<script src="/js/page-shell.js"></script>
+<script>
+    const auth = PeerlinkApp.getAuth();
+    const loginHref = PeerlinkApp.withLang("/login.html");
+    const registerHref = PeerlinkApp.withLang("/registro.html");
+    document.getElementById("landingLoginBtn").href = loginHref;
+    document.getElementById("landingRegisterBtn").href = registerHref;
+    document.getElementById("landingLoginHeroBtn").href = loginHref;
+    document.getElementById("landingRegisterHeroBtn").href = registerHref;
+
+    if (auth.token && auth.role) {
+        const panelHref = PeerlinkApp.withLang(PeerlinkApp.panelForRole(auth.role));
+        const panelBtn = document.getElementById("landingPanelBtn");
+        panelBtn.href = panelHref;
+        panelBtn.classList.remove("hidden");
+    }
+</script>
 </body>
 </html>

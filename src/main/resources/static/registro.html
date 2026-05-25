@@ -27,6 +27,10 @@
                         </div>
                     </div>
 
+                    <div class="section-note mb-4">
+                        <p class="mb-0" data-i18n="register_value_note">Usa un correo que revises con frecuencia para recibir el seguimiento de tus tutorias.</p>
+                    </div>
+
                     <form id="registerForm" class="row g-3">
                         <div class="col-12">
                             <label for="nombreCompleto" class="form-label" data-i18n="label_full_name">Nombre completo</label>
@@ -37,7 +41,7 @@
                             <input id="correo" name="correo" type="email" class="form-control" required>
                         </div>
                         <div class="col-md-6">
-                            <label for="password" class="form-label" data-i18n="label_password">Contraseña</label>
+                            <label for="password" class="form-label" data-i18n="label_password">Contrasena</label>
                             <input id="password" name="password" type="password" class="form-control" required>
                         </div>
                         <div class="col-md-6">
@@ -52,10 +56,24 @@
                         </div>
                     </form>
 
+                    <div class="mt-4">
+                        <div class="card border-0 bg-light-subtle">
+                            <div class="card-body p-3">
+                                <h2 class="h6 text-uppercase text-secondary mb-2" data-i18n="console_title">Consola</h2>
+                                <pre id="consoleOutput" class="console-output mb-0"></pre>
+                            </div>
+                        </div>
+                    </div>
+
                     <p class="mt-4 mb-0 text-secondary">
-                        <span data-i18n="register_has_account">¿Ya tienes cuenta?</span>
+                        <span data-i18n="register_has_account">Ya tienes cuenta?</span>
                         <a id="goLoginLink" href="/login.html" class="link-success" data-i18n="register_back_login">Volver al login</a>
                     </p>
+                    <div class="auth-links small">
+                        <a href="/ayuda.html" class="link-secondary" data-i18n="navbar_help">Ayuda</a>
+                        <a href="/terminos.html" class="link-secondary" data-i18n="legal_terms_heading">Terminos y condiciones</a>
+                        <a href="/privacidad.html" class="link-secondary" data-i18n="legal_privacy_heading">Politica de privacidad</a>
+                    </div>
                 </div>
             </section>
         </div>

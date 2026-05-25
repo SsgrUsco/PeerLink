@@ -3,6 +3,7 @@ package co.edu.usco.peerlink.controller;
 import co.edu.usco.peerlink.dto.MateriaDTO;
 import co.edu.usco.peerlink.dto.TutorMateriaDetalleDTO;
 import co.edu.usco.peerlink.dto.TutorMateriaDTO;
+import co.edu.usco.peerlink.dto.TutorOfertaDTO;
 import co.edu.usco.peerlink.service.MateriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -82,6 +83,12 @@ public class MateriaController {
         return ResponseEntity.ok(materiaService.listarAsignacionesTutorMateria());
     }
 
+    @GetMapping("/mis-materias")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<List<TutorMateriaDetalleDTO>> listarMisMateriasTutor() {
+        return ResponseEntity.ok(materiaService.listarMisMateriasTutor());
+    }
+
     @PutMapping("/{id}")
     @Operation(
             summary = "Actualizar materia",
@@ -129,5 +136,22 @@ public class MateriaController {
                 "message",
                 messageSource.getMessage("materia.tutor.asignado", null, LocaleContextHolder.getLocale())
         ));
+    }
+
+    @PostMapping("/mis-materias")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<Map<String, String>> crearOfertaTutor(@Valid @RequestBody TutorOfertaDTO dto) {
+        materiaService.crearOfertaTutor(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                "message",
+                messageSource.getMessage("materia.tutor.asignado", null, LocaleContextHolder.getLocale())
+        ));
+    }
+
+    @DeleteMapping("/mis-materias/{materiaId}")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<Void> eliminarOfertaTutor(@PathVariable Integer materiaId) {
+        materiaService.eliminarOfertaTutor(materiaId);
+        return ResponseEntity.noContent().build();
     }
 }

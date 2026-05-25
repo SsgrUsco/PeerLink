@@ -9,6 +9,7 @@ public class TutorMateriaDetalleDTO {
     private String tutorCorreo;
     private Integer materiaId;
     private String materiaNombre;
+    private java.time.LocalDateTime fechaHora;
     private String idioma;
     private String facultad;
 }

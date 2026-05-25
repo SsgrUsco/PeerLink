@@ -13,90 +13,249 @@
 <div id="navbarContainer"></div>
 <main class="container-xxl py-4">
     <section class="hero-card rounded-4 shadow-sm p-4 p-lg-5 mb-4">
-        <h1 class="display-6 fw-bold mb-3" data-i18n="tutor_hero_title">Gestion de Tutorias Solicitadas</h1>
-        <p class="lead mb-0" data-i18n="tutor_hero_desc">Confirma o cancela las solicitudes pendientes dirigidas a ti.</p>
+        <h1 class="display-6 fw-bold mb-3" data-i18n="tutor_panel_heading">Panel Tutor</h1>
+        <p class="lead mb-0" data-i18n="tutor_panel_desc">Administra solicitudes recibidas, publica nuevas tutorias y consulta tu horario semanal en calendario o lista.</p>
     </section>
 
-    <section class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <h2 class="h4 mb-1" data-i18n="tutor_filters_title">Filtrar tutorias</h2>
-                <p class="text-secondary mb-0" data-i18n="tutor_filters_desc">Encuentra rapido tus tutorias por idioma, facultad y fecha/hora.</p>
-            </div>
-            <button id="refreshReservasBtn" type="button" class="btn btn-outline-dark btn-sm" data-i18n="action_refresh">Refrescar</button>
-        </div>
-        <div class="card-body pt-0 px-4 pb-4">
-            <form id="filtrosForm" class="row g-3">
-                <div class="col-lg-3">
-                    <label for="filtroIdioma" class="form-label" data-i18n="label_language">Idioma</label>
-                    <select id="filtroIdioma" class="form-select"></select>
-                </div>
-                <div class="col-lg-3">
-                    <label for="filtroFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
-                    <select id="filtroFacultad" class="form-select"></select>
-                </div>
-                <div class="col-lg-3">
-                    <label for="filtroFecha" class="form-label" data-i18n="label_date">Fecha</label>
-                    <input id="filtroFecha" type="date" class="form-control">
-                </div>
-                <div class="col-lg-3">
-                    <label for="filtroHora" class="form-label" data-i18n="label_time">Hora</label>
-                    <input id="filtroHora" type="time" class="form-control">
-                </div>
-                <div class="col-sm-6 col-lg-3 d-grid">
-                    <button type="submit" class="btn btn-outline-success" data-i18n="action_apply_filters">Aplicar filtros</button>
-                </div>
-                <div class="col-sm-6 col-lg-3 d-grid">
-                    <button id="clearFiltersBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear_filters">Limpiar filtros</button>
-                </div>
-            </form>
-        </div>
-    </section>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <button id="tutorSolicitudesTabBtn" type="button" class="btn btn-success" data-i18n="tutor_tab_requests">Solicitudes recibidas</button>
+        <button id="tutorCrearTabBtn" type="button" class="btn btn-outline-success" data-i18n="tutor_tab_create">Crear tutoria</button>
+        <button id="tutorHorarioTabBtn" type="button" class="btn btn-outline-success" data-i18n="tutor_tab_schedule">Mis materias y horario</button>
+    </div>
 
-    <section class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div>
-                <h2 class="h4 mb-1" data-i18n="tutor_schedule_title">Mi horario semanal</h2>
-                <p class="text-secondary mb-0" data-i18n="tutor_schedule_desc">Calendario semanal con tus tutorias asignadas.</p>
-            </div>
-            <div class="d-flex flex-wrap gap-2 align-items-center">
-                <button id="prevWeekBtn" type="button" class="btn btn-outline-secondary btn-sm" data-i18n="action_prev_week">Semana anterior</button>
-                <button id="thisWeekBtn" type="button" class="btn btn-outline-success btn-sm" data-i18n="action_this_week">Esta semana</button>
-                <button id="nextWeekBtn" type="button" class="btn btn-outline-secondary btn-sm" data-i18n="action_next_week">Semana siguiente</button>
+    <section id="tutorSolicitudesTab">
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
-                    <label for="weekPicker" class="form-label small text-secondary mb-1 d-block" data-i18n="label_pick_week">Semana a visualizar</label>
+                    <h2 class="h4 mb-1" data-i18n="tutor_requests_title">Solicitudes recibidas</h2>
+                    <p class="text-secondary mb-0" data-i18n="tutor_requests_desc_extended">Filtra por buscador, idioma, facultad y fecha/hora. Tambien puedes ocultar las ya respondidas o deshacer una respuesta.</p>
+                </div>
+                <button id="refreshReservasBtn" type="button" class="btn btn-outline-dark btn-sm" data-i18n="action_refresh">Refrescar</button>
+            </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <form id="filtrosSolicitudesForm" class="row g-3 mb-4">
+                    <div class="col-lg-4">
+                        <label for="solicitudBusqueda" class="form-label" data-i18n="label_search">Buscador</label>
+                        <input id="solicitudBusqueda" type="search" class="form-control" data-i18n-placeholder="placeholder_subject_or_student" placeholder="Buscar estudiante o materia">
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="solicitudIdioma" class="form-label" data-i18n="label_language">Idioma</label>
+                        <select id="solicitudIdioma" class="form-select"></select>
+                    </div>
+                    <div class="col-lg-3">
+                        <label for="solicitudFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
+                        <select id="solicitudFacultad" class="form-select"></select>
+                    </div>
+                    <div class="col-lg-1">
+                        <label for="solicitudFecha" class="form-label" data-i18n="label_date">Fecha</label>
+                        <input id="solicitudFecha" type="date" class="form-control">
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="solicitudHora" class="form-label" data-i18n="label_time">Hora</label>
+                        <input id="solicitudHora" type="time" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input id="ocultarRespondidas" class="form-check-input" type="checkbox" checked>
+                            <label for="ocultarRespondidas" class="form-check-label" data-i18n="tutor_hide_answered">Ocultar solicitudes ya respondidas</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 d-grid">
+                        <button type="submit" class="btn btn-outline-success" data-i18n="action_apply_filters">Aplicar filtros</button>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 d-grid">
+                        <button id="clearSolicitudesBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear">Limpiar</button>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th data-i18n="table_student">Estudiante</th>
+                            <th data-i18n="table_subject">Materia</th>
+                            <th data-i18n="table_datetime">Fecha y hora</th>
+                            <th data-i18n="table_language">Idioma</th>
+                            <th data-i18n="table_faculty">Facultad</th>
+                            <th data-i18n="table_status">Estado</th>
+                            <th data-i18n="table_actions">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="reservasTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section id="tutorCrearTab" class="hidden">
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4">
+                <h2 class="h4 mb-1" data-i18n="tutor_create_title">Buscar materia para publicar</h2>
+                <p class="text-secondary mb-0" data-i18n="tutor_create_desc">Busca una materia creada por admin y selecciona la coincidencia para asignarle la fecha y hora de tu tutoria.</p>
+            </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <form id="crearBusquedaForm" class="row g-3">
+                    <div class="col-lg-8">
+                        <label for="crearBusqueda" class="form-label" data-i18n="label_search">Buscador</label>
+                        <input id="crearBusqueda" type="search" class="form-control" data-i18n-placeholder="placeholder_subject_only" placeholder="Buscar por nombre de materia">
+                    </div>
+                    <div class="col-lg-4">
+                        <label for="crearFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
+                        <select id="crearFacultad" class="form-select"></select>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 d-grid">
+                            <button type="submit" class="btn btn-success" data-i18n="action_search">Buscar coincidencias</button>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 d-grid">
+                            <button id="clearCrearBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0" data-i18n="state_match">Coincidencias</h2>
+                    <button id="refreshTutorMateriasBtn" type="button" class="btn btn-outline-primary btn-sm" data-i18n="action_refresh">Refrescar</button>
+            </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <div id="crearMateriasContainer" class="row g-3"></div>
+            </div>
+        </section>
+
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4">
+                    <h2 class="h4 mb-0" data-i18n="tutor_create_selected">Tutoria a publicar</h2>
+                </div>
+                <div class="card-body pt-0 px-4 pb-4">
+                    <div id="crearEmptyState" class="text-secondary" data-i18n="tutor_create_empty">Selecciona una coincidencia para desplegar el formulario de publicacion.</div>
+                    <form id="tutorOfertaForm" class="row g-3 hidden">
+                        <div class="col-md-4">
+                            <label for="tutorMateriaNombre" class="form-label" data-i18n="label_subject">Materia</label>
+                        <input id="tutorMateriaNombre" type="text" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-3">
+                            <label for="tutorMateriaIdioma" class="form-label" data-i18n="label_language">Idioma</label>
+                        <input id="tutorMateriaIdioma" type="text" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-5">
+                            <label for="tutorMateriaFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
+                        <input id="tutorMateriaFacultad" type="text" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-4">
+                            <label for="tutorMateriaFechaHora" class="form-label" data-i18n="label_datetime">Fecha y hora</label>
+                        <input id="tutorMateriaFechaHora" type="datetime-local" class="form-control" required>
+                    </div>
+                    <div class="col-md-8 d-grid d-md-flex justify-content-md-end">
+                        <label class="form-label invisible d-none d-md-block" data-i18n="table_actions">Accion</label>
+                        <button type="submit" class="btn btn-success" data-i18n="action_save_tutoring">Guardar tutoria</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4">
+                <h2 class="h4 mb-1" data-i18n="tutor_published_title">Tutorias publicadas por mi</h2>
+                <p class="text-secondary mb-0" data-i18n="tutor_published_desc">Desde aqui puedes revisar o remover las tutorias que ya publicaste.</p>
+            </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th data-i18n="table_subject">Materia</th>
+                            <th data-i18n="table_datetime">Fecha y hora</th>
+                            <th data-i18n="table_language">Idioma</th>
+                            <th data-i18n="table_faculty">Facultad</th>
+                            <th data-i18n="table_actions">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tutorOfertasTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section id="tutorHorarioTab" class="hidden">
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h2 class="h4 mb-1" data-i18n="tutor_schedule_filter_title">Filtrar mi horario</h2>
+                    <p class="text-secondary mb-0" data-i18n="tutor_schedule_filter_desc">Consulta tus tutorias reales por buscador, idioma, facultad y fecha/hora, en calendario semanal o lista.</p>
+                </div>
+                <button id="refreshHorarioBtn" type="button" class="btn btn-outline-dark btn-sm" data-i18n="action_refresh">Refrescar</button>
+            </div>
+            <div class="card-body pt-0 px-4 pb-4">
+                <form id="filtrosHorarioTutorForm" class="row g-3">
+                    <div class="col-lg-4">
+                        <label for="horarioBusquedaTutor" class="form-label" data-i18n="label_search">Buscador</label>
+                        <input id="horarioBusquedaTutor" type="search" class="form-control" data-i18n-placeholder="placeholder_subject_or_student" placeholder="Buscar estudiante o materia">
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="materiaTutorIdioma" class="form-label" data-i18n="label_language">Idioma</label>
+                        <select id="materiaTutorIdioma" class="form-select"></select>
+                    </div>
+                    <div class="col-lg-3">
+                        <label for="materiaTutorFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
+                        <select id="materiaTutorFacultad" class="form-select"></select>
+                    </div>
+                    <div class="col-lg-1">
+                        <label for="materiaTutorFecha" class="form-label" data-i18n="label_date">Fecha</label>
+                        <input id="materiaTutorFecha" type="date" class="form-control">
+                    </div>
+                    <div class="col-lg-2">
+                        <label for="materiaTutorHora" class="form-label" data-i18n="label_time">Hora</label>
+                        <input id="materiaTutorHora" type="time" class="form-control">
+                    </div>
+                    <div class="col-sm-6 col-lg-3 d-grid">
+                        <button type="submit" class="btn btn-outline-success" data-i18n="action_apply_filters">Aplicar filtros</button>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 d-grid">
+                        <button id="clearMateriasTutorBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="btn-group" role="group">
+                    <button id="tutorCalendarViewBtn" type="button" class="btn btn-success" data-i18n="schedule_weekly">Calendario semanal</button>
+                    <button id="tutorListViewBtn" type="button" class="btn btn-outline-success" data-i18n="schedule_list">Lista simple</button>
+                </div>
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <button id="prevWeekBtn" type="button" class="btn btn-outline-secondary btn-sm" data-i18n="action_prev_week">Semana anterior</button>
+                    <button id="thisWeekBtn" type="button" class="btn btn-outline-success btn-sm" data-i18n="action_this_week">Esta semana</button>
+                    <button id="nextWeekBtn" type="button" class="btn btn-outline-secondary btn-sm" data-i18n="action_next_week">Semana siguiente</button>
                     <input id="weekPicker" type="date" class="form-control form-control-sm">
                 </div>
             </div>
-        </div>
-        <div class="card-body pt-0 px-4 pb-4">
-            <p id="weekRangeLabel" class="fw-semibold mb-3"></p>
-            <div id="weeklyCalendar" class="weekly-calendar"></div>
-        </div>
-    </section>
-
-    <section class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white border-0 p-4">
-            <h2 class="h4 mb-0" data-i18n="tutor_requests_title">Solicitudes recibidas</h2>
-        </div>
-        <div class="card-body pt-0 px-4 pb-4">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                    <tr>
-                        <th data-i18n="table_student">Estudiante</th>
-                        <th data-i18n="table_subject">Materia</th>
-                        <th data-i18n="table_datetime">Fecha y hora</th>
-                        <th data-i18n="table_language">Idioma</th>
-                        <th data-i18n="table_faculty">Facultad</th>
-                        <th data-i18n="table_status">Estado</th>
-                        <th data-i18n="table_actions">Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody id="reservasTableBody"></tbody>
-                </table>
+            <div class="card-body pt-0 px-4 pb-4">
+                <div id="tutorCalendarPanel">
+                    <p id="weekRangeLabel" class="fw-semibold mb-3"></p>
+                    <div id="weeklyCalendar" class="weekly-calendar"></div>
+                </div>
+                <div id="tutorListPanel" class="hidden">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th data-i18n="table_subject">Materia</th>
+                                <th data-i18n="table_student">Estudiante</th>
+                                <th data-i18n="table_datetime">Fecha y hora</th>
+                                <th data-i18n="table_language">Idioma</th>
+                                <th data-i18n="table_faculty">Facultad</th>
+                                <th data-i18n="table_status">Estado</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tutorHorarioTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     </section>
 
     <section class="card border-0 shadow-sm">
@@ -109,6 +268,15 @@
 }</pre>
         </div>
     </section>
+    <footer class="page-footer d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+        <p class="text-secondary" data-i18n="landing_footer">Construido para coordinar tutorias con claridad, trazabilidad y buena experiencia de uso.</p>
+        <div class="page-footer-links">
+            <a href="/ayuda.html" class="link-secondary" data-i18n="navbar_help">Ayuda</a>
+            <a href="/perfil.html" class="link-secondary" data-i18n="navbar_profile">Perfil</a>
+            <a href="/terminos.html" class="link-secondary" data-i18n="legal_terms_heading">Terminos y condiciones</a>
+            <a href="/privacidad.html" class="link-secondary" data-i18n="legal_privacy_heading">Politica de privacidad</a>
+        </div>
+    </footer>
 </main>
 <script src="/js/common.js"></script>
 <script src="/js/panel-tutor.js"></script>

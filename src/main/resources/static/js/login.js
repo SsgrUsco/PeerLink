@@ -8,6 +8,7 @@ document.querySelectorAll(".lang-btn").forEach((button) => {
 });
 
 document.getElementById("goRegistroLink").href = PeerlinkApp.withLang("/registro.html");
+document.getElementById("goRecoveryLink").href = PeerlinkApp.withLang("/recuperar-password.html");
 
 const auth = PeerlinkApp.getAuth();
 if (auth.token && auth.role) {

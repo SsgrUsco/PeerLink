@@ -8,6 +8,6 @@ import lombok.Data;
 public class ReservaEstadoUpdateDTO {
 
     @NotBlank(message = "{validation.reserva.estado.notBlank}")
-    @Pattern(regexp = "CONFIRMADA|CANCELADA", message = "{validation.reserva.estado.pattern}")
+    @Pattern(regexp = "PENDIENTE|CONFIRMADA|CANCELADA", message = "{validation.reserva.estado.pattern}")
     private String estado;
 }
