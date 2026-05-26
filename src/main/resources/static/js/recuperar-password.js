@@ -1,10 +1,7 @@
-const recoveryConsole = PeerlinkApp.bindConsole("consoleOutput");
+const recoveryFeedback = PeerlinkApp.bindFeedback("recoveryFeedback");
 
 PeerlinkApp.applyI18n();
-document.querySelectorAll(".lang-btn").forEach((button) => {
-    button.classList.toggle("active", button.dataset.lang === PeerlinkApp.getLang());
-    button.addEventListener("click", () => PeerlinkApp.setLang(button.dataset.lang));
-});
+PeerlinkApp.bindLanguageSelect("recoveryLanguageSelect");
 
 const backToLoginLink = document.getElementById("backToLoginLink");
 if (backToLoginLink) {
@@ -13,9 +10,5 @@ if (backToLoginLink) {
 
 document.getElementById("recoveryForm").addEventListener("submit", (event) => {
     event.preventDefault();
-    recoveryConsole.print({
-        requested: true,
-        correo: document.getElementById("recoveryCorreo").value.trim(),
-        nextStep: "contact_support_or_admin"
-    });
+    recoveryFeedback.success("feedback_recovery_submitted");
 });

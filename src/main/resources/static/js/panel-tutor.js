@@ -1,5 +1,6 @@
 const tutorAuth = PeerlinkApp.ensureRole("TUTOR");
 const tutorConsole = PeerlinkApp.bindConsole("consoleOutput");
+const tutorFeedback = PeerlinkApp.bindFeedback("tutorFeedback");
 
 let tutorReservations = [];
 let tutorOffers = [];
@@ -58,6 +59,7 @@ async function bootTutor() {
         renderTutorSchedule();
     });
     document.getElementById("refreshHorarioBtn").addEventListener("click", loadTutorias);
+    document.getElementById("downloadTutorReportBtn").addEventListener("click", downloadTutorReport);
 
     document.getElementById("tutorCalendarViewBtn").addEventListener("click", () => setTutorScheduleView("calendar"));
     document.getElementById("tutorListViewBtn").addEventListener("click", () => setTutorScheduleView("list"));
@@ -80,6 +82,35 @@ async function bootTutor() {
     await Promise.all([loadTutorias(), loadTutorSources()]);
 }
 
+async function downloadTutorReport() {
+    try {
+        await PeerlinkApp.downloadFile(
+            `/api/reportes/mis-tutorias.pdf${buildTutorReportQuery()}`,
+            "peerlink-mis-tutorias.pdf"
+        );
+        tutorFeedback.success("feedback_report_downloaded");
+    } catch (error) {
+        tutorFeedback.error(error);
+    }
+}
+
+function buildTutorReportQuery() {
+    const params = new URLSearchParams();
+    const idioma = document.getElementById("materiaTutorIdioma").value;
+    const facultad = document.getElementById("materiaTutorFacultad").value;
+    const fecha = document.getElementById("materiaTutorFecha").value;
+    if (idioma) params.set("idioma", idioma);
+    if (facultad) params.set("facultad", facultad);
+    if (fecha) {
+        params.set("desde", `${fecha}T00:00:00`);
+        const hasta = new Date(`${fecha}T00:00:00`);
+        hasta.setDate(hasta.getDate() + 1);
+        params.set("hasta", toDateTimeLocalValue(hasta));
+    }
+    const query = params.toString();
+    return query ? `?${query}` : "";
+}
+
 function showTutorTab(tab) {
     const solicitudesTab = document.getElementById("tutorSolicitudesTab");
     const crearTab = document.getElementById("tutorCrearTab");
@@ -91,9 +122,23 @@ function showTutorTab(tab) {
     solicitudesTab.classList.toggle("hidden", tab !== "solicitudes");
     crearTab.classList.toggle("hidden", tab !== "crear");
     horarioTab.classList.toggle("hidden", tab !== "horario");
-    solicitudesBtn.className = tab === "solicitudes" ? "btn btn-success" : "btn btn-outline-success";
-    crearBtn.className = tab === "crear" ? "btn btn-success" : "btn btn-outline-success";
-    horarioBtn.className = tab === "horario" ? "btn btn-success" : "btn btn-outline-success";
+    setToggleButtonState(solicitudesBtn, tab === "solicitudes");
+    setToggleButtonState(crearBtn, tab === "crear");
+    setToggleButtonState(horarioBtn, tab === "horario");
+}
+
+function setToggleButtonState(button, active) {
+    if (!button) {
+        return;
+    }
+    if (!button.dataset.baseClass) {
+        button.dataset.baseClass = button.className;
+    }
+    button.classList.toggle("btn-success", active);
+    button.classList.toggle("btn-outline-success", !active);
+    button.classList.toggle("btn-white", !active && button.dataset.baseClass.includes("btn-white"));
+    button.classList.toggle("text-secondary", !active && button.dataset.baseClass.includes("text-secondary"));
+    button.classList.toggle("text-hover-success", !active && button.dataset.baseClass.includes("text-hover-success"));
 }
 
 function fillLanguageSelect(elementId, includeAllOption) {
@@ -135,7 +180,9 @@ async function loadTutorias() {
         tutorReservations = await PeerlinkApp.api("/api/reservas/mis-tutorias");
         renderTutoriasTable();
         renderTutorSchedule();
+        tutorFeedback.info("feedback_loaded_tutor_data");
     } catch (error) {
+        tutorFeedback.error(error);
         tutorConsole.printError(error);
     }
 }
@@ -150,7 +197,9 @@ async function loadTutorSources() {
         tutorOffers = offers.filter((item) => item.fechaHora);
         renderCrearMaterias();
         renderTutorOffersTable();
+        tutorFeedback.info("feedback_loaded_tutor_data");
     } catch (error) {
+        tutorFeedback.error(error);
         tutorConsole.printError(error);
     }
 }
@@ -186,6 +235,7 @@ function getFilteredTutorRequests() {
 
 function renderTutoriasTable() {
     const reservas = getFilteredTutorRequests();
+    document.getElementById("tutorSolicitudesCount").textContent = PeerlinkApp.t("results_count", { count: reservas.length });
     const tbody = document.getElementById("reservasTableBody");
     if (!reservas.length) {
         tbody.innerHTML = `<tr><td colspan="7">${PeerlinkApp.t("empty_tutor_requests")}</td></tr>`;
@@ -234,9 +284,11 @@ async function updateEstado(id, estado) {
             body: JSON.stringify({ estado })
         });
         hiddenRespondedRequests.delete(Number(id));
+        tutorFeedback.success("feedback_tutor_request_updated");
         tutorConsole.print(response);
         await loadTutorias();
     } catch (error) {
+        tutorFeedback.error(error);
         tutorConsole.printError(error);
     }
 }
@@ -254,6 +306,7 @@ function getFilteredCreateMaterias() {
 function renderCrearMaterias() {
     const container = document.getElementById("crearMateriasContainer");
     const materias = getFilteredCreateMaterias();
+    document.getElementById("crearMatchesCount").textContent = PeerlinkApp.t("results_count", { count: materias.length });
 
     if (!materias.length) {
         container.innerHTML = `<div class="col-12"><div class="alert alert-light border mb-0">${PeerlinkApp.t("empty_filtered_subjects")}</div></div>`;
@@ -321,11 +374,13 @@ async function createTutorOffer(event) {
                 fechaHora: document.getElementById("tutorMateriaFechaHora").value
             })
         });
+        tutorFeedback.success("feedback_tutor_offer_saved");
         tutorConsole.print(response);
         setInitialOfferDateTime();
         await loadTutorSources();
         showTutorTab("crear");
     } catch (error) {
+        tutorFeedback.error(error);
         tutorConsole.printError(error);
     }
 }
@@ -357,8 +412,10 @@ function renderTutorOffersTable() {
 async function removeTutorOffer(materiaId) {
     try {
         await PeerlinkApp.api(`/api/materias/mis-materias/${materiaId}`, { method: "DELETE" });
+        tutorFeedback.success("feedback_tutor_offer_deleted");
         await loadTutorSources();
     } catch (error) {
+        tutorFeedback.error(error);
         tutorConsole.printError(error);
     }
 }
@@ -390,6 +447,7 @@ function getFilteredTutorScheduleItems() {
 
 function renderTutorSchedule() {
     const items = getFilteredTutorScheduleItems();
+    document.getElementById("tutorHorarioCount").textContent = PeerlinkApp.t("reservations_count", { count: items.length });
     renderTutorScheduleList(items);
     renderTutorCalendar(items);
 }
@@ -417,8 +475,8 @@ function setTutorScheduleView(view) {
     tutorScheduleView = view;
     document.getElementById("tutorCalendarPanel").classList.toggle("hidden", view !== "calendar");
     document.getElementById("tutorListPanel").classList.toggle("hidden", view !== "list");
-    document.getElementById("tutorCalendarViewBtn").className = view === "calendar" ? "btn btn-success" : "btn btn-outline-success";
-    document.getElementById("tutorListViewBtn").className = view === "list" ? "btn btn-success" : "btn btn-outline-success";
+    setToggleButtonState(document.getElementById("tutorCalendarViewBtn"), view === "calendar");
+    setToggleButtonState(document.getElementById("tutorListViewBtn"), view === "list");
 }
 
 function changeTutorWeek(days) {

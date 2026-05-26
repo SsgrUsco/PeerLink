@@ -1,5 +1,6 @@
 const adminAuth = PeerlinkApp.ensureRole("ADMIN");
 const adminConsole = PeerlinkApp.bindConsole("consoleOutput");
+const adminFeedback = PeerlinkApp.bindFeedback("adminFeedback");
 let materiasCache = [];
 let usuariosCache = [];
 let relacionesCache = [];
@@ -23,6 +24,9 @@ async function bootAdmin() {
 
     document.getElementById("adminMateriaCrearTabBtn").addEventListener("click", () => showMateriaSubtab("crear"));
     document.getElementById("adminMateriaBuscarTabBtn").addEventListener("click", () => showMateriaSubtab("buscar"));
+    document.getElementById("downloadAdminReportBtn").addEventListener("click", downloadAdminReport);
+    document.getElementById("downloadAdminTutorsReportBtn").addEventListener("click", downloadAdminTutorsReport);
+    document.getElementById("downloadAdminUsersReportBtn").addEventListener("click", downloadAdminUsersReport);
 
     document.getElementById("materiaForm").addEventListener("submit", saveMateria);
     document.getElementById("cancelMateriaEdit").addEventListener("click", resetMateriaForm);
@@ -52,6 +56,33 @@ async function bootAdmin() {
     await Promise.all([loadMaterias(), loadUsuarios(), loadTutorMaterias()]);
 }
 
+async function downloadAdminReport() {
+    try {
+        await PeerlinkApp.downloadFile("/api/reportes/admin/resumen.pdf", "peerlink-admin-resumen.pdf");
+        adminFeedback.success("feedback_report_downloaded");
+    } catch (error) {
+        adminFeedback.error(error);
+    }
+}
+
+async function downloadAdminTutorsReport() {
+    try {
+        await PeerlinkApp.downloadFile("/api/reportes/admin/tutores.pdf", "peerlink-admin-tutores.pdf");
+        adminFeedback.success("feedback_report_downloaded");
+    } catch (error) {
+        adminFeedback.error(error);
+    }
+}
+
+async function downloadAdminUsersReport() {
+    try {
+        await PeerlinkApp.downloadFile("/api/reportes/admin/usuarios.pdf", "peerlink-admin-usuarios.pdf");
+        adminFeedback.success("feedback_report_downloaded");
+    } catch (error) {
+        adminFeedback.error(error);
+    }
+}
+
 function showAdminTab(tab) {
     const materiasTab = document.getElementById("adminMateriasTab");
     const tutoresTab = document.getElementById("adminTutoresTab");
@@ -61,9 +92,9 @@ function showAdminTab(tab) {
     tutoresTab.classList.toggle("hidden", tab !== "tutores");
     usuariosTab.classList.toggle("hidden", tab !== "usuarios");
 
-    document.getElementById("adminMateriasTabBtn").className = tab === "materias" ? "btn btn-success" : "btn btn-outline-success";
-    document.getElementById("adminTutoresTabBtn").className = tab === "tutores" ? "btn btn-success" : "btn btn-outline-success";
-    document.getElementById("adminUsuariosTabBtn").className = tab === "usuarios" ? "btn btn-success" : "btn btn-outline-success";
+    setToggleButtonState(document.getElementById("adminMateriasTabBtn"), tab === "materias");
+    setToggleButtonState(document.getElementById("adminTutoresTabBtn"), tab === "tutores");
+    setToggleButtonState(document.getElementById("adminUsuariosTabBtn"), tab === "usuarios");
 }
 
 function showMateriaSubtab(tab) {
@@ -71,8 +102,22 @@ function showMateriaSubtab(tab) {
     const buscar = document.getElementById("adminMateriaBuscarSection");
     crear.classList.toggle("hidden", tab !== "crear");
     buscar.classList.toggle("hidden", tab !== "buscar");
-    document.getElementById("adminMateriaCrearTabBtn").className = tab === "crear" ? "btn btn-success" : "btn btn-outline-success";
-    document.getElementById("adminMateriaBuscarTabBtn").className = tab === "buscar" ? "btn btn-success" : "btn btn-outline-success";
+    setToggleButtonState(document.getElementById("adminMateriaCrearTabBtn"), tab === "crear");
+    setToggleButtonState(document.getElementById("adminMateriaBuscarTabBtn"), tab === "buscar");
+}
+
+function setToggleButtonState(button, active) {
+    if (!button) {
+        return;
+    }
+    if (!button.dataset.baseClass) {
+        button.dataset.baseClass = button.className;
+    }
+    button.classList.toggle("btn-success", active);
+    button.classList.toggle("btn-outline-success", !active);
+    button.classList.toggle("btn-white", !active && button.dataset.baseClass.includes("btn-white"));
+    button.classList.toggle("text-secondary", !active && button.dataset.baseClass.includes("text-secondary"));
+    button.classList.toggle("text-hover-success", !active && button.dataset.baseClass.includes("text-hover-success"));
 }
 
 function fillLanguageSelect(elementId, includeAllOption) {
@@ -106,7 +151,9 @@ async function loadMaterias() {
         materiasCache = await PeerlinkApp.api("/api/materias");
         fillMateriaSelect();
         renderMateriasMatches();
+        adminFeedback.info("feedback_loaded_admin_data");
     } catch (error) {
+        adminFeedback.error(error);
         adminConsole.printError(error);
     }
 }
@@ -127,6 +174,7 @@ function getFilteredMaterias() {
 function renderMateriasMatches() {
     const container = document.getElementById("materiasMatchesContainer");
     const filtered = getFilteredMaterias();
+    document.getElementById("adminMateriasCount").textContent = PeerlinkApp.t("results_count", { count: filtered.length });
 
     if (!filtered.length) {
         container.innerHTML = `<div class="col-12"><div class="alert alert-light border mb-0">${PeerlinkApp.t("empty_subjects")}</div></div>`;
@@ -194,9 +242,11 @@ function renderMateriasMatches() {
             }
             try {
                 await PeerlinkApp.api(`/api/materias/${button.dataset.deleteMateria}`, { method: "DELETE" });
+                adminFeedback.success("feedback_subject_deleted");
                 selectedMateriaCardId = null;
                 await Promise.all([loadMaterias(), loadTutorMaterias()]);
             } catch (error) {
+                adminFeedback.error(error);
                 adminConsole.printError(error);
             }
         });
@@ -225,12 +275,14 @@ async function saveMateria(event) {
             method,
             body: JSON.stringify(payload)
         });
+        adminFeedback.success("feedback_subject_saved");
         adminConsole.print(response);
         resetMateriaForm();
         await Promise.all([loadMaterias(), loadTutorMaterias()]);
         showAdminTab("materias");
         showMateriaSubtab("buscar");
     } catch (error) {
+        adminFeedback.error(error);
         adminConsole.printError(error);
     }
 }
@@ -280,12 +332,14 @@ async function asignarTutorMateria(event) {
             method: "POST",
             body: JSON.stringify(payload)
         });
+        adminFeedback.success("feedback_assignment_saved");
         adminConsole.print(response);
         formElement.reset();
         fillTutorSelect();
         fillMateriaSelect();
         await loadTutorMaterias();
     } catch (error) {
+        adminFeedback.error(error);
         adminConsole.printError(error);
     }
 }
@@ -306,6 +360,7 @@ function renderTutorMateriasTable() {
         const haystack = `${item.tutorNombre} ${item.tutorCorreo} ${item.materiaNombre} ${item.idioma} ${item.facultad}`.toLowerCase();
         return !filterValue || haystack.includes(filterValue);
     });
+    document.getElementById("adminAsignacionesCount").textContent = PeerlinkApp.t("results_count", { count: filtered.length });
 
     if (!filtered.length) {
         tbody.innerHTML = `<tr><td colspan="5">${PeerlinkApp.t("empty_assignments")}</td></tr>`;
@@ -328,7 +383,9 @@ async function loadUsuarios() {
         usuariosCache = await PeerlinkApp.api("/api/usuarios");
         fillTutorSelect();
         renderUsuariosTable();
+        adminFeedback.info("feedback_loaded_admin_data");
     } catch (error) {
+        adminFeedback.error(error);
         adminConsole.printError(error);
     }
 }
@@ -347,6 +404,7 @@ function getFilteredUsuarios() {
 function renderUsuariosTable() {
     const tbody = document.getElementById("usuariosTableBody");
     const filtered = getFilteredUsuarios();
+    document.getElementById("adminUsuariosCount").textContent = PeerlinkApp.t("results_count", { count: filtered.length });
     if (!filtered.length) {
         tbody.innerHTML = `<tr><td colspan="4">${PeerlinkApp.t("empty_users")}</td></tr>`;
         return;
@@ -370,8 +428,10 @@ function renderUsuariosTable() {
                 }
                 try {
                     await PeerlinkApp.api(`/api/usuarios/${button.dataset.deleteUserId}`, { method: "DELETE" });
+                    adminFeedback.success("feedback_user_deleted");
                     await Promise.all([loadUsuarios(), loadTutorMaterias()]);
                 } catch (error) {
+                    adminFeedback.error(error);
                     adminConsole.printError(error);
                 }
             });
@@ -398,10 +458,12 @@ async function saveUsuario(event) {
             method: "POST",
             body: JSON.stringify(payload)
         });
+        adminFeedback.success("feedback_user_saved");
         adminConsole.print(response);
         formElement.reset();
         await loadUsuarios();
     } catch (error) {
+        adminFeedback.error(error);
         adminConsole.printError(error);
     }
 }

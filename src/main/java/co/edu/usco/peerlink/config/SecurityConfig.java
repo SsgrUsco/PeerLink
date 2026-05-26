@@ -79,7 +79,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/*.html", "/*.js", "/*.css", "/favicon.ico").permitAll()
-                        .requestMatchers("/js/**", "/css/**", "/images/**").permitAll()
+                        .requestMatchers("/js/**", "/css/**", "/img/**", "/images/**").permitAll()
                         .requestMatchers("/api/auth/login", "/api/usuarios/registro").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/usuarios/me").authenticated()
@@ -90,6 +90,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/materias/mis-materias/**").hasRole("TUTOR")
                         .requestMatchers("/api/materias/**").hasRole("ADMIN")
                         .requestMatchers("/api/reservas/**").hasAnyRole("ESTUDIANTE", "TUTOR")
+                        .requestMatchers("/api/reportes/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/reportes/mis-reservas.pdf").hasRole("ESTUDIANTE")
+                        .requestMatchers("/api/reportes/mis-tutorias.pdf").hasRole("TUTOR")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -30,6 +30,7 @@
 	<properties>
 		<java.version>26</java.version>
 		<jjwt.version>0.12.6</jjwt.version>
+		<jasperreports.version>6.21.5</jasperreports.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -52,6 +53,11 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>3.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>${jasperreports.version}</version>
 		</dependency>
 
 		<dependency>

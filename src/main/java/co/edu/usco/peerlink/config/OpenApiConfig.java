@@ -13,10 +13,19 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "PeerLink API",
-                version = "1.0",
-                description = "API REST para la gestión de tutorías con autenticación JWT, roles ADMIN/TUTOR/ESTUDIANTE, i18n y validaciones.",
+                version = "1.1",
+                description = """
+                        API REST de PeerLink para la gestion de tutorias academicas entre estudiantes, tutores y administradores.
+
+                        La autenticacion se realiza mediante JWT obtenido en /api/auth/login. La seguridad y los roles se consultan desde las tablas satelite usuarios_correo, usuarios_password y usuarios_rol. El catalogo y las reservas respetan el modelo 6NF, incluyendo idioma, facultad, fecha/hora, estados, asignaciones tutor-materia y reportes PDF.
+
+                        Roles principales:
+                        - ADMIN: gestiona usuarios, materias, asignaciones, reportes administrativos y Swagger.
+                        - TUTOR: crea tutorias, consulta solicitudes, responde reservas y descarga su reporte.
+                        - ESTUDIANTE: solicita o acepta tutorias, consulta su horario/reservas y descarga su reporte.
+                        """,
                 contact = @Contact(name = "PeerLink", email = "admin@peerlink.edu.co"),
-                license = @License(name = "Uso académico")
+                license = @License(name = "Uso academico")
         )
 )
 @SecurityScheme(
@@ -25,7 +34,7 @@ import org.springframework.context.annotation.Configuration;
         scheme = "bearer",
         bearerFormat = "JWT",
         in = SecuritySchemeIn.HEADER,
-        description = "Token JWT obtenido desde /api/auth/login. Pégalo en Swagger UI usando el botón Authorize."
+        description = "Token JWT obtenido desde /api/auth/login. Pegalo en Swagger UI usando el boton Authorize con el formato: Bearer <token>."
 )
 public class OpenApiConfig {
 }

@@ -3,27 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PeerLink | Terminos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    <title>PeerLink | Términos</title>
+    <link rel="icon" href="/img/peerlink.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+          crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+              crossorigin="anonymous">
+    </noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="peerlink-body" data-i18n-title="legal_terms_title">
-<div id="navbarContainer"></div>
-<main class="container-xxl py-4">
-    <section class="hero-card rounded-4 shadow-sm p-4 p-lg-5 mb-4">
-        <h1 class="display-6 fw-bold mb-3" data-i18n="legal_terms_heading">Terminos y condiciones</h1>
-        <p class="lead mb-0" data-i18n="legal_terms_intro">PeerLink es una plataforma academica de coordinacion de tutorias. Su uso debe mantenerse dentro de fines educativos, respetando a estudiantes, tutores y administradores.</p>
-    </section>
-    <section class="card border-0 shadow-sm">
-        <div class="card-body p-4 p-lg-5">
-            <p data-i18n="legal_terms_body_1">Al usar la plataforma aceptas proporcionar informacion veraz, cuidar tu acceso y no utilizar la aplicacion para fines ajenos al acompanamiento academico.</p>
-            <p class="mb-0" data-i18n="legal_terms_body_2">Las reservas, cambios de estado y publicaciones quedan sujetas a las reglas operativas de la institucion y a la disponibilidad de tutores y materias.</p>
+<body class="peerlink-body bg-light" data-i18n-title="legal_terms_title">
+
+<div id="navbarContainer" class="d-none"></div>
+
+<main class="container-xxl py-4 py-lg-5">
+
+    <nav class="landing-nav nav-blur d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 sticky-top mb-5 bg-white bg-opacity-75 rounded-pill px-4 py-2 shadow-sm border" style="backdrop-filter: blur(10px); z-index: 1020;" aria-label="Navegación de términos">
+        <div class="d-flex align-items-center justify-content-between gap-4 flex-wrap w-100 w-md-auto">
+            <a class="navbar-brand text-decoration-none" href="/">
+                <img src="/img/peerlink.svg" alt="PeerLink" class="brand-logo" width="140" height="35" fetchpriority="high">
+            </a>
         </div>
-    </section>
+        <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center w-100 w-md-auto">
+            <div id="termsLanguageSelect" class="peerlink-language-select me-2" data-language-dropdown>
+                <button class="btn btn-sm btn-white border rounded-circle p-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;" type="button" aria-label="Idioma" aria-expanded="false">
+                    <i class="bi bi-globe2 text-secondary"></i>
+                </button>
+            </div>
+            <a id="termsBackBtn" class="btn btn-outline-dark rounded-pill px-4 fw-medium" href="/"><i class="bi bi-arrow-left me-2"></i><span data-i18n="action_go_home">Volver al inicio</span></a>
+        </div>
+    </nav>
+
+    <header class="bg-white rounded-5 shadow-sm p-4 p-lg-5 mb-5 border text-center" data-animation="fade-up">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-primary-subtle text-primary border border-primary-subtle mb-4">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <span class="small fw-semibold" data-i18n="legal_terms_badge">Acuerdos y reglas</span>
+        </div>
+        <h1 class="display-5 fw-bold mb-3 text-dark" data-i18n="legal_terms_heading">Términos y Condiciones</h1>
+        <p class="lead mb-0 text-secondary mx-auto" style="max-width: 750px;" data-i18n="legal_terms_intro">PeerLink es el espacio centralizado para coordinar tus tutorías. Su uso es estrictamente educativo y está diseñado para mantener el orden, el respeto y la eficiencia, dejando atrás el caos de los grupos externos.</p>
+    </header>
+
+    <div class="row justify-content-center" data-animation="fade-up">
+        <div class="col-lg-10">
+            <section class="card border rounded-5 shadow-sm bg-white overflow-hidden p-4 p-lg-5">
+
+                <div class="d-flex align-items-start gap-4 mb-4 pb-4 border-bottom">
+                    <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 55px; height: 55px;">
+                        <i class="bi bi-check-circle-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="h4 fw-bold text-dark mb-3" data-i18n="legal_terms_section_usage">Compromiso de uso</h2>
+                        <p class="text-secondary lh-lg mb-0" data-i18n="legal_terms_body_1">Al usar la plataforma aceptas proporcionar información veraz, cuidar tu acceso institucional y no utilizar la aplicación para fines ajenos al acompañamiento académico. La comunidad depende del respeto mutuo entre estudiantes, tutores y personal administrativo.</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-4 pt-2">
+                    <div class="bg-info-subtle text-info rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 55px; height: 55px;">
+                        <i class="bi bi-calendar-check-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <h2 class="h4 fw-bold text-dark mb-3" data-i18n="legal_terms_section_reservations">Reservas y disponibilidad</h2>
+                        <p class="text-secondary lh-lg mb-0" data-i18n="legal_terms_body_2">El sistema de agendamiento en tiempo real es una herramienta facilitadora. Las reservas, los cambios de estado y las publicaciones de horarios quedan estrictamente sujetas a las reglas operativas de tu institución educativa y a la disponibilidad real de tutores y materias.</p>
+                    </div>
+                </div>
+
+                <div class="mt-5 p-4 bg-light rounded-4 border text-center text-secondary small">
+                    <i class="bi bi-exclamation-triangle me-2 text-warning"></i><span data-i18n="legal_terms_notice">Cualquier uso indebido o automatizado de la plataforma puede resultar en la suspension del acceso al panel de reservas.</span>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer class="pt-5 mt-4 text-center text-secondary small">
+        <div class="d-flex justify-content-center gap-3 mb-3">
+            <a href="/ayuda.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="navbar_help">Ayuda</a>
+            <a href="/privacidad.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="legal_privacy_heading">Privacidad</a>
+        </div>
+        <p data-i18n="legal_terms_footer">© 2026 PeerLink. Fomentando el orden y la colaboracion academica.</p>
+    </footer>
+
 </main>
-<script src="/js/common.js"></script>
-<script src="/js/page-shell.js"></script>
+
+<script src="/js/common.js" defer></script>
+<script src="/js/page-shell.js" defer></script>
+<script>
+    // Script para que el botón "Volver" redirija a su panel si hay una sesión activa
+    document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+            if(typeof PeerlinkApp !== 'undefined') {
+                const auth = PeerlinkApp.getAuth();
+                const backBtn = document.getElementById("termsBackBtn");
+                if (backBtn && auth.token && auth.role) {
+                    backBtn.href = PeerlinkApp.withLang(PeerlinkApp.panelForRole(auth.role));
+                    backBtn.innerHTML = `<i class="bi bi-columns-gap me-2"></i><span>${PeerlinkApp.t("landing_panel_cta")}</span>`;
+                }
+            }
+        }, 100);
+    });
+</script>
 </body>
 </html>

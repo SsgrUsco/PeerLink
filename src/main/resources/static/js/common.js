@@ -28,12 +28,118 @@ const PeerlinkApp = (() => {
             landing_feature_calendar: "Horarios semanales por horas para ver claramente reservas, tutorias y disponibilidad.",
             landing_feature_i18n: "Interfaz preparada para espanol, ingles y portugues con claves consistentes.",
             landing_footer: "Construido para coordinar tutorias con claridad, trazabilidad y buena experiencia de uso.",
+            landing_nav_features: "Beneficios",
+            landing_nav_how: "Como funciona",
+            landing_nav_testimonials: "Escenarios",
+            landing_nav_pricing: "Plan",
+            landing_nav_faq: "FAQ",
+            landing_cta_primary: "Comenzar gratis",
+            landing_cta_secondary: "Saber mas",
+            landing_support_text: "Pensado para estudiantes que necesitan claridad inmediata y tutores que quieren organizar mejor su tiempo.",
+            landing_support_badge: "Disponible en espanol, ingles y portugues",
+            landing_mock_calendar_label: "Calendario",
+            landing_mock_calendar: "Consulta tutorias publicadas, solicitudes y reservas desde un calendario semanal por horas.",
+            landing_mock_agenda_title: "Tu agenda, bajo control",
+            landing_mock_example: "Calculo I - 10:00 AM",
+            landing_mock_filters_label: "Filtros",
+            landing_mock_filters: "Filtra por idioma, facultad y fecha para llegar mas rapido a la coincidencia correcta.",
+            landing_mock_roles_label: "Roles",
+            landing_mock_roles: "Paneles separados para estudiante, tutor y administrador con tareas claras en cada rol.",
+            landing_mock_security_label: "Seguridad",
+            landing_mock_security: "Acceso protegido por rol y control administrativo para mantener orden y trazabilidad.",
+            landing_trust_label_1: "Claridad",
+            landing_trust_value_1: "Flujo visible",
+            landing_trust_text_1: "Cada reserva, solicitud y cambio de estado queda reflejado en el panel correspondiente.",
+            landing_trust_label_2: "Coordinacion",
+            landing_trust_value_2: "Menos friccion",
+            landing_trust_text_2: "Los filtros reducen pasos innecesarios al elegir materia, tutor, idioma y horario.",
+            landing_trust_label_3: "Gestion",
+            landing_trust_value_3: "Control por rol",
+            landing_trust_text_3: "Estudiante, tutor y admin trabajan con vistas distintas pero conectadas entre si.",
+            landing_trust_label_4: "Soporte",
+            landing_trust_value_4: "i18n manual",
+            landing_trust_text_4: "La interfaz mantiene claves tecnicas estables y textos adaptados al idioma actual.",
+            landing_features_title: "Beneficios pensados para convertir interes en accion",
+            landing_features_desc: "Cada bloque resuelve una objecion frecuente: tiempo, claridad, confianza y seguimiento.",
+            landing_feature_card_1_title: "Filtros avanzados",
+            landing_feature_card_1_desc: "Encuentra tutorias por buscador, idioma, facultad, fecha y hora sin revisar listas interminables.",
+            landing_feature_card_2_title: "Horario semanal claro",
+            landing_feature_card_2_desc: "Visualiza reservas y tutorias por hora para reducir choques de agenda y olvidos.",
+            landing_feature_card_3_title: "Roles con control real",
+            landing_feature_card_3_desc: "Administra usuarios, materias y asignaciones mientras cada rol solo ve lo que necesita.",
+            landing_how_title: "Como funciona",
+            landing_how_desc: "Reducimos la friccion con un recorrido simple desde el registro hasta la tutoria confirmada.",
+            landing_how_step_1_title: "Explora o publica",
+            landing_how_step_1_desc: "El estudiante filtra materias o tutorias publicadas y el tutor publica nuevas disponibilidades.",
+            landing_how_step_2_title: "Selecciona la mejor coincidencia",
+            landing_how_step_2_desc: "Idioma, facultad, tutor y fecha quedan claros antes de confirmar cualquier accion.",
+            landing_how_step_3_title: "Sigue todo desde tu horario",
+            landing_how_step_3_desc: "Cada reserva o solicitud aparece en calendario y lista para dar seguimiento sin perder contexto.",
+            landing_testimonials_title: "Escenarios de uso reales del producto",
+            landing_testimonials_desc: "En lugar de promesas vacias, mostramos como encaja PeerLink en situaciones concretas del dia a dia academico.",
+            landing_testimonial_1_title: "Para estudiantes que necesitan decidir rapido",
+            landing_testimonial_1_quote: "El flujo de solicitar o aceptar tutorias ayuda a comparar opciones y agendar sin perder tiempo entre mensajes dispersos.",
+            landing_testimonial_2_title: "Para tutores que quieren ordenar su semana",
+            landing_testimonial_2_quote: "El calendario, las solicitudes y la publicacion de tutorias se concentran en un solo panel facil de seguir.",
+            landing_testimonial_3_title: "Para administracion que necesita trazabilidad",
+            landing_testimonial_3_quote: "Materias, usuarios, asignaciones y acceso tecnico quedan separados para mantener orden y control.",
+            landing_pricing_title: "Claridad total desde el inicio",
+            landing_pricing_desc: "Aunque la plataforma sea gratuita, mostrarlo de forma explicita reduce dudas y acelera la decision.",
+            landing_pricing_badge: "Plan academico",
+            landing_pricing_plan: "PeerLink Campus",
+            landing_pricing_plan_desc: "Acceso para estudiantes, tutores y administradores dentro del entorno academico.",
+            landing_pricing_price: "$0 / Gratis para siempre",
+            landing_pricing_points: "Filtros, reservas, calendario semanal, paneles por rol e internacionalizacion incluida.",
+            landing_faq_title: "Preguntas frecuentes",
+            landing_faq_desc: "Resolvemos objeciones comunes sin saturar la pagina principal.",
+            landing_faq_q1: "La plataforma tiene costo?",
+            landing_faq_a1: "No. PeerLink se presenta como una solucion academica gratuita para coordinar tutorias dentro del entorno institucional.",
+            landing_faq_q2: "Quien puede usar PeerLink?",
+            landing_faq_a2: "Estudiantes, tutores y administradores. Cada rol entra a un panel diferente con acciones ajustadas a su flujo de trabajo.",
+            landing_faq_q3: "Que pasa si una tutoria cambia o se cancela?",
+            landing_faq_a3: "El estado queda reflejado en el flujo de reservas y el horario semanal para que ambas partes tengan visibilidad inmediata.",
+            landing_faq_q4: "Puedo filtrar por idioma o facultad?",
+            landing_faq_a4: "Si. Los filtros por idioma, facultad, fecha, hora y buscador forman parte del flujo principal para solicitar o aceptar tutorias.",
+            landing_final_cta_title: "Convierte la intencion en una tutoria agendada hoy mismo",
+            landing_final_cta_desc: "Si llegaste hasta aqui, ya viste como PeerLink ordena la busqueda, la reserva y el seguimiento en un solo flujo.",
+            landing_footer_brand: "Una experiencia academica mas clara para estudiantes, tutores y administradores.",
+            landing_footer_nav: "Navegacion",
+            landing_footer_support: "Soporte y legal",
+            landing_footer_contact: "Contacto",
+            landing_copyright: "© 2026 PeerLink. Todos los derechos reservados.",
             login_hero_title: "Inicia sesion en el sistema de tutorias",
             login_hero_desc: "Accede a tu panel como administrador, tutor o estudiante.",
             login_heading: "Login",
+            login_welcome_title: "Te damos la bienvenida",
+            login_welcome_desc: "Ingresa tus credenciales para continuar.",
+            register_welcome_title: "Crea tu cuenta",
+            register_welcome_desc: "Completa tus datos para empezar a solicitar o publicar tutorias.",
             login_value_note: "Accede a reservas, tutorias, materias y horario semanal desde un mismo entorno.",
             label_email: "Correo",
             label_password: "Contrasena",
+            validation_email_required: "Ingresa un correo valido para continuar.",
+            validation_password_required: "Ingresa tu contrasena para continuar.",
+            validation_name_required: "Ingresa tu nombre completo.",
+            validation_role_required: "Selecciona el rol con el que vas a entrar.",
+            validation_subject_required: "Ingresa el nombre de la materia.",
+            validation_faculty_required: "Selecciona la facultad.",
+            aria_peerlink_home: "Ir al inicio de PeerLink",
+            aria_landing_nav: "Navegacion principal de PeerLink",
+            aria_go_features: "Ir a beneficios",
+            aria_go_how: "Ir a como funciona",
+            aria_go_testimonials: "Ir a escenarios",
+            aria_go_pricing: "Ir a planes",
+            aria_go_faq: "Ir a preguntas frecuentes",
+            aria_language_selector: "Selector de idioma",
+            aria_toggle_password: "Mostrar u ocultar contrasena",
+            aria_close_menu: "Cerrar menu",
+            aria_open_menu: "Abrir menu",
+            aria_admin_nav: "Navegacion administrador",
+            aria_student_nav: "Navegacion estudiante",
+            aria_tutor_nav: "Navegacion tutor",
+            login_remember_me: "Recordar mis datos",
+            login_forgot_password: "Olvidaste tu contrasena?",
+            action_back_home: "Volver",
             action_login: "Iniciar sesion",
             login_no_account: "No tienes cuenta?",
             login_register_here: "Registrate aqui",
@@ -75,6 +181,19 @@ const PeerlinkApp = (() => {
             legal_privacy_intro: "PeerLink utiliza datos de cuenta, rol, materias y reservas unicamente para gestionar autenticacion, tutorias y paneles de trabajo.",
             legal_privacy_body_1: "La informacion almacenada se limita a los datos necesarios para operar la plataforma y mostrar a cada persona el contenido correspondiente a su rol.",
             legal_privacy_body_2: "Las credenciales se gestionan de forma segura y la aplicacion no debe compartir datos con terceros no autorizados dentro del alcance actual del proyecto.",
+            legal_terms_badge: "Acuerdos y reglas",
+            legal_terms_section_usage: "Compromiso de uso",
+            legal_terms_section_reservations: "Reservas y disponibilidad",
+            legal_terms_notice: "Cualquier uso indebido o automatizado de la plataforma puede resultar en la suspension del acceso al panel de reservas.",
+            legal_terms_footer: "© 2026 PeerLink. Fomentando el orden y la colaboracion academica.",
+            legal_privacy_badge: "Proteccion de datos",
+            legal_privacy_section_data: "Uso de la informacion",
+            legal_privacy_section_credentials: "Gestion de credenciales",
+            legal_privacy_notice: "Esta politica esta disenada para garantizar un entorno academico seguro, confiable y libre de distracciones.",
+            legal_privacy_footer: "© 2026 PeerLink. Haciendo la vida universitaria mas segura y conectada.",
+            help_badge: "Soporte academico",
+            help_unresolved_title: "Aun no resuelves tu problema?",
+            help_footer: "© 2026 PeerLink. Haciendo la vida universitaria mas simple.",
             error_403_title: "Acceso denegado",
             error_404_title: "Pagina no encontrada",
             error_500_title: "Ocurrio un error",
@@ -97,6 +216,7 @@ const PeerlinkApp = (() => {
             admin_subject_table: "Tabla de materias",
             admin_assignments_table: "Asignaciones tutor - materia",
             admin_users_title: "Usuarios",
+            admin_footer: "© 2026 PeerLink. Panel de Administracion.",
             admin_save_user: "Agregar usuario",
             admin_open_swagger: "Abrir Swagger",
             admin_swagger_hint: "Documentacion protegida para administradores.",
@@ -125,6 +245,7 @@ const PeerlinkApp = (() => {
             action_this_week: "Esta semana",
             console_title: "Consola",
             console_technical_title: "Actividad tecnica",
+            feedback_loaded: "La informacion se actualizo correctamente.",
             student_title: "PeerLink | Panel Estudiante",
             student_panel_heading: "Panel Estudiante",
             student_panel_desc: "Gestiona tus tutorias en dos flujos: solicitar una nueva o aceptar una tutoria ya publicada por un tutor.",
@@ -164,6 +285,7 @@ const PeerlinkApp = (() => {
             tutor_hide_answered: "Ocultar solicitudes ya respondidas",
             tutor_create_title: "Buscar materia para publicar",
             tutor_create_desc: "Busca una materia creada por admin y selecciona la coincidencia para asignarle la fecha y hora de tu tutoria.",
+            tutor_create_hint: "Selecciona una materia, revisa su idioma y facultad, y luego define la fecha y hora de la tutoria.",
             tutor_create_selected: "Tutoria a publicar",
             tutor_create_empty: "Selecciona una coincidencia para desplegar el formulario de publicacion.",
             tutor_published_title: "Tutorias publicadas por mi",
@@ -186,6 +308,10 @@ const PeerlinkApp = (() => {
             label_time: "Hora",
             label_search: "Buscador",
             label_pick_week: "Semana a visualizar",
+            validation_language_required: "Selecciona el idioma de la tutoria.",
+            validation_tutor_required: "Selecciona el tutor de la tutoria.",
+            validation_datetime_required: "Selecciona la fecha y hora de la tutoria.",
+            loading_matches: "Buscando coincidencias...",
             action_request_tutoring: "Solicitar tutoria",
             table_id: "ID",
             table_name: "Nombre",
@@ -203,6 +329,9 @@ const PeerlinkApp = (() => {
             action_delete: "Eliminar",
             action_confirm: "Confirmar",
             action_cancel: "Cancelar",
+            action_download_report: "Descargar reporte PDF",
+            action_download_tutors_report: "Reporte tutores",
+            action_download_users_report: "Reporte usuarios",
             no_actions: "Sin acciones",
             schedule_weekly: "Calendario semanal",
             schedule_list: "Lista simple",
@@ -221,6 +350,22 @@ const PeerlinkApp = (() => {
             feedback_request_created: "La solicitud fue enviada y ahora aparece en tu horario.",
             feedback_reservation_created: "La tutoria fue reservada correctamente.",
             feedback_schedule_loaded: "Tu horario se actualizo con la informacion mas reciente.",
+            feedback_login_error: "No se pudo iniciar sesion con esas credenciales.",
+            feedback_register_success: "La cuenta fue creada correctamente. Ya puedes iniciar sesion.",
+            feedback_profile_loaded: "Tus datos de perfil fueron cargados.",
+            feedback_profile_saved: "Tus datos se guardaron correctamente.",
+            feedback_recovery_submitted: "Registramos tu solicitud y el siguiente paso aparece aqui.",
+            feedback_loaded_tutor_data: "Se actualizaron solicitudes, materias y horarios del tutor.",
+            feedback_tutor_request_updated: "La solicitud se actualizo correctamente.",
+            feedback_tutor_offer_saved: "La tutoria fue publicada correctamente.",
+            feedback_tutor_offer_deleted: "La tutoria publicada fue removida.",
+            feedback_loaded_admin_data: "Se actualizaron materias, asignaciones y usuarios.",
+            feedback_subject_saved: "La materia se guardo correctamente.",
+            feedback_subject_deleted: "La materia fue eliminada.",
+            feedback_assignment_saved: "La asignacion tutor-materia se guardo correctamente.",
+            feedback_user_saved: "El usuario fue creado correctamente.",
+            feedback_user_deleted: "El usuario fue eliminado correctamente.",
+            feedback_report_downloaded: "El reporte PDF se descargo correctamente.",
             placeholder_subject_name: "Nombre, idioma o facultad",
             placeholder_tutor_name: "Nombre o correo",
             placeholder_assignment_search: "Buscar asignaciones",
@@ -229,6 +374,9 @@ const PeerlinkApp = (() => {
             placeholder_subject_or_student: "Buscar estudiante o materia",
             placeholder_subject_only: "Buscar por nombre de materia",
             placeholder_email: "Tu correo institucional o de acceso",
+            placeholder_login_email: "correo@ejemplo.com",
+            placeholder_password: "Contrasena",
+            placeholder_full_name: "Nombre completo",
             status_ready: "ready",
             console_idle: "La actividad reciente aparecera aqui.",
             password_updated: "Contrasena actualizada correctamente.",
@@ -298,12 +446,118 @@ const PeerlinkApp = (() => {
             landing_feature_calendar: "Weekly hourly schedules to clearly see reservations, tutoring sessions, and availability.",
             landing_feature_i18n: "Interface prepared for Spanish, English, and Portuguese with consistent keys.",
             landing_footer: "Built to coordinate tutoring with clarity, traceability, and a strong user experience.",
+            landing_nav_features: "Benefits",
+            landing_nav_how: "How it works",
+            landing_nav_testimonials: "Scenarios",
+            landing_nav_pricing: "Plan",
+            landing_nav_faq: "FAQ",
+            landing_cta_primary: "Start free",
+            landing_cta_secondary: "Learn more",
+            landing_support_text: "Designed for students who need immediate clarity and tutors who want a better organized week.",
+            landing_support_badge: "Available in Spanish, English, and Portuguese",
+            landing_mock_calendar_label: "Calendar",
+            landing_mock_calendar: "Review published tutoring sessions, requests, and reservations from a weekly hourly calendar.",
+            landing_mock_agenda_title: "Your schedule, under control",
+            landing_mock_example: "Calculus I - 10:00 AM",
+            landing_mock_filters_label: "Filters",
+            landing_mock_filters: "Filter by language, faculty, and date to reach the right match faster.",
+            landing_mock_roles_label: "Roles",
+            landing_mock_roles: "Separate dashboards for student, tutor, and admin with clear responsibilities in each role.",
+            landing_mock_security_label: "Security",
+            landing_mock_security: "Role-protected access and administrative control keep the experience organized and traceable.",
+            landing_trust_label_1: "Clarity",
+            landing_trust_value_1: "Visible flow",
+            landing_trust_text_1: "Every reservation, request, and status change appears in the panel where it belongs.",
+            landing_trust_label_2: "Coordination",
+            landing_trust_value_2: "Less friction",
+            landing_trust_text_2: "Filters reduce unnecessary steps when choosing subject, tutor, language, and schedule.",
+            landing_trust_label_3: "Management",
+            landing_trust_value_3: "Role control",
+            landing_trust_text_3: "Students, tutors, and admins work from different but connected views.",
+            landing_trust_label_4: "Support",
+            landing_trust_value_4: "Manual i18n",
+            landing_trust_text_4: "The interface keeps stable technical keys while adapting visible labels to the active language.",
+            landing_features_title: "Benefits designed to turn interest into action",
+            landing_features_desc: "Each block answers a common objection: time, clarity, trust, and follow-up.",
+            landing_feature_card_1_title: "Advanced filters",
+            landing_feature_card_1_desc: "Find tutoring sessions by search, language, faculty, date, and time without scanning endless lists.",
+            landing_feature_card_2_title: "Clear weekly schedule",
+            landing_feature_card_2_desc: "See reservations and tutoring sessions by hour to reduce schedule conflicts and missed sessions.",
+            landing_feature_card_3_title: "Real role control",
+            landing_feature_card_3_desc: "Manage users, subjects, and assignments while each role sees only what it needs.",
+            landing_how_title: "How it works",
+            landing_how_desc: "We reduce friction with a simple path from registration to a confirmed tutoring session.",
+            landing_how_step_1_title: "Explore or publish",
+            landing_how_step_1_desc: "Students filter subjects or published tutoring sessions while tutors publish new availability.",
+            landing_how_step_2_title: "Choose the best match",
+            landing_how_step_2_desc: "Language, faculty, tutor, and date stay clear before any action is confirmed.",
+            landing_how_step_3_title: "Track everything from your schedule",
+            landing_how_step_3_desc: "Each reservation or request appears in calendar and list view so follow-up stays simple.",
+            landing_testimonials_title: "Real product use scenarios",
+            landing_testimonials_desc: "Instead of empty promises, we show how PeerLink fits concrete academic situations.",
+            landing_testimonial_1_title: "For students who need to decide quickly",
+            landing_testimonial_1_quote: "The request or accept flow helps compare options and schedule support without juggling scattered messages.",
+            landing_testimonial_2_title: "For tutors who want an organized week",
+            landing_testimonial_2_quote: "Calendar, requests, and tutoring publication stay together in one dashboard that is easy to follow.",
+            landing_testimonial_3_title: "For administration that needs traceability",
+            landing_testimonial_3_quote: "Subjects, users, assignments, and technical access stay separate enough to preserve order and control.",
+            landing_pricing_title: "Full clarity from the start",
+            landing_pricing_desc: "Even when the platform is free, stating it clearly reduces doubt and speeds up the decision.",
+            landing_pricing_badge: "Academic plan",
+            landing_pricing_plan: "PeerLink Campus",
+            landing_pricing_plan_desc: "Access for students, tutors, and administrators inside the academic environment.",
+            landing_pricing_price: "$0 / Free forever",
+            landing_pricing_points: "Filters, reservations, weekly calendar, role-based dashboards, and built-in internationalization.",
+            landing_faq_title: "Frequently asked questions",
+            landing_faq_desc: "We answer common objections without overcrowding the page.",
+            landing_faq_q1: "Does the platform have a cost?",
+            landing_faq_a1: "No. PeerLink is presented as a free academic solution to coordinate tutoring inside the institutional environment.",
+            landing_faq_q2: "Who can use PeerLink?",
+            landing_faq_a2: "Students, tutors, and administrators. Each role enters a different dashboard with actions tailored to its workflow.",
+            landing_faq_q3: "What happens if a tutoring session changes or is canceled?",
+            landing_faq_a3: "The status is reflected in reservations and the weekly schedule so both sides keep immediate visibility.",
+            landing_faq_q4: "Can I filter by language or faculty?",
+            landing_faq_a4: "Yes. Language, faculty, date, time, and search filters are part of the main flow for requesting or accepting tutoring sessions.",
+            landing_final_cta_title: "Turn interest into a scheduled tutoring session today",
+            landing_final_cta_desc: "If you reached this point, you already saw how PeerLink organizes search, reservation, and follow-up in one flow.",
+            landing_footer_brand: "A clearer academic experience for students, tutors, and administrators.",
+            landing_footer_nav: "Navigation",
+            landing_footer_support: "Support and legal",
+            landing_footer_contact: "Contact",
+            landing_copyright: "© 2026 PeerLink. All rights reserved.",
             login_hero_title: "Sign in to the tutoring system",
             login_hero_desc: "Access your dashboard as administrator, tutor, or student.",
             login_heading: "Login",
+            login_welcome_title: "Welcome back",
+            login_welcome_desc: "Enter your credentials to continue.",
+            register_welcome_title: "Create your account",
+            register_welcome_desc: "Complete your details to start requesting or publishing tutoring sessions.",
             login_value_note: "Access reservations, tutoring, subjects, and your weekly schedule from one place.",
             label_email: "Email",
             label_password: "Password",
+            validation_email_required: "Enter a valid email to continue.",
+            validation_password_required: "Enter your password to continue.",
+            validation_name_required: "Enter your full name.",
+            validation_role_required: "Select the role you will use to enter.",
+            validation_subject_required: "Enter the subject name.",
+            validation_faculty_required: "Select the faculty.",
+            aria_peerlink_home: "Go to PeerLink home",
+            aria_landing_nav: "PeerLink main navigation",
+            aria_go_features: "Go to benefits",
+            aria_go_how: "Go to how it works",
+            aria_go_testimonials: "Go to scenarios",
+            aria_go_pricing: "Go to plans",
+            aria_go_faq: "Go to frequently asked questions",
+            aria_language_selector: "Language selector",
+            aria_toggle_password: "Show or hide password",
+            aria_close_menu: "Close menu",
+            aria_open_menu: "Open menu",
+            aria_admin_nav: "Administrator navigation",
+            aria_student_nav: "Student navigation",
+            aria_tutor_nav: "Tutor navigation",
+            login_remember_me: "Remember my details",
+            login_forgot_password: "Forgot your password?",
+            action_back_home: "Back",
             action_login: "Sign in",
             login_no_account: "Don't have an account?",
             login_register_here: "Register here",
@@ -345,6 +599,19 @@ const PeerlinkApp = (() => {
             legal_privacy_intro: "PeerLink uses account, role, subject, and reservation data only to manage authentication, tutoring, and work dashboards.",
             legal_privacy_body_1: "Stored information is limited to the data needed to operate the platform and show each person the content that matches their role.",
             legal_privacy_body_2: "Credentials are managed securely, and within the current project scope the application must not share data with unauthorized third parties.",
+            legal_terms_badge: "Agreements and rules",
+            legal_terms_section_usage: "Acceptable use commitment",
+            legal_terms_section_reservations: "Reservations and availability",
+            legal_terms_notice: "Any improper or automated use of the platform may result in suspension of access to the reservations dashboard.",
+            legal_terms_footer: "© 2026 PeerLink. Promoting academic order and collaboration.",
+            legal_privacy_badge: "Data protection",
+            legal_privacy_section_data: "Information use",
+            legal_privacy_section_credentials: "Credential management",
+            legal_privacy_notice: "This policy is designed to support a safe, reliable academic environment free of distractions.",
+            legal_privacy_footer: "© 2026 PeerLink. Making university life safer and more connected.",
+            help_badge: "Academic support",
+            help_unresolved_title: "Still need help?",
+            help_footer: "© 2026 PeerLink. Making university life simpler.",
             error_403_title: "Access denied",
             error_404_title: "Page not found",
             error_500_title: "Something went wrong",
@@ -367,6 +634,7 @@ const PeerlinkApp = (() => {
             admin_subject_table: "Subjects table",
             admin_assignments_table: "Tutor - subject assignments",
             admin_users_title: "Users",
+            admin_footer: "© 2026 PeerLink. Administration panel.",
             admin_save_user: "Add user",
             admin_open_swagger: "Open Swagger",
             admin_swagger_hint: "Protected documentation for administrators.",
@@ -395,6 +663,7 @@ const PeerlinkApp = (() => {
             action_this_week: "This week",
             console_title: "Console",
             console_technical_title: "Technical activity",
+            feedback_loaded: "Information was refreshed successfully.",
             student_title: "PeerLink | Student Panel",
             student_panel_heading: "Student Panel",
             student_panel_desc: "Manage your tutoring in two flows: request a new one or accept a tutoring session already published by a tutor.",
@@ -434,6 +703,7 @@ const PeerlinkApp = (() => {
             tutor_hide_answered: "Hide answered requests",
             tutor_create_title: "Search subject to publish",
             tutor_create_desc: "Search a subject created by the admin and select the match to assign the date and time of your tutoring session.",
+            tutor_create_hint: "Select a subject, review its language and faculty, and then define the tutoring date and time.",
             tutor_create_selected: "Tutoring to publish",
             tutor_create_empty: "Select a match to open the publishing form.",
             tutor_published_title: "Tutoring sessions published by me",
@@ -456,6 +726,10 @@ const PeerlinkApp = (() => {
             label_time: "Time",
             label_search: "Search",
             label_pick_week: "Week to view",
+            validation_language_required: "Select the tutoring language.",
+            validation_tutor_required: "Select the tutoring tutor.",
+            validation_datetime_required: "Select the tutoring date and time.",
+            loading_matches: "Searching matches...",
             action_request_tutoring: "Request tutoring",
             table_id: "ID",
             table_name: "Name",
@@ -473,6 +747,9 @@ const PeerlinkApp = (() => {
             action_delete: "Delete",
             action_confirm: "Confirm",
             action_cancel: "Cancel",
+            action_download_report: "Download PDF report",
+            action_download_tutors_report: "Tutors report",
+            action_download_users_report: "Users report",
             no_actions: "No actions",
             schedule_weekly: "Weekly calendar",
             schedule_list: "Simple list",
@@ -491,6 +768,22 @@ const PeerlinkApp = (() => {
             feedback_request_created: "Your request was sent and now appears in your schedule.",
             feedback_reservation_created: "The tutoring session was reserved successfully.",
             feedback_schedule_loaded: "Your schedule was refreshed with the latest information.",
+            feedback_login_error: "Could not sign in with those credentials.",
+            feedback_register_success: "The account was created successfully. You can now sign in.",
+            feedback_profile_loaded: "Your profile details were loaded.",
+            feedback_profile_saved: "Your profile details were saved successfully.",
+            feedback_recovery_submitted: "We recorded your request and the next step appears here.",
+            feedback_loaded_tutor_data: "Tutor requests, subjects, and schedules were refreshed.",
+            feedback_tutor_request_updated: "The request was updated successfully.",
+            feedback_tutor_offer_saved: "The tutoring session was published successfully.",
+            feedback_tutor_offer_deleted: "The published tutoring session was removed.",
+            feedback_loaded_admin_data: "Subjects, assignments, and users were refreshed.",
+            feedback_subject_saved: "The subject was saved successfully.",
+            feedback_subject_deleted: "The subject was deleted.",
+            feedback_assignment_saved: "The tutor-subject assignment was saved successfully.",
+            feedback_user_saved: "The user was created successfully.",
+            feedback_user_deleted: "The user was deleted successfully.",
+            feedback_report_downloaded: "The PDF report was downloaded successfully.",
             placeholder_subject_name: "Name, language, or faculty",
             placeholder_tutor_name: "Name or email",
             placeholder_assignment_search: "Search assignments",
@@ -499,6 +792,9 @@ const PeerlinkApp = (() => {
             placeholder_subject_or_student: "Search student or subject",
             placeholder_subject_only: "Search by subject name",
             placeholder_email: "Your institutional or access email",
+            placeholder_login_email: "email@example.com",
+            placeholder_password: "Password",
+            placeholder_full_name: "Full name",
             status_ready: "ready",
             console_idle: "Recent activity will appear here.",
             password_updated: "Password updated successfully.",
@@ -568,12 +864,118 @@ const PeerlinkApp = (() => {
             landing_feature_calendar: "Horarios semanais por hora para ver claramente reservas, tutorias e disponibilidade.",
             landing_feature_i18n: "Interface preparada para espanhol, ingles e portugues com chaves consistentes.",
             landing_footer: "Construido para coordenar tutorias com clareza, rastreabilidade e boa experiencia de uso.",
+            landing_nav_features: "Beneficios",
+            landing_nav_how: "Como funciona",
+            landing_nav_testimonials: "Cenarios",
+            landing_nav_pricing: "Plano",
+            landing_nav_faq: "FAQ",
+            landing_cta_primary: "Comecar gratis",
+            landing_cta_secondary: "Saber mais",
+            landing_support_text: "Pensado para estudantes que precisam de clareza imediata e tutores que querem organizar melhor sua semana.",
+            landing_support_badge: "Disponivel em espanhol, ingles e portugues",
+            landing_mock_calendar_label: "Calendario",
+            landing_mock_calendar: "Consulte tutorias publicadas, solicitacoes e reservas em um calendario semanal por hora.",
+            landing_mock_agenda_title: "Sua agenda sob controle",
+            landing_mock_example: "Calculo I - 10:00",
+            landing_mock_filters_label: "Filtros",
+            landing_mock_filters: "Filtre por idioma, faculdade e data para chegar mais rapido a coincidencia correta.",
+            landing_mock_roles_label: "Papeis",
+            landing_mock_roles: "Paineis separados para estudante, tutor e admin com responsabilidades claras em cada papel.",
+            landing_mock_security_label: "Seguranca",
+            landing_mock_security: "Acesso protegido por papel e controle administrativo mantem a experiencia organizada e rastreavel.",
+            landing_trust_label_1: "Clareza",
+            landing_trust_value_1: "Fluxo visivel",
+            landing_trust_text_1: "Cada reserva, solicitacao e mudanca de status aparece no painel correspondente.",
+            landing_trust_label_2: "Coordenacao",
+            landing_trust_value_2: "Menos friccao",
+            landing_trust_text_2: "Os filtros reduzem passos desnecessarios ao escolher materia, tutor, idioma e horario.",
+            landing_trust_label_3: "Gestao",
+            landing_trust_value_3: "Controle por papel",
+            landing_trust_text_3: "Estudantes, tutores e admins trabalham em vistas diferentes, mas conectadas.",
+            landing_trust_label_4: "Suporte",
+            landing_trust_value_4: "i18n manual",
+            landing_trust_text_4: "A interface mantem chaves tecnicas estaveis enquanto adapta os textos visiveis ao idioma atual.",
+            landing_features_title: "Beneficios pensados para transformar interesse em acao",
+            landing_features_desc: "Cada bloco responde a uma objecao comum: tempo, clareza, confianca e acompanhamento.",
+            landing_feature_card_1_title: "Filtros avancados",
+            landing_feature_card_1_desc: "Encontre tutorias por buscador, idioma, faculdade, data e hora sem revisar listas interminaveis.",
+            landing_feature_card_2_title: "Horario semanal claro",
+            landing_feature_card_2_desc: "Veja reservas e tutorias por hora para reduzir conflitos de agenda e esquecimentos.",
+            landing_feature_card_3_title: "Controle real por papel",
+            landing_feature_card_3_desc: "Gerencie usuarios, materias e atribuicoes enquanto cada papel ve apenas o necessario.",
+            landing_how_title: "Como funciona",
+            landing_how_desc: "Reduzimos a friccao com um caminho simples do registro ate a tutoria confirmada.",
+            landing_how_step_1_title: "Explore ou publique",
+            landing_how_step_1_desc: "Estudantes filtram materias ou tutorias publicadas enquanto tutores publicam novas disponibilidades.",
+            landing_how_step_2_title: "Escolha a melhor coincidencia",
+            landing_how_step_2_desc: "Idioma, faculdade, tutor e data ficam claros antes de confirmar qualquer acao.",
+            landing_how_step_3_title: "Acompanhe tudo pelo horario",
+            landing_how_step_3_desc: "Cada reserva ou solicitacao aparece em calendario e lista para facilitar o acompanhamento.",
+            landing_testimonials_title: "Cenarios reais de uso do produto",
+            landing_testimonials_desc: "Em vez de promessas vazias, mostramos como o PeerLink se encaixa em situacoes academicas concretas.",
+            landing_testimonial_1_title: "Para estudantes que precisam decidir rapido",
+            landing_testimonial_1_quote: "O fluxo de solicitar ou aceitar tutorias ajuda a comparar opcoes e agendar apoio sem mensagens dispersas.",
+            landing_testimonial_2_title: "Para tutores que querem uma semana organizada",
+            landing_testimonial_2_quote: "Calendario, solicitacoes e publicacao de tutorias ficam reunidos em um unico painel facil de acompanhar.",
+            landing_testimonial_3_title: "Para administracao que precisa de rastreabilidade",
+            landing_testimonial_3_quote: "Materias, usuarios, atribuicoes e acesso tecnico ficam separados para preservar ordem e controle.",
+            landing_pricing_title: "Clareza total desde o inicio",
+            landing_pricing_desc: "Mesmo quando a plataforma e gratuita, dizer isso com clareza reduz duvidas e acelera a decisao.",
+            landing_pricing_badge: "Plano academico",
+            landing_pricing_plan: "PeerLink Campus",
+            landing_pricing_plan_desc: "Acesso para estudantes, tutores e administradores dentro do ambiente academico.",
+            landing_pricing_price: "$0 / Gratis para sempre",
+            landing_pricing_points: "Filtros, reservas, calendario semanal, paineis por papel e internacionalizacao integrada.",
+            landing_faq_title: "Perguntas frequentes",
+            landing_faq_desc: "Respondemos objecoes comuns sem sobrecarregar a pagina.",
+            landing_faq_q1: "A plataforma tem custo?",
+            landing_faq_a1: "Nao. O PeerLink se apresenta como uma solucao academica gratuita para coordenar tutorias no ambiente institucional.",
+            landing_faq_q2: "Quem pode usar o PeerLink?",
+            landing_faq_a2: "Estudantes, tutores e administradores. Cada papel entra em um painel diferente com acoes ajustadas ao seu fluxo.",
+            landing_faq_q3: "O que acontece se uma tutoria mudar ou for cancelada?",
+            landing_faq_a3: "O status aparece no fluxo de reservas e no horario semanal para que ambos os lados mantenham visibilidade imediata.",
+            landing_faq_q4: "Posso filtrar por idioma ou faculdade?",
+            landing_faq_a4: "Sim. Filtros por idioma, faculdade, data, hora e buscador fazem parte do fluxo principal para solicitar ou aceitar tutorias.",
+            landing_final_cta_title: "Transforme interesse em uma tutoria agendada hoje",
+            landing_final_cta_desc: "Se voce chegou ate aqui, ja viu como o PeerLink organiza busca, reserva e acompanhamento em um unico fluxo.",
+            landing_footer_brand: "Uma experiencia academica mais clara para estudantes, tutores e administradores.",
+            landing_footer_nav: "Navegacao",
+            landing_footer_support: "Suporte e legal",
+            landing_footer_contact: "Contato",
+            landing_copyright: "© 2026 PeerLink. Todos os direitos reservados.",
             login_hero_title: "Entre no sistema de tutorias",
             login_hero_desc: "Acesse seu painel como administrador, tutor ou estudante.",
             login_heading: "Login",
+            login_welcome_title: "Boas-vindas",
+            login_welcome_desc: "Digite suas credenciais para continuar.",
+            register_welcome_title: "Crie sua conta",
+            register_welcome_desc: "Preencha seus dados para comecar a solicitar ou publicar tutorias.",
             login_value_note: "Acesse reservas, tutorias, materias e seu horario semanal em um unico lugar.",
             label_email: "E-mail",
             label_password: "Senha",
+            validation_email_required: "Digite um e-mail valido para continuar.",
+            validation_password_required: "Digite sua senha para continuar.",
+            validation_name_required: "Digite seu nome completo.",
+            validation_role_required: "Selecione o papel com o qual voce vai entrar.",
+            validation_subject_required: "Digite o nome da materia.",
+            validation_faculty_required: "Selecione a faculdade.",
+            aria_peerlink_home: "Ir para o inicio do PeerLink",
+            aria_landing_nav: "Navegacao principal do PeerLink",
+            aria_go_features: "Ir para beneficios",
+            aria_go_how: "Ir para como funciona",
+            aria_go_testimonials: "Ir para cenarios",
+            aria_go_pricing: "Ir para planos",
+            aria_go_faq: "Ir para perguntas frequentes",
+            aria_language_selector: "Seletor de idioma",
+            aria_toggle_password: "Mostrar ou ocultar senha",
+            aria_close_menu: "Fechar menu",
+            aria_open_menu: "Abrir menu",
+            aria_admin_nav: "Navegacao do administrador",
+            aria_student_nav: "Navegacao do estudante",
+            aria_tutor_nav: "Navegacao do tutor",
+            login_remember_me: "Lembrar meus dados",
+            login_forgot_password: "Esqueceu sua senha?",
+            action_back_home: "Voltar",
             action_login: "Entrar",
             login_no_account: "Nao tem conta?",
             login_register_here: "Cadastre-se aqui",
@@ -615,6 +1017,19 @@ const PeerlinkApp = (() => {
             legal_privacy_intro: "PeerLink utiliza dados de conta, papel, materias e reservas apenas para gerir autenticacao, tutorias e paineis de trabalho.",
             legal_privacy_body_1: "As informacoes armazenadas se limitam ao necessario para operar a plataforma e mostrar a cada pessoa o conteudo correspondente ao seu papel.",
             legal_privacy_body_2: "As credenciais sao tratadas com seguranca e a aplicacao nao deve compartilhar dados com terceiros nao autorizados dentro do escopo atual do projeto.",
+            legal_terms_badge: "Acordos e regras",
+            legal_terms_section_usage: "Compromisso de uso",
+            legal_terms_section_reservations: "Reservas e disponibilidade",
+            legal_terms_notice: "Qualquer uso indevido ou automatizado da plataforma pode resultar na suspensao do acesso ao painel de reservas.",
+            legal_terms_footer: "© 2026 PeerLink. Promovendo ordem e colaboracao academica.",
+            legal_privacy_badge: "Protecao de dados",
+            legal_privacy_section_data: "Uso da informacao",
+            legal_privacy_section_credentials: "Gestao de credenciais",
+            legal_privacy_notice: "Esta politica foi projetada para apoiar um ambiente academico seguro, confiavel e livre de distracoes.",
+            legal_privacy_footer: "© 2026 PeerLink. Tornando a vida universitaria mais segura e conectada.",
+            help_badge: "Suporte academico",
+            help_unresolved_title: "Ainda precisa de ajuda?",
+            help_footer: "© 2026 PeerLink. Tornando a vida universitaria mais simples.",
             error_403_title: "Acesso negado",
             error_404_title: "Pagina nao encontrada",
             error_500_title: "Ocorreu um erro",
@@ -637,6 +1052,7 @@ const PeerlinkApp = (() => {
             admin_subject_table: "Tabela de materias",
             admin_assignments_table: "Atribuicoes tutor - materia",
             admin_users_title: "Usuarios",
+            admin_footer: "© 2026 PeerLink. Painel de administracao.",
             admin_save_user: "Adicionar usuario",
             admin_open_swagger: "Abrir Swagger",
             admin_swagger_hint: "Documentacao protegida para administradores.",
@@ -665,6 +1081,7 @@ const PeerlinkApp = (() => {
             action_this_week: "Esta semana",
             console_title: "Console",
             console_technical_title: "Atividade tecnica",
+            feedback_loaded: "As informacoes foram atualizadas com sucesso.",
             student_title: "PeerLink | Painel Estudante",
             student_panel_heading: "Painel Estudante",
             student_panel_desc: "Gerencie suas tutorias em dois fluxos: solicitar uma nova ou aceitar uma tutoria ja publicada por um tutor.",
@@ -704,6 +1121,7 @@ const PeerlinkApp = (() => {
             tutor_hide_answered: "Ocultar solicitacoes ja respondidas",
             tutor_create_title: "Buscar materia para publicar",
             tutor_create_desc: "Busque uma materia criada pelo admin e selecione a coincidencia para definir a data e hora da sua tutoria.",
+            tutor_create_hint: "Selecione uma materia, revise idioma e faculdade, e depois defina a data e a hora da tutoria.",
             tutor_create_selected: "Tutoria para publicar",
             tutor_create_empty: "Selecione uma coincidencia para abrir o formulario de publicacao.",
             tutor_published_title: "Tutorias publicadas por mim",
@@ -726,6 +1144,10 @@ const PeerlinkApp = (() => {
             label_time: "Hora",
             label_search: "Buscador",
             label_pick_week: "Semana para visualizar",
+            validation_language_required: "Selecione o idioma da tutoria.",
+            validation_tutor_required: "Selecione o tutor da tutoria.",
+            validation_datetime_required: "Selecione a data e hora da tutoria.",
+            loading_matches: "Buscando coincidencias...",
             action_request_tutoring: "Solicitar tutoria",
             table_id: "ID",
             table_name: "Nome",
@@ -743,6 +1165,9 @@ const PeerlinkApp = (() => {
             action_delete: "Excluir",
             action_confirm: "Confirmar",
             action_cancel: "Cancelar",
+            action_download_report: "Baixar relatorio PDF",
+            action_download_tutors_report: "Relatorio de tutores",
+            action_download_users_report: "Relatorio de usuarios",
             no_actions: "Sem acoes",
             schedule_weekly: "Calendario semanal",
             schedule_list: "Lista simples",
@@ -761,6 +1186,22 @@ const PeerlinkApp = (() => {
             feedback_request_created: "A solicitacao foi enviada e agora aparece no seu horario.",
             feedback_reservation_created: "A tutoria foi reservada com sucesso.",
             feedback_schedule_loaded: "Seu horario foi atualizado com as informacoes mais recentes.",
+            feedback_login_error: "Nao foi possivel entrar com essas credenciais.",
+            feedback_register_success: "A conta foi criada com sucesso. Agora voce ja pode entrar.",
+            feedback_profile_loaded: "Os dados do seu perfil foram carregados.",
+            feedback_profile_saved: "Os dados do seu perfil foram salvos com sucesso.",
+            feedback_recovery_submitted: "Registramos sua solicitacao e o proximo passo aparece aqui.",
+            feedback_loaded_tutor_data: "Solicitacoes, materias e horarios do tutor foram atualizados.",
+            feedback_tutor_request_updated: "A solicitacao foi atualizada com sucesso.",
+            feedback_tutor_offer_saved: "A tutoria foi publicada com sucesso.",
+            feedback_tutor_offer_deleted: "A tutoria publicada foi removida.",
+            feedback_loaded_admin_data: "Materias, atribuicoes e usuarios foram atualizados.",
+            feedback_subject_saved: "A materia foi salva com sucesso.",
+            feedback_subject_deleted: "A materia foi excluida.",
+            feedback_assignment_saved: "A atribuicao tutor-materia foi salva com sucesso.",
+            feedback_user_saved: "O usuario foi criado com sucesso.",
+            feedback_user_deleted: "O usuario foi removido.",
+            feedback_report_downloaded: "O relatorio PDF foi baixado com sucesso.",
             placeholder_subject_name: "Nome, idioma ou faculdade",
             placeholder_tutor_name: "Nome ou e-mail",
             placeholder_assignment_search: "Buscar atribuicoes",
@@ -769,6 +1210,9 @@ const PeerlinkApp = (() => {
             placeholder_subject_or_student: "Buscar estudante ou materia",
             placeholder_subject_only: "Buscar por nome da materia",
             placeholder_email: "Seu e-mail institucional ou de acesso",
+            placeholder_login_email: "email@exemplo.com",
+            placeholder_password: "Senha",
+            placeholder_full_name: "Nome completo",
             status_ready: "ready",
             console_idle: "A atividade recente aparecera aqui.",
             password_updated: "Senha atualizada com sucesso.",
@@ -857,6 +1301,102 @@ const PeerlinkApp = (() => {
         window.location.href = url.toString();
     }
 
+    function languageOptionsMarkup(asButtons = false) {
+        if (asButtons) {
+            return ["es", "en", "pt"].map((lang) => `
+                <button class="peerlink-language-option" type="button" role="menuitem" data-lang="${lang}">${lang.toUpperCase()}</button>
+            `).join("");
+        }
+
+        return `
+            <option value="es">ES</option>
+            <option value="en">EN</option>
+            <option value="pt">PT</option>
+        `;
+    }
+
+    function languageIconMarkup() {
+        return `
+            <svg class="peerlink-language-icon" aria-hidden="true" viewBox="0 0 16 16" focusable="false">
+                <path d="M4.545 6.714 4.11 8H3l1.862-5h1.284L8 8H6.833l-.435-1.286H4.545Zm1.634-.736L5.5 3.956h-.049l-.679 2.022h1.407Z"/>
+                <path d="M0 2a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v3h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-3H2a2 2 0 0 1-2-2V2Zm2-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2Zm7.138 9.995c.193.301.402.583.63.846-.748.575-1.673 1.001-2.768 1.292.178.217.451.635.555.867 1.125-.359 2.08-.844 2.886-1.494.777.665 1.739 1.165 2.93 1.472.133-.254.414-.673.629-.89-1.125-.253-2.057-.694-2.82-1.284.681-.747 1.222-1.651 1.621-2.757H14V8h-3v1.047h.765a6.477 6.477 0 0 1-1.257 2.002 6.11 6.11 0 0 1-.872-1.415H8.5c.18.47.392.921.638 1.361Z"/>
+            </svg>
+        `;
+    }
+
+    function renderLanguageSelect(id = "languageSelect", extraClasses = "") {
+        return `
+            <div id="${id}" class="peerlink-language-select ${extraClasses}" data-language-dropdown>
+                <button class="peerlink-language-toggle" type="button" aria-label="${t("aria_language_selector")}" aria-haspopup="menu" aria-expanded="false">
+                    ${languageIconMarkup()}
+                    <span data-language-current>${getLang().toUpperCase()}</span>
+                </button>
+                <div class="peerlink-language-menu" role="menu">
+                    ${languageOptionsMarkup(true)}
+                </div>
+            </div>
+        `;
+    }
+
+    function bindLanguageSelect(target) {
+        const node = typeof target === "string" ? document.getElementById(target) : target;
+        if (!node || node.dataset.boundLanguageSelect) {
+            return;
+        }
+
+        if (node.tagName === "SELECT") {
+            node.value = getLang();
+            node.dataset.boundLanguageSelect = "true";
+            node.addEventListener("change", () => setLang(node.value));
+            return;
+        }
+
+        if (!node.querySelector(".peerlink-language-toggle")
+                || !node.querySelector("[data-language-current]")
+                || !node.querySelectorAll("[data-lang]").length) {
+            node.innerHTML = `
+                <button class="peerlink-language-toggle" type="button" aria-label="${t("aria_language_selector")}" aria-haspopup="menu" aria-expanded="false">
+                    ${languageIconMarkup()}
+                    <span data-language-current>${getLang().toUpperCase()}</span>
+                </button>
+                <div class="peerlink-language-menu" role="menu">
+                    ${languageOptionsMarkup(true)}
+                </div>
+            `;
+        }
+
+        const toggle = node.querySelector(".peerlink-language-toggle");
+        const current = node.querySelector("[data-language-current]");
+        const options = node.querySelectorAll("[data-lang]");
+        if (!toggle || !current || !options.length) {
+            return;
+        }
+
+        current.textContent = getLang().toUpperCase();
+        node.dataset.boundLanguageSelect = "true";
+        options.forEach((option) => {
+            const active = option.dataset.lang === getLang();
+            option.classList.toggle("active", active);
+            option.setAttribute("aria-current", active ? "true" : "false");
+            option.addEventListener("click", () => {
+                node.classList.remove("show");
+                toggle.setAttribute("aria-expanded", "false");
+                setLang(option.dataset.lang);
+            });
+        });
+
+        toggle.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const isOpen = node.classList.toggle("show");
+            toggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        document.addEventListener("click", () => {
+            node.classList.remove("show");
+            toggle.setAttribute("aria-expanded", "false");
+        });
+    }
+
     function getAuth() {
         return {
             token: localStorage.getItem(storageKeys.token) || "",
@@ -889,6 +1429,15 @@ const PeerlinkApp = (() => {
         localStorage.removeItem(storageKeys.email);
         localStorage.removeItem(storageKeys.name);
         document.cookie = "AUTH_TOKEN=; path=/; Max-Age=0; Secure; SameSite=Lax";
+    }
+
+    function isLogoutTrigger(target) {
+        return Boolean(target?.closest?.("[data-dashboard-logout], #dashboardLogoutBtn, #dashboardLogoutDirectBtn, #logoutBtn"));
+    }
+
+    function logoutToLogin() {
+        clearAuth();
+        window.location.href = withLang("/login.html");
     }
 
     function panelForRole(role) {
@@ -935,19 +1484,17 @@ const PeerlinkApp = (() => {
         }
 
         container.innerHTML = `
-            <nav class="navbar navbar-expand-lg border-bottom border-light-subtle bg-white bg-opacity-75 backdrop-blur sticky-top">
+            <nav class="navbar navbar-expand-lg border-bottom border-light-subtle nav-blur sticky-top" aria-label="PeerLink application navigation">
                 <div class="container-xxl">
-                    <a class="navbar-brand fw-bold text-success-emphasis" href="${withLang(panelForRole(auth.role || "ADMIN"))}">${t("brand")}</a>
+                    <a class="navbar-brand" href="${withLang(panelForRole(auth.role || "ADMIN"))}" aria-label="${t("brand")}">
+                        <img src="/img/peerlink.svg" alt="${t("brand")}" class="brand-logo brand-logo-sm" width="200" height="50" fetchpriority="high">
+                    </a>
                     <div class="d-flex align-items-center gap-3 flex-wrap">
                         <div class="d-flex align-items-center gap-2 flex-wrap">
                             <a class="btn btn-outline-success btn-sm" href="${withLang("/perfil.html")}">${t("navbar_profile")}</a>
                             <a class="btn btn-outline-secondary btn-sm" href="${withLang("/ayuda.html")}">${t("navbar_help")}</a>
                         </div>
-                        <div class="btn-group btn-group-sm" role="group" aria-label="Language selector">
-                            <button class="btn btn-outline-success lang-btn" data-lang="es" type="button">ES</button>
-                            <button class="btn btn-outline-success lang-btn" data-lang="en" type="button">EN</button>
-                            <button class="btn btn-outline-success lang-btn" data-lang="pt" type="button">PT</button>
-                        </div>
+                        ${renderLanguageSelect("navbarLanguageSelect")}
                         <span class="badge rounded-pill text-bg-light border">${escapeHtml(auth.name || auth.email || t("navbar_user_fallback"))} · ${escapeHtml(auth.role || t("navbar_no_role"))}</span>
                         <button id="logoutBtn" class="btn btn-outline-dark btn-sm" type="button">${t("navbar_logout")}</button>
                     </div>
@@ -955,17 +1502,11 @@ const PeerlinkApp = (() => {
             </nav>
         `;
 
-        container.querySelectorAll(".lang-btn").forEach((button) => {
-            button.classList.toggle("active", button.dataset.lang === getLang());
-            button.addEventListener("click", () => setLang(button.dataset.lang));
-        });
+        container.querySelectorAll(".peerlink-language-select").forEach(bindLanguageSelect);
 
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
-            logoutBtn.addEventListener("click", () => {
-                clearAuth();
-                window.location.href = withLang("/login.html");
-            });
+            logoutBtn.dataset.dashboardLogout = "true";
         }
     }
 
@@ -983,6 +1524,12 @@ const PeerlinkApp = (() => {
         });
         root.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
             node.placeholder = t(node.dataset.i18nPlaceholder);
+        });
+        root.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+            node.setAttribute("aria-label", t(node.dataset.i18nAriaLabel));
+        });
+        root.querySelectorAll("[data-i18n-title-attr]").forEach((node) => {
+            node.setAttribute("title", t(node.dataset.i18nTitleAttr));
         });
     }
 
@@ -1013,6 +1560,40 @@ const PeerlinkApp = (() => {
         }
 
         return data;
+    }
+
+    async function downloadFile(path, filename, options = {}, requiresAuth = true) {
+        const auth = getAuth();
+        const headers = {
+            ...(options.headers || {})
+        };
+
+        if (requiresAuth && auth.token) {
+            headers.Authorization = `Bearer ${auth.token}`;
+        }
+
+        const response = await fetch(withLang(path), {
+            ...options,
+            headers
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                clearAuth();
+            }
+            const raw = await response.text();
+            throw raw ? safeJsonParse(raw) : { status: response.status, message: response.statusText };
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
     }
 
     function bindConsole(elementId) {
@@ -1148,11 +1729,91 @@ const PeerlinkApp = (() => {
             .replaceAll("'", "&#39;");
     }
 
+    function closeDashboardDropdowns(except = null) {
+        document.querySelectorAll(".dropdown-menu.show").forEach((menu) => {
+            if (menu === except) {
+                return;
+            }
+            menu.classList.remove("show");
+            menu.closest(".dropdown")?.querySelector("[data-bs-toggle='dropdown']")?.setAttribute("aria-expanded", "false");
+        });
+    }
+
+    function openDashboardOffcanvas(selector) {
+        const panel = document.querySelector(selector);
+        if (!panel) {
+            return;
+        }
+        panel.classList.add("show");
+        panel.style.visibility = "visible";
+        document.body.classList.add("overflow-hidden");
+
+        if (!document.querySelector(".dashboard-offcanvas-backdrop")) {
+            const backdrop = document.createElement("button");
+            backdrop.type = "button";
+            backdrop.className = "offcanvas-backdrop fade show dashboard-offcanvas-backdrop";
+            backdrop.setAttribute("aria-label", "Cerrar menu");
+            document.body.appendChild(backdrop);
+        }
+    }
+
+    function closeDashboardOffcanvas(target = null) {
+        const panel = target?.closest?.(".offcanvas.show") || document.querySelector(".offcanvas.show");
+        if (panel) {
+            panel.classList.remove("show");
+            panel.style.visibility = "hidden";
+        }
+        document.querySelector(".dashboard-offcanvas-backdrop")?.remove();
+        document.body.classList.remove("overflow-hidden");
+    }
+
+    document.addEventListener("click", (event) => {
+        const dropdownToggle = event.target.closest("[data-bs-toggle='dropdown']");
+        if (dropdownToggle) {
+            event.preventDefault();
+            const menu = dropdownToggle.closest(".dropdown")?.querySelector(".dropdown-menu");
+            if (menu) {
+                const willOpen = !menu.classList.contains("show");
+                closeDashboardDropdowns(menu);
+                menu.classList.toggle("show", willOpen);
+                dropdownToggle.setAttribute("aria-expanded", String(willOpen));
+            }
+            return;
+        }
+
+        const offcanvasToggle = event.target.closest("[data-bs-toggle='offcanvas']");
+        if (offcanvasToggle) {
+            event.preventDefault();
+            openDashboardOffcanvas(offcanvasToggle.dataset.bsTarget);
+            return;
+        }
+
+        if (event.target.closest("[data-bs-dismiss='offcanvas']") || event.target.classList.contains("dashboard-offcanvas-backdrop")) {
+            event.preventDefault();
+            closeDashboardOffcanvas(event.target);
+            return;
+        }
+
+        if (!isLogoutTrigger(event.target)) {
+            closeDashboardDropdowns();
+            return;
+        }
+
+        event.preventDefault();
+        logoutToLogin();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".peerlink-language-select").forEach(bindLanguageSelect);
+    });
+
     return {
         api,
         applyI18n,
         bindConsole,
+        downloadFile,
         bindFeedback,
+        bindLanguageSelect,
         clearAuth,
         ensureRole,
         escapeHtml,
@@ -1168,6 +1829,7 @@ const PeerlinkApp = (() => {
         labelForLanguage,
         panelForRole,
         redirectToPanel,
+        renderLanguageSelect,
         renderNavbar,
         saveAuth,
         updateStoredProfile,

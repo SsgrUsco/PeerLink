@@ -4,53 +4,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PeerLink | Ayuda</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    <link rel="icon" href="/img/peerlink.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+          crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+              crossorigin="anonymous">
+    </noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="peerlink-body" data-i18n-title="help_title">
-<div id="navbarContainer"></div>
-<main class="container-xxl py-4">
-    <section class="hero-card rounded-4 shadow-sm p-4 p-lg-5 mb-4">
-        <h1 class="display-6 fw-bold mb-3" data-i18n="help_heading">Centro de ayuda</h1>
-        <p class="lead mb-0" data-i18n="help_desc">Encuentra respuestas rapidas sobre reservas, tutorias, cuentas y uso general de la plataforma.</p>
-    </section>
-    <div class="row g-4">
+<body class="peerlink-body bg-light" data-i18n-title="help_title">
+
+<div id="navbarContainer" class="d-none"></div>
+
+<main class="container-xxl py-4 py-lg-5">
+
+    <nav class="landing-nav nav-blur d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 sticky-top mb-5 bg-white bg-opacity-75 rounded-pill px-4 py-2 shadow-sm border" style="backdrop-filter: blur(10px); z-index: 1020;" aria-label="Navegación de ayuda">
+        <div class="d-flex align-items-center justify-content-between gap-4 flex-wrap w-100 w-md-auto">
+            <a class="navbar-brand text-decoration-none" href="/">
+                <img src="/img/peerlink.svg" alt="PeerLink" class="brand-logo" width="140" height="35" fetchpriority="high">
+            </a>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center w-100 w-md-auto">
+            <div id="helpLanguageSelect" class="peerlink-language-select me-2" data-language-dropdown>
+                <button class="btn btn-sm btn-white border rounded-circle p-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;" type="button" aria-label="Idioma" aria-expanded="false">
+                    <i class="bi bi-globe2 text-secondary"></i>
+                </button>
+            </div>
+            <a id="helpBackBtn" class="btn btn-outline-dark rounded-pill px-4 fw-medium" href="/"><i class="bi bi-arrow-left me-2"></i><span data-i18n="action_go_home">Volver al inicio</span></a>
+        </div>
+    </nav>
+
+    <header class="bg-white rounded-5 shadow-sm p-4 p-lg-5 mb-5 border text-center" data-animation="fade-up">
+        <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-success-subtle text-success border border-success-subtle mb-4">
+            <i class="bi bi-info-circle-fill"></i>
+            <span class="small fw-semibold" data-i18n="help_badge">Soporte Academico</span>
+        </div>
+        <h1 class="display-5 fw-bold mb-3 text-dark" data-i18n="help_heading">¿Cómo te podemos ayudar hoy?</h1>
+        <p class="lead mb-0 text-secondary mx-auto" style="max-width: 700px;" data-i18n="help_desc">Todo lo que necesitas saber para coordinar tus tutorías sin cruces de horarios ni grupos de chat desordenados. Encuentra tu materia y aprueba.</p>
+    </header>
+
+    <div class="row g-4 mb-5" data-animation="fade-up">
+
         <div class="col-lg-6">
-            <section class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white border-0 p-4">
-                    <h2 class="h4 mb-0" data-i18n="help_section_general">Uso general</h2>
+            <section class="card border rounded-5 shadow-sm h-100 bg-white overflow-hidden">
+                <div class="card-header bg-white border-bottom p-4 d-flex align-items-center gap-3">
+                    <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                        <i class="bi bi-mortarboard-fill fs-5"></i>
+                    </div>
+                    <h2 class="h4 mb-0 fw-bold text-dark" data-i18n="help_section_general">Uso General y Estudiantes</h2>
                 </div>
-                <div class="card-body pt-0 px-4 pb-4">
-                    <p class="fw-semibold mb-1" data-i18n="help_faq_login_q">No puedo iniciar sesion</p>
-                    <p class="text-secondary" data-i18n="help_faq_login_a">Verifica correo, contrasena y que el navegador permita el certificado local si trabajas en entorno de desarrollo.</p>
-                    <p class="fw-semibold mb-1" data-i18n="help_faq_student_q">Como solicito una tutoria</p>
-                    <p class="text-secondary" data-i18n="help_faq_student_a">Desde Tutorias puedes usar Solicitar para proponer fecha y tutor, o Aceptar para reservar una tutoria ya publicada.</p>
+                <div class="card-body p-0">
+                    <div class="d-grid">
+                        <details class="p-4 border-bottom bg-hover-light cursor-pointer">
+                            <summary class="fw-bold fs-6 text-dark d-flex justify-content-between align-items-center list-none" data-i18n="help_faq_login_q">
+                                ¿Problemas para ingresar?
+                                <i class="bi bi-chevron-down text-secondary small"></i>
+                            </summary>
+                            <p class="text-secondary mt-3 mb-0 small lh-lg" data-i18n="help_faq_login_a">Verifica tu correo, contraseña y asegúrate de que el entorno sea seguro. Todo el acceso es exclusivo para la comunidad universitaria certificada.</p>
+                        </details>
+                        <details class="p-4 bg-hover-light cursor-pointer">
+                            <summary class="fw-bold fs-6 text-dark d-flex justify-content-between align-items-center list-none" data-i18n="help_faq_student_q">
+                                ¿Cómo agendo una tutoría sin usar WhatsApp?
+                                <i class="bi bi-chevron-down text-secondary small"></i>
+                            </summary>
+                            <p class="text-secondary mt-3 mb-0 small lh-lg" data-i18n="help_faq_student_a">Desde tu panel, busca la materia, filtra el horario que mejor se adapte a ti y envía la solicitud. Puedes proponer una fecha o aceptar una reserva ya disponible. Todo se sincroniza en tu agenda al instante.</p>
+                        </details>
+                    </div>
                 </div>
             </section>
         </div>
+
         <div class="col-lg-6">
-            <section class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white border-0 p-4">
-                    <h2 class="h4 mb-0" data-i18n="help_section_tutor">Tutores</h2>
+            <section class="card border rounded-5 shadow-sm h-100 bg-white overflow-hidden">
+                <div class="card-header bg-white border-bottom p-4 d-flex align-items-center gap-3">
+                    <div class="bg-warning-subtle text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                        <i class="bi bi-person-workspace fs-5"></i>
+                    </div>
+                    <h2 class="h4 mb-0 fw-bold text-dark" data-i18n="help_section_tutor">Tutores y Administración</h2>
                 </div>
-                <div class="card-body pt-0 px-4 pb-4">
-                    <p class="fw-semibold mb-1" data-i18n="help_faq_tutor_q">Como publico una tutoria</p>
-                    <p class="text-secondary" data-i18n="help_faq_tutor_a">Desde Crear tutoria filtra la materia, selecciona la coincidencia y asigna fecha y hora.</p>
-                    <p class="fw-semibold mb-1" data-i18n="help_faq_admin_q">Que puedo hacer como admin</p>
-                    <p class="text-secondary" data-i18n="help_faq_admin_a">Puedes crear materias, asignar tutores, administrar usuarios y abrir Swagger con permisos protegidos.</p>
+                <div class="card-body p-0">
+                    <div class="d-grid">
+                        <details class="p-4 border-bottom bg-hover-light cursor-pointer">
+                            <summary class="fw-bold fs-6 text-dark d-flex justify-content-between align-items-center list-none" data-i18n="help_faq_tutor_q">
+                                ¿Cómo publico mis horarios disponibles?
+                                <i class="bi bi-chevron-down text-secondary small"></i>
+                            </summary>
+                            <p class="text-secondary mt-3 mb-0 small lh-lg" data-i18n="help_faq_tutor_a">En la sección de Crear tutoría, elige la materia para la que fuiste asignado por coordinación y define tu disponibilidad con fecha y hora. Los estudiantes lo verán automáticamente.</p>
+                        </details>
+                        <details class="p-4 bg-hover-light cursor-pointer">
+                            <summary class="fw-bold fs-6 text-dark d-flex justify-content-between align-items-center list-none" data-i18n="help_faq_admin_q">
+                                ¿Qué herramientas tiene el administrador?
+                                <i class="bi bi-chevron-down text-secondary small"></i>
+                            </summary>
+                            <p class="text-secondary mt-3 mb-0 small lh-lg" data-i18n="help_faq_admin_a">Gestión total: puedes crear el catálogo de materias, asignar tutores, administrar la comunidad de usuarios y abrir Swagger con permisos protegidos para revisar la API.</p>
+                        </details>
+                    </div>
                 </div>
             </section>
         </div>
     </div>
-    <section class="card border-0 shadow-sm mt-4">
-        <div class="card-body p-4">
-            <p class="mb-0 text-secondary" data-i18n="help_contact_line">Si sigues bloqueada, comparte una captura y el mensaje de error con soporte o con el administrador.</p>
+
+    <section class="cta-final bg-dark text-white rounded-5 p-4 p-lg-5 text-center shadow-lg position-relative overflow-hidden" data-animation="fade-up">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-success opacity-10" style="clip-path: circle(50% at 90% -20%);"></div>
+        <div class="position-relative z-1 d-flex flex-column align-items-center">
+            <i class="bi bi-headset fs-1 text-success mb-3"></i>
+            <h3 class="h4 fw-bold mb-3" data-i18n="help_unresolved_title">Aun no resuelves tu problema?</h3>
+            <p class="mb-0 text-white-50" style="max-width: 600px;" data-i18n="help_contact_line">Si sigues bloqueado o experimentas un cruce de datos, comparte una captura de pantalla y el mensaje de error directamente con el equipo de soporte o con el administrador institucional.</p>
         </div>
     </section>
+
+    <footer class="pt-5 mt-4 text-center text-secondary small">
+        <p data-i18n="help_footer">© 2026 PeerLink. Haciendo la vida universitaria mas simple.</p>
+    </footer>
+
 </main>
-<script src="/js/common.js"></script>
-<script src="/js/page-shell.js"></script>
+
+<script src="/js/common.js" defer></script>
+<script src="/js/page-shell.js" defer></script>
+<script>
+    // Pequeño script para que el botón "Volver" te mande a tu panel si tienes sesión activa
+    document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+            if(typeof PeerlinkApp !== 'undefined') {
+                const auth = PeerlinkApp.getAuth();
+                const backBtn = document.getElementById("helpBackBtn");
+                if (backBtn && auth.token && auth.role) {
+                    backBtn.href = PeerlinkApp.withLang(PeerlinkApp.panelForRole(auth.role));
+                    backBtn.innerHTML = `<i class="bi bi-columns-gap me-2"></i><span>${PeerlinkApp.t("landing_panel_cta")}</span>`;
+                }
+            }
+
+            // Ocultar las flechitas de las etiquetas details por defecto para usar los íconos de Bootstrap
+            const style = document.createElement('style');
+            style.innerHTML = `
+                details > summary { list-style: none; outline: none; }
+                details > summary::-webkit-details-marker { display: none; }
+                details[open] summary i { transform: rotate(180deg); transition: transform 0.3s ease; }
+                details summary i { transition: transform 0.3s ease; }
+            `;
+            document.head.appendChild(style);
+        }, 100);
+    });
+</script>
 </body>
 </html>

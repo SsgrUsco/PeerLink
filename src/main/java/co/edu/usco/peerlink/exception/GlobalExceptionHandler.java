@@ -86,6 +86,6 @@ public class GlobalExceptionHandler {
     }
 
     private String resolveMessage(String key, Object... args) {
-        return messageSource.getMessage(key, args, LocaleContextHolder.getLocale());
+        return messageSource.getMessage(key, args, key, LocaleContextHolder.getLocale());
     }
 }

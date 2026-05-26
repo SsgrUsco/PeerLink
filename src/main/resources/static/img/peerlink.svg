@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50" aria-label="PeerLink Logo">
+    <defs>
+        <linearGradient id="peerlinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#198754" />
+            <stop offset="60%" stop-color="#198754" />
+            <stop offset="100%" stop-color="#0dcaf0" />
+        </linearGradient>
+    </defs>
+
+    <g transform="translate(4, 3)">
+        <path d="M 16,22 C 24,14 26,30 34,22" fill="none" stroke="url(#peerlinkGradient)" stroke-width="4.5" stroke-linecap="round"/>
+
+        <circle cx="16" cy="22" r="7" fill="#0f5132" stroke="#ffffff" stroke-width="1.5" />
+        <circle cx="16" cy="22" r="3" fill="#ffffff" />
+
+        <circle cx="34" cy="22" r="7" fill="#0dcaf0" stroke="#ffffff" stroke-width="1.5" />
+        <circle cx="34" cy="22" r="3" fill="#ffffff" />
+
+        <path d="M 12,12 L 16,9 L 20,12 L 16,15 Z" fill="#198754" />
+        <path d="M 20,12 L 20,16" stroke="#198754" stroke-width="1" />
+    </g>
+
+    <text x="54" y="31" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="800" fill="#212529" letter-spacing="-0.5">Peer<tspan font-weight="400" fill="#198754">Link</tspan></text>
+</svg>

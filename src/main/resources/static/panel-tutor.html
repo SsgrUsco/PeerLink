@@ -4,281 +4,451 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PeerLink | Panel Tutor</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    <link rel="icon" href="/img/peerlink.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+          crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+              crossorigin="anonymous">
+    </noscript>
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="peerlink-body" data-i18n-title="tutor_title">
-<div id="navbarContainer"></div>
-<main class="container-xxl py-4">
-    <section class="hero-card rounded-4 shadow-sm p-4 p-lg-5 mb-4">
-        <h1 class="display-6 fw-bold mb-3" data-i18n="tutor_panel_heading">Panel Tutor</h1>
-        <p class="lead mb-0" data-i18n="tutor_panel_desc">Administra solicitudes recibidas, publica nuevas tutorias y consulta tu horario semanal en calendario o lista.</p>
-    </section>
+<body class="peerlink-body bg-body-tertiary" data-i18n-title="tutor_title">
+<div id="navbarContainer" class="d-none"></div>
 
-    <div class="d-flex flex-wrap gap-2 mb-4">
-        <button id="tutorSolicitudesTabBtn" type="button" class="btn btn-success" data-i18n="tutor_tab_requests">Solicitudes recibidas</button>
-        <button id="tutorCrearTabBtn" type="button" class="btn btn-outline-success" data-i18n="tutor_tab_create">Crear tutoria</button>
-        <button id="tutorHorarioTabBtn" type="button" class="btn btn-outline-success" data-i18n="tutor_tab_schedule">Mis materias y horario</button>
-    </div>
+<div class="dashboard-shell d-flex flex-column flex-lg-row min-vh-100">
+    <aside class="offcanvas-lg offcanvas-start dashboard-sidebar bg-white shadow-sm border-0 m-0 m-lg-3 rounded-end-0 rounded-lg-4 d-flex flex-column" tabindex="-1" id="tutorSidebar" aria-labelledby="tutorSidebarLabel" style="width: 280px;">
+        <div class="offcanvas-header border-bottom border-light-subtle py-4 px-4">
+            <a class="navbar-brand text-decoration-none" href="/panel-tutor.html" aria-label="PeerLink" data-i18n-aria-label="aria_peerlink_home">
+                <img src="/img/peerlink.svg" alt="PeerLink" class="brand-logo brand-logo-sm" width="150" height="38" fetchpriority="high">
+            </a>
+            <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#tutorSidebar" aria-label="Cerrar" data-i18n-aria-label="aria_close_menu"></button>
+        </div>
 
-    <section id="tutorSolicitudesTab">
-        <section class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <h2 class="h4 mb-1" data-i18n="tutor_requests_title">Solicitudes recibidas</h2>
-                    <p class="text-secondary mb-0" data-i18n="tutor_requests_desc_extended">Filtra por buscador, idioma, facultad y fecha/hora. Tambien puedes ocultar las ya respondidas o deshacer una respuesta.</p>
+        <div class="offcanvas-body d-flex flex-column p-4 overflow-y-auto">
+            <p id="tutorSidebarLabel" class="text-uppercase text-secondary small fw-bold mb-3 tracking-wider opacity-75" data-i18n="tutor_panel_heading">Panel Tutor</p>
+
+            <nav class="nav nav-pills flex-column gap-2" aria-label="Navegacion tutor" data-i18n-aria-label="aria_tutor_nav">
+                <button id="tutorSolicitudesTabBtn" type="button" class="btn btn-success text-start py-2.5 px-4 rounded-pill shadow-sm w-100 fw-medium d-flex align-items-center gap-2 transition-all">
+                    <i class="bi bi-inbox fs-5"></i>
+                    <span data-i18n="tutor_tab_requests">Solicitudes recibidas</span>
+                </button>
+                <button id="tutorCrearTabBtn" type="button" class="btn btn-outline-success border-0 text-start py-2.5 px-4 rounded-pill w-100 fw-medium d-flex align-items-center gap-2 transition-all">
+                    <i class="bi bi-plus-square fs-5"></i>
+                    <span data-i18n="tutor_tab_create">Crear tutoria</span>
+                </button>
+                <button id="tutorHorarioTabBtn" type="button" class="btn btn-outline-success border-0 text-start py-2.5 px-4 rounded-pill w-100 fw-medium d-flex align-items-center gap-2 transition-all">
+                    <i class="bi bi-calendar2-week fs-5"></i>
+                    <span data-i18n="tutor_tab_schedule">Mis materias y horario</span>
+                </button>
+            </nav>
+
+            <div class="mt-auto pt-4 border-top border-light-subtle">
+                <div class="p-3 bg-light rounded-4 border border-light-subtle text-center">
+                    <i class="bi bi-person-workspace text-success fs-3 mb-2 d-block opacity-50"></i>
+                    <p class="small text-secondary mb-0 fw-medium" style="line-height: 1.4;" data-i18n="tutor_panel_desc">Administra solicitudes recibidas, publica nuevas tutorias y consulta tu horario semanal en calendario o lista.</p>
                 </div>
-                <button id="refreshReservasBtn" type="button" class="btn btn-outline-dark btn-sm" data-i18n="action_refresh">Refrescar</button>
             </div>
-            <div class="card-body pt-0 px-4 pb-4">
-                <form id="filtrosSolicitudesForm" class="row g-3 mb-4">
-                    <div class="col-lg-4">
-                        <label for="solicitudBusqueda" class="form-label" data-i18n="label_search">Buscador</label>
-                        <input id="solicitudBusqueda" type="search" class="form-control" data-i18n-placeholder="placeholder_subject_or_student" placeholder="Buscar estudiante o materia">
+        </div>
+    </aside>
+
+    <div class="dashboard-main flex-grow-1 d-flex flex-column min-w-0 px-2 px-lg-0">
+        <header class="dashboard-topbar bg-white shadow-sm mx-0 mx-lg-3 mt-0 mt-lg-3 rounded-0 rounded-lg-4 sticky-top border-0">
+            <div class="container-fluid py-3 px-3 px-lg-4 d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light border-0 d-lg-none rounded-pill p-2 shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#tutorSidebar" aria-controls="tutorSidebar" aria-label="Abrir menu" data-i18n-aria-label="aria_open_menu">
+                        <i class="bi bi-list fs-4 text-dark"></i>
+                    </button>
+                    <a class="d-none d-sm-inline-flex align-items-center text-decoration-none me-2" href="/panel-tutor.html" aria-label="PeerLink" data-i18n-aria-label="aria_peerlink_home">
+                        <img src="/img/peerlink.svg" alt="PeerLink" class="dashboard-topbar-logo" width="130" height="32">
+                    </a>
+                    <div class="border-start ps-3 d-none d-md-block border-light-subtle">
+                        <h1 class="h5 mb-0 fw-bold text-dark" data-i18n="tutor_panel_heading">Panel Tutor</h1>
                     </div>
-                    <div class="col-lg-2">
-                        <label for="solicitudIdioma" class="form-label" data-i18n="label_language">Idioma</label>
-                        <select id="solicitudIdioma" class="form-select"></select>
-                    </div>
-                    <div class="col-lg-3">
-                        <label for="solicitudFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
-                        <select id="solicitudFacultad" class="form-select"></select>
-                    </div>
-                    <div class="col-lg-1">
-                        <label for="solicitudFecha" class="form-label" data-i18n="label_date">Fecha</label>
-                        <input id="solicitudFecha" type="date" class="form-control">
-                    </div>
-                    <div class="col-lg-2">
-                        <label for="solicitudHora" class="form-label" data-i18n="label_time">Hora</label>
-                        <input id="solicitudHora" type="time" class="form-control">
-                    </div>
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input id="ocultarRespondidas" class="form-check-input" type="checkbox" checked>
-                            <label for="ocultarRespondidas" class="form-check-label" data-i18n="tutor_hide_answered">Ocultar solicitudes ya respondidas</label>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <div id="dashboardLanguageSelect" class="peerlink-language-select" data-language-dropdown>
+                        <button class="btn btn-sm btn-light border rounded-circle p-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;" type="button" aria-label="Language selector" data-i18n-aria-label="aria_language_selector" aria-haspopup="menu" aria-expanded="false">
+                            <i class="bi bi-globe2 text-secondary"></i>
+                        </button>
+                        <div class="peerlink-language-menu shadow-lg border-0 rounded-4 mt-2" role="menu">
+                            <button class="peerlink-language-option rounded-top-4" type="button" role="menuitem" data-lang="es">ES</button>
+                            <button class="peerlink-language-option" type="button" role="menuitem" data-lang="en">EN</button>
+                            <button class="peerlink-language-option rounded-bottom-4" type="button" role="menuitem" data-lang="pt">PT</button>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-3 d-grid">
-                        <button type="submit" class="btn btn-outline-success" data-i18n="action_apply_filters">Aplicar filtros</button>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 d-grid">
-                        <button id="clearSolicitudesBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear">Limpiar</button>
-                    </div>
-                </form>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                        <tr>
-                            <th data-i18n="table_student">Estudiante</th>
-                            <th data-i18n="table_subject">Materia</th>
-                            <th data-i18n="table_datetime">Fecha y hora</th>
-                            <th data-i18n="table_language">Idioma</th>
-                            <th data-i18n="table_faculty">Facultad</th>
-                            <th data-i18n="table_status">Estado</th>
-                            <th data-i18n="table_actions">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody id="reservasTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </section>
 
-    <section id="tutorCrearTab" class="hidden">
-        <section class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0 p-4">
-                <h2 class="h4 mb-1" data-i18n="tutor_create_title">Buscar materia para publicar</h2>
-                <p class="text-secondary mb-0" data-i18n="tutor_create_desc">Busca una materia creada por admin y selecciona la coincidencia para asignarle la fecha y hora de tu tutoria.</p>
+                    <div class="dropdown">
+                        <button class="btn btn-white border rounded-pill d-flex align-items-center gap-2 p-1 pe-3 shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 0.85rem;">
+                                T
+                            </div>
+                            <span class="d-none d-md-inline small fw-bold text-secondary" data-i18n="navbar_profile">Tutor</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-2">
+                            <li><a class="dropdown-item py-2 rounded-3 fw-medium text-secondary" href="/perfil.html"><i class="bi bi-person-gear me-2"></i><span data-i18n="navbar_profile">Perfil</span></a></li>
+                            <li><a class="dropdown-item py-2 rounded-3 fw-medium text-secondary" href="/ayuda.html"><i class="bi bi-question-circle me-2"></i><span data-i18n="navbar_help">Ayuda</span></a></li>
+                            <li><hr class="dropdown-divider border-light"></li>
+                            <li><button id="dashboardLogoutBtn" class="dropdown-item py-2 rounded-3 fw-medium text-danger" type="button"><i class="bi bi-box-arrow-right me-2"></i><span data-i18n="navbar_logout">Cerrar sesion</span></button></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="card-body pt-0 px-4 pb-4">
-                <form id="crearBusquedaForm" class="row g-3">
-                    <div class="col-lg-8">
-                        <label for="crearBusqueda" class="form-label" data-i18n="label_search">Buscador</label>
-                        <input id="crearBusqueda" type="search" class="form-control" data-i18n-placeholder="placeholder_subject_only" placeholder="Buscar por nombre de materia">
-                    </div>
-                    <div class="col-lg-4">
-                        <label for="crearFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
-                        <select id="crearFacultad" class="form-select"></select>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 d-grid">
-                            <button type="submit" class="btn btn-success" data-i18n="action_search">Buscar coincidencias</button>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 d-grid">
-                            <button id="clearCrearBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear">Limpiar</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+        </header>
 
-        <section class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
-                    <h2 class="h4 mb-0" data-i18n="state_match">Coincidencias</h2>
-                    <button id="refreshTutorMateriasBtn" type="button" class="btn btn-outline-primary btn-sm" data-i18n="action_refresh">Refrescar</button>
-            </div>
-            <div class="card-body pt-0 px-4 pb-4">
-                <div id="crearMateriasContainer" class="row g-3"></div>
-            </div>
-        </section>
+        <main class="container-fluid p-3 p-lg-4 flex-grow-1">
+            <div id="tutorFeedback" class="hidden mb-4"></div>
 
-        <section class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0 p-4">
-                    <h2 class="h4 mb-0" data-i18n="tutor_create_selected">Tutoria a publicar</h2>
+            <section id="tutorSolicitudesTab">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 px-1 flex-wrap">
+                    <div>
+                        <h2 class="h4 fw-bold text-dark mb-1" data-i18n="tutor_requests_title">Solicitudes recibidas</h2>
+                        <p class="text-secondary small mb-0" data-i18n="tutor_requests_desc_extended">Filtra por buscador, idioma, facultad y fecha/hora. Tambien puedes ocultar las ya respondidas o deshacer una respuesta.</p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <span id="tutorSolicitudesCount" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2">0</span>
+                        <button id="refreshReservasBtn" type="button" class="btn btn-light border btn-sm rounded-pill px-3 d-flex align-items-center gap-1">
+                            <i class="bi bi-arrow-clockwise text-secondary"></i><span data-i18n="action_refresh">Refrescar</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="card-body pt-0 px-4 pb-4">
-                    <div id="crearEmptyState" class="text-secondary" data-i18n="tutor_create_empty">Selecciona una coincidencia para desplegar el formulario de publicacion.</div>
-                    <form id="tutorOfertaForm" class="row g-3 hidden">
-                        <div class="col-md-4">
-                            <label for="tutorMateriaNombre" class="form-label" data-i18n="label_subject">Materia</label>
-                        <input id="tutorMateriaNombre" type="text" class="form-control" readonly>
-                    </div>
-                    <div class="col-md-3">
-                            <label for="tutorMateriaIdioma" class="form-label" data-i18n="label_language">Idioma</label>
-                        <input id="tutorMateriaIdioma" type="text" class="form-control" readonly>
-                    </div>
-                    <div class="col-md-5">
-                            <label for="tutorMateriaFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
-                        <input id="tutorMateriaFacultad" type="text" class="form-control" readonly>
-                    </div>
-                    <div class="col-md-4">
-                            <label for="tutorMateriaFechaHora" class="form-label" data-i18n="label_datetime">Fecha y hora</label>
-                        <input id="tutorMateriaFechaHora" type="datetime-local" class="form-control" required>
-                    </div>
-                    <div class="col-md-8 d-grid d-md-flex justify-content-md-end">
-                        <label class="form-label invisible d-none d-md-block" data-i18n="table_actions">Accion</label>
-                        <button type="submit" class="btn btn-success" data-i18n="action_save_tutoring">Guardar tutoria</button>
-                    </div>
-                </form>
-            </div>
-        </section>
 
-        <section class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0 p-4">
-                <h2 class="h4 mb-1" data-i18n="tutor_published_title">Tutorias publicadas por mi</h2>
-                <p class="text-secondary mb-0" data-i18n="tutor_published_desc">Desde aqui puedes revisar o remover las tutorias que ya publicaste.</p>
-            </div>
-            <div class="card-body pt-0 px-4 pb-4">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                        <tr>
-                            <th data-i18n="table_subject">Materia</th>
-                            <th data-i18n="table_datetime">Fecha y hora</th>
-                            <th data-i18n="table_language">Idioma</th>
-                            <th data-i18n="table_faculty">Facultad</th>
-                            <th data-i18n="table_actions">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody id="tutorOfertasTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </section>
+                <section class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 mb-4">
+                    <header class="mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px;">
+                                <i class="bi bi-inbox fs-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="h5 fw-bold text-dark mb-1" data-i18n="tutor_requests_title">Solicitudes recibidas</h3>
+                                <p class="text-secondary small mb-0" data-i18n="tutor_requests_desc_extended">Filtra por buscador, idioma, facultad y fecha/hora. Tambien puedes ocultar las ya respondidas o deshacer una respuesta.</p>
+                            </div>
+                        </div>
+                    </header>
 
-    <section id="tutorHorarioTab" class="hidden">
-        <section class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <h2 class="h4 mb-1" data-i18n="tutor_schedule_filter_title">Filtrar mi horario</h2>
-                    <p class="text-secondary mb-0" data-i18n="tutor_schedule_filter_desc">Consulta tus tutorias reales por buscador, idioma, facultad y fecha/hora, en calendario semanal o lista.</p>
-                </div>
-                <button id="refreshHorarioBtn" type="button" class="btn btn-outline-dark btn-sm" data-i18n="action_refresh">Refrescar</button>
-            </div>
-            <div class="card-body pt-0 px-4 pb-4">
-                <form id="filtrosHorarioTutorForm" class="row g-3">
-                    <div class="col-lg-4">
-                        <label for="horarioBusquedaTutor" class="form-label" data-i18n="label_search">Buscador</label>
-                        <input id="horarioBusquedaTutor" type="search" class="form-control" data-i18n-placeholder="placeholder_subject_or_student" placeholder="Buscar estudiante o materia">
-                    </div>
-                    <div class="col-lg-2">
-                        <label for="materiaTutorIdioma" class="form-label" data-i18n="label_language">Idioma</label>
-                        <select id="materiaTutorIdioma" class="form-select"></select>
-                    </div>
-                    <div class="col-lg-3">
-                        <label for="materiaTutorFacultad" class="form-label" data-i18n="label_faculty">Facultad</label>
-                        <select id="materiaTutorFacultad" class="form-select"></select>
-                    </div>
-                    <div class="col-lg-1">
-                        <label for="materiaTutorFecha" class="form-label" data-i18n="label_date">Fecha</label>
-                        <input id="materiaTutorFecha" type="date" class="form-control">
-                    </div>
-                    <div class="col-lg-2">
-                        <label for="materiaTutorHora" class="form-label" data-i18n="label_time">Hora</label>
-                        <input id="materiaTutorHora" type="time" class="form-control">
-                    </div>
-                    <div class="col-sm-6 col-lg-3 d-grid">
-                        <button type="submit" class="btn btn-outline-success" data-i18n="action_apply_filters">Aplicar filtros</button>
-                    </div>
-                    <div class="col-sm-6 col-lg-3 d-grid">
-                        <button id="clearMateriasTutorBtn" type="button" class="btn btn-outline-secondary" data-i18n="action_clear">Limpiar</button>
-                    </div>
-                </form>
-            </div>
-        </section>
+                    <form id="filtrosSolicitudesForm" class="row g-3 align-items-end bg-light p-4 rounded-4 border border-light-subtle">
+                        <div class="col-xl-3 col-lg-6">
+                            <label for="solicitudBusqueda" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_search">Buscador</label>
+                            <input id="solicitudBusqueda" type="search" class="form-control rounded-pill bg-white border py-2 px-3 shadow-sm" data-i18n-placeholder="placeholder_subject_or_student" placeholder="Buscar estudiante o materia">
+                        </div>
+                        <div class="col-sm-6 col-xl-2">
+                            <label for="solicitudIdioma" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_language">Idioma</label>
+                            <select id="solicitudIdioma" class="form-select rounded-pill bg-white border py-2 px-3 shadow-sm"></select>
+                        </div>
+                        <div class="col-xl-3 col-lg-6">
+                            <label for="solicitudFacultad" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_faculty">Facultad</label>
+                            <select id="solicitudFacultad" class="form-select rounded-pill bg-white border py-2 px-3 shadow-sm"></select>
+                        </div>
+                        <div class="col-sm-6 col-xl-2">
+                            <label for="solicitudFecha" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_date">Fecha</label>
+                            <input id="solicitudFecha" type="date" class="form-control rounded-pill bg-white border py-2 px-3 shadow-sm">
+                        </div>
+                        <div class="col-sm-6 col-xl-2">
+                            <label for="solicitudHora" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_time">Hora</label>
+                            <input id="solicitudHora" type="time" class="form-control rounded-pill bg-white border py-2 px-3 shadow-sm">
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check bg-white border border-light-subtle rounded-4 px-4 py-3 d-inline-flex align-items-center gap-2 shadow-sm">
+                                <input id="ocultarRespondidas" class="form-check-input m-0" type="checkbox" checked>
+                                <label for="ocultarRespondidas" class="form-check-label small fw-semibold text-secondary" data-i18n="tutor_hide_answered">Ocultar solicitudes ya respondidas</label>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="filter-actions">
+                                <button type="submit" class="btn btn-success rounded-pill px-4 py-2 fw-medium shadow-sm d-flex align-items-center gap-2">
+                                    <i class="bi bi-search"></i><span data-i18n="action_apply_filters">Aplicar filtros</span>
+                                </button>
+                                <button id="clearSolicitudesBtn" type="button" class="btn btn-white border rounded-pill px-4 py-2 text-secondary d-flex align-items-center gap-2">
+                                    <i class="bi bi-eraser"></i><span data-i18n="action_clear">Limpiar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
 
-        <section class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div class="btn-group" role="group">
-                    <button id="tutorCalendarViewBtn" type="button" class="btn btn-success" data-i18n="schedule_weekly">Calendario semanal</button>
-                    <button id="tutorListViewBtn" type="button" class="btn btn-outline-success" data-i18n="schedule_list">Lista simple</button>
-                </div>
-                <div class="d-flex flex-wrap gap-2 align-items-center">
-                    <button id="prevWeekBtn" type="button" class="btn btn-outline-secondary btn-sm" data-i18n="action_prev_week">Semana anterior</button>
-                    <button id="thisWeekBtn" type="button" class="btn btn-outline-success btn-sm" data-i18n="action_this_week">Esta semana</button>
-                    <button id="nextWeekBtn" type="button" class="btn btn-outline-secondary btn-sm" data-i18n="action_next_week">Semana siguiente</button>
-                    <input id="weekPicker" type="date" class="form-control form-control-sm">
-                </div>
-            </div>
-            <div class="card-body pt-0 px-4 pb-4">
-                <div id="tutorCalendarPanel">
-                    <p id="weekRangeLabel" class="fw-semibold mb-3"></p>
-                    <div id="weeklyCalendar" class="weekly-calendar"></div>
-                </div>
-                <div id="tutorListPanel" class="hidden">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light">
+                <section class="card border-0 shadow-sm rounded-4 bg-white p-3 p-md-4 mb-5">
+                    <div class="table-responsive rounded-4 border border-light-subtle shadow-sm" style="max-height: 520px; overflow-y: auto;">
+                        <table class="table table-hover align-middle mb-0 bg-white">
+                            <thead class="table-light text-secondary small fw-bold sticky-top">
                             <tr>
-                                <th data-i18n="table_subject">Materia</th>
-                                <th data-i18n="table_student">Estudiante</th>
-                                <th data-i18n="table_datetime">Fecha y hora</th>
-                                <th data-i18n="table_language">Idioma</th>
-                                <th data-i18n="table_faculty">Facultad</th>
-                                <th data-i18n="table_status">Estado</th>
+                                <th class="py-2 px-3" data-i18n="table_student">Estudiante</th>
+                                <th class="py-2" data-i18n="table_subject">Materia</th>
+                                <th class="py-2" data-i18n="table_datetime">Fecha y hora</th>
+                                <th class="py-2" data-i18n="table_language">Idioma</th>
+                                <th class="py-2" data-i18n="table_faculty">Facultad</th>
+                                <th class="py-2" data-i18n="table_status">Estado</th>
+                                <th class="py-2 px-3" data-i18n="table_actions">Acciones</th>
                             </tr>
                             </thead>
-                            <tbody id="tutorHorarioTableBody"></tbody>
+                            <tbody id="reservasTableBody" class="text-dark fw-medium small"></tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-        </section>
-    </section>
+                </section>
+            </section>
 
-    <section class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-0 p-4">
-            <h2 class="h4 mb-0" data-i18n="console_title">Consola</h2>
+            <section id="tutorCrearTab" class="hidden">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 px-1 flex-wrap">
+                    <div>
+                        <h2 class="h4 fw-bold text-dark mb-1" data-i18n="tutor_tab_create">Crear tutoria</h2>
+                        <p class="text-secondary small mb-0" data-i18n="tutor_create_desc">Busca una materia creada por admin y selecciona la coincidencia para asignarle la fecha y hora de tu tutoria.</p>
+                    </div>
+                </div>
+
+                <section class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 mb-4">
+                    <header class="mb-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px;">
+                                <i class="bi bi-search fs-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="h5 fw-bold text-dark mb-1" data-i18n="tutor_create_title">Buscar materia para publicar</h3>
+                                <p class="text-secondary small mb-0" data-i18n="tutor_create_desc">Busca una materia creada por admin y selecciona la coincidencia para asignarle la fecha y hora de tu tutoria.</p>
+                            </div>
+                        </div>
+                    </header>
+
+                    <form id="crearBusquedaForm" class="row g-4 align-items-end">
+                        <div class="col-lg-8">
+                            <label for="crearBusqueda" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_search">Buscador</label>
+                            <input id="crearBusqueda" type="search" class="form-control rounded-pill bg-light border-0 py-2.5 px-4 shadow-inner" data-i18n-placeholder="placeholder_subject_only" placeholder="Buscar por nombre de materia">
+                        </div>
+                        <div class="col-xl-3 col-lg-6">
+                            <label for="crearFacultad" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_faculty">Facultad</label>
+                            <select id="crearFacultad" class="form-select rounded-pill bg-light border-0 py-2.5 px-4"></select>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="filter-actions">
+                                <button type="submit" class="btn btn-success rounded-pill px-4 py-2 fw-semibold shadow-sm d-flex align-items-center gap-2">
+                                    <i class="bi bi-search"></i><span data-i18n="action_search">Buscar coincidencias</span>
+                                </button>
+                                <button id="clearCrearBtn" type="button" class="btn btn-light border rounded-pill px-4 py-2 text-secondary d-flex align-items-center gap-2">
+                                    <i class="bi bi-eraser"></i><span data-i18n="action_clear">Limpiar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 mb-4">
+                    <header class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <h3 class="h5 fw-bold text-dark mb-0" data-i18n="state_match">Coincidencias</h3>
+                            <span id="crearMatchesCount" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2">0</span>
+                        </div>
+                        <button id="refreshTutorMateriasBtn" type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 d-flex align-items-center gap-2">
+                            <i class="bi bi-arrow-clockwise"></i><span data-i18n="action_refresh">Refrescar</span>
+                        </button>
+                    </header>
+
+                    <div id="crearMateriasContainer" class="row g-3 mt-1"></div>
+                </section>
+
+                <section class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 mb-4 border-top border-4 border-success">
+                    <header class="mb-4">
+                        <h3 class="h5 fw-bold text-dark mb-0" data-i18n="tutor_create_selected">Tutoria a publicar</h3>
+                    </header>
+
+                    <div class="d-flex align-items-start gap-3 p-3 bg-success-subtle text-success-emphasis rounded-4 small mb-4 border border-success-subtle">
+                        <i class="bi bi-info-circle-fill mt-1"></i>
+                        <p class="mb-0 fw-medium lh-sm" data-i18n="tutor_create_hint">Selecciona una materia, revisa su idioma y facultad, y luego define la fecha y hora de la tutoria.</p>
+                    </div>
+
+                    <div id="crearEmptyState" class="bg-light border border-dashed rounded-4 text-center py-5 px-4">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm mb-3" style="width: 70px; height: 70px;">
+                            <i class="bi bi-inbox fs-2 text-secondary opacity-50"></i>
+                        </div>
+                        <p class="text-secondary fw-medium mb-0" data-i18n="tutor_create_empty">Selecciona una coincidencia para desplegar el formulario de publicacion.</p>
+                    </div>
+
+                    <form id="tutorOfertaForm" class="row g-4 hidden needs-validation" novalidate>
+                        <div class="col-md-4">
+                            <label for="tutorMateriaNombre" class="form-label small fw-bold text-secondary" data-i18n="label_subject">Materia</label>
+                            <input id="tutorMateriaNombre" type="text" class="form-control rounded-4 bg-light border-0 py-2.5 fw-semibold text-dark" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="tutorMateriaIdioma" class="form-label small fw-bold text-secondary" data-i18n="label_language">Idioma</label>
+                            <input id="tutorMateriaIdioma" type="text" class="form-control rounded-4 bg-light border-0 py-2.5 text-secondary" readonly>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="tutorMateriaFacultad" class="form-label small fw-bold text-secondary" data-i18n="label_faculty">Facultad</label>
+                            <input id="tutorMateriaFacultad" type="text" class="form-control rounded-4 bg-light border-0 py-2.5 text-secondary" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="tutorMateriaFechaHora" class="form-label small fw-bold text-secondary" data-i18n="label_datetime">Fecha y hora</label>
+                            <input id="tutorMateriaFechaHora" type="datetime-local" class="form-control rounded-4 py-2.5 border-light-subtle" required>
+                            <div class="invalid-feedback px-2" data-i18n="validation_datetime_required">Selecciona fecha y hora.</div>
+                        </div>
+                        <div class="col-md-8 d-grid d-md-flex justify-content-md-end align-items-end">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-calendar-check"></i><span data-i18n="action_save_tutoring">Guardar tutoria</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="card border-0 shadow-sm rounded-4 bg-white p-4 p-md-5 mb-5">
+                    <header class="mb-4">
+                        <h3 class="h5 fw-bold text-dark mb-1" data-i18n="tutor_published_title">Tutorias publicadas por mi</h3>
+                        <p class="text-secondary small mb-0" data-i18n="tutor_published_desc">Desde aqui puedes revisar o remover las tutorias que ya publicaste.</p>
+                    </header>
+
+                    <div class="table-responsive rounded-4 border border-light-subtle shadow-sm" style="max-height: 450px; overflow-y: auto;">
+                        <table class="table table-hover align-middle mb-0 bg-white">
+                            <thead class="table-light text-secondary small fw-bold sticky-top">
+                            <tr>
+                                <th class="py-2 px-3" data-i18n="table_subject">Materia</th>
+                                <th class="py-2" data-i18n="table_datetime">Fecha y hora</th>
+                                <th class="py-2" data-i18n="table_language">Idioma</th>
+                                <th class="py-2" data-i18n="table_faculty">Facultad</th>
+                                <th class="py-2 px-3" data-i18n="table_actions">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tutorOfertasTableBody" class="text-dark fw-medium small"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+
+            <section id="tutorHorarioTab" class="hidden">
+                <section class="card border-0 shadow-sm rounded-4 bg-white p-3 p-md-4 mb-4">
+                    <header class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                        <div>
+                            <h2 class="h5 fw-bold text-dark mb-1" data-i18n="tutor_schedule_filter_title">Filtrar mi horario</h2>
+                            <p class="text-secondary small mb-0" data-i18n="tutor_schedule_filter_desc">Consulta tus tutorias reales por buscador, idioma, facultad y fecha/hora, en calendario semanal o lista.</p>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <button id="downloadTutorReportBtn" type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3 shadow-sm d-flex align-items-center gap-1 report-download-btn">
+                                <i class="bi bi-file-earmark-pdf"></i><span class="d-none d-sm-inline" data-i18n="action_download_report">Descargar reporte PDF</span>
+                            </button>
+                            <button id="refreshHorarioBtn" type="button" class="btn btn-light border btn-sm rounded-pill px-3 d-flex align-items-center gap-1">
+                                <i class="bi bi-arrow-clockwise text-secondary"></i><span class="d-none d-sm-inline" data-i18n="action_refresh">Refrescar</span>
+                            </button>
+                        </div>
+                    </header>
+
+                    <form id="filtrosHorarioTutorForm" class="row g-3 align-items-end bg-light p-4 rounded-4 border border-light-subtle">
+                        <div class="col-lg-4">
+                            <label for="horarioBusquedaTutor" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_search">Buscador</label>
+                            <input id="horarioBusquedaTutor" type="search" class="form-control rounded-pill bg-white border py-2 px-3 shadow-sm" data-i18n-placeholder="placeholder_subject_or_student" placeholder="Buscar estudiante o materia">
+                        </div>
+                        <div class="col-sm-6 col-xl-2">
+                            <label for="materiaTutorIdioma" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_language">Idioma</label>
+                            <select id="materiaTutorIdioma" class="form-select rounded-pill bg-white border py-2 px-3 shadow-sm"></select>
+                        </div>
+                        <div class="col-xl-3 col-lg-6">
+                            <label for="materiaTutorFacultad" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_faculty">Facultad</label>
+                            <select id="materiaTutorFacultad" class="form-select rounded-pill bg-white border py-2 px-3 shadow-sm"></select>
+                        </div>
+                        <div class="col-sm-6 col-xl-2">
+                            <label for="materiaTutorFecha" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_date">Fecha</label>
+                            <input id="materiaTutorFecha" type="date" class="form-control rounded-pill bg-white border py-2 px-3 shadow-sm">
+                        </div>
+                        <div class="col-sm-6 col-xl-2">
+                            <label for="materiaTutorHora" class="form-label small fw-bold text-secondary text-uppercase" data-i18n="label_time">Hora</label>
+                            <input id="materiaTutorHora" type="time" class="form-control rounded-pill bg-white border py-2 px-3 shadow-sm">
+                        </div>
+                        <div class="col-12 mt-4">
+                            <div class="filter-actions">
+                                <button type="submit" class="btn btn-success rounded-pill px-4 py-2 fw-medium shadow-sm d-flex align-items-center gap-2">
+                                    <i class="bi bi-search"></i><span data-i18n="action_apply_filters">Aplicar filtros</span>
+                                </button>
+                                <button id="clearMateriasTutorBtn" type="button" class="btn btn-white border rounded-pill px-4 py-2 text-secondary d-flex align-items-center gap-2">
+                                    <i class="bi bi-eraser"></i><span data-i18n="action_clear">Limpiar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <section class="card border-0 shadow-sm rounded-4 bg-white p-3 p-md-4 mb-5">
+                    <header class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3 border-bottom pb-3">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <div class="d-inline-flex bg-light p-1 rounded-pill shadow-sm border border-light-subtle">
+                                <button id="tutorCalendarViewBtn" type="button" class="btn btn-success btn-sm rounded-pill px-3 py-1 fw-semibold d-flex align-items-center gap-1">
+                                    <i class="bi bi-calendar-week"></i><span data-i18n="schedule_weekly">Calendario semanal</span>
+                                </button>
+                                <button id="tutorListViewBtn" type="button" class="btn btn-light btn-sm bg-transparent rounded-pill px-3 py-1 text-secondary fw-semibold border-0 d-flex align-items-center gap-1">
+                                    <i class="bi bi-list-ul"></i><span data-i18n="schedule_list">Lista simple</span>
+                                </button>
+                            </div>
+                            <span id="tutorHorarioCount" class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1">0</span>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-1 align-items-center">
+                            <button id="prevWeekBtn" type="button" class="btn btn-white btn-sm border shadow-sm rounded-pill px-2 py-1 text-secondary d-flex align-items-center" title="Semana anterior" data-i18n-title="action_prev_week">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <button id="thisWeekBtn" type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1 fw-medium shadow-sm" data-i18n="action_this_week">Esta semana</button>
+                            <button id="nextWeekBtn" type="button" class="btn btn-white btn-sm border shadow-sm rounded-pill px-2 py-1 text-secondary d-flex align-items-center" title="Semana siguiente" data-i18n-title="action_next_week">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                            <div style="width: 32px; height: 32px; overflow: hidden; border-radius: 50%;" class="border shadow-sm ms-1 position-relative">
+                                <input id="weekPicker" type="date" class="form-control form-control-sm border-0 bg-light position-absolute top-50 start-50 translate-middle" style="opacity: 0; cursor: pointer; width: 200%; height: 200%;">
+                                <div class="bg-white d-flex align-items-center justify-content-center text-success w-100 h-100" style="pointer-events: none;">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div class="card-body p-0">
+                        <div id="tutorCalendarPanel">
+                            <p id="weekRangeLabel" class="fw-bold text-dark text-center text-md-start mb-3 fs-6"></p>
+                            <div class="weekly-calendar-shell rounded-4 border shadow-sm">
+                                <div id="weeklyCalendar" class="weekly-calendar weekly-calendar-compact"></div>
+                            </div>
+                        </div>
+
+                        <div id="tutorListPanel" class="hidden">
+                            <div class="table-responsive rounded-4 border border-light-subtle shadow-sm" style="max-height: 450px; overflow-y: auto;">
+                                <table class="table table-hover align-middle mb-0 bg-white">
+                                    <thead class="table-light text-secondary small fw-bold sticky-top">
+                                    <tr>
+                                        <th class="py-2 px-3" data-i18n="table_subject">Materia</th>
+                                        <th class="py-2" data-i18n="table_student">Estudiante</th>
+                                        <th class="py-2" data-i18n="table_datetime">Fecha y hora</th>
+                                        <th class="py-2" data-i18n="table_language">Idioma</th>
+                                        <th class="py-2" data-i18n="table_faculty">Facultad</th>
+                                        <th class="py-2 px-3" data-i18n="table_status">Estado</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tutorHorarioTableBody" class="text-dark fw-medium small"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <footer class="mt-auto py-4 border-top text-center text-lg-start d-flex flex-column flex-lg-row justify-content-between align-items-center gap-3 text-secondary small px-3">
+                <p class="mb-0" data-i18n="landing_footer">Construido para coordinar tutorias con claridad, trazabilidad y buena experiencia de uso.</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="/ayuda.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="navbar_help">Ayuda</a>
+                    <a href="/perfil.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="navbar_profile">Perfil</a>
+                    <a href="/terminos.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="legal_terms_heading">Terminos y condiciones</a>
+                    <a href="/privacidad.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="legal_privacy_heading">Politica de privacidad</a>
+                </div>
+            </footer>
+        </main>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1060;">
+    <div id="liveToast" class="toast align-items-center text-bg-dark border-0 rounded-4 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex p-1">
+            <div class="toast-body d-flex align-items-center gap-2 fw-medium" data-i18n="feedback_loaded">
+                <i class="bi bi-check-circle-fill text-success fs-5"></i> La informacion se actualizo correctamente.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar" data-i18n-aria-label="aria_close_menu"></button>
         </div>
-        <div class="card-body pt-0 px-4 pb-4">
-            <pre id="consoleOutput" class="console-output">{
-  "status": "ready"
-}</pre>
-        </div>
-    </section>
-    <footer class="page-footer d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-        <p class="text-secondary" data-i18n="landing_footer">Construido para coordinar tutorias con claridad, trazabilidad y buena experiencia de uso.</p>
-        <div class="page-footer-links">
-            <a href="/ayuda.html" class="link-secondary" data-i18n="navbar_help">Ayuda</a>
-            <a href="/perfil.html" class="link-secondary" data-i18n="navbar_profile">Perfil</a>
-            <a href="/terminos.html" class="link-secondary" data-i18n="legal_terms_heading">Terminos y condiciones</a>
-            <a href="/privacidad.html" class="link-secondary" data-i18n="legal_privacy_heading">Politica de privacidad</a>
-        </div>
-    </footer>
-</main>
-<script src="/js/common.js"></script>
-<script src="/js/panel-tutor.js"></script>
+    </div>
+</div>
+
+<script src="/js/common.js" defer></script>
+<script src="/js/panel-tutor.js" defer></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 const profileAuth = PeerlinkApp.ensureRole();
 const profileConsole = PeerlinkApp.bindConsole("consoleOutput");
+const profileFeedback = PeerlinkApp.bindFeedback("profileFeedback");
 
 if (profileAuth) {
     PeerlinkApp.renderNavbar("navbarContainer");
@@ -8,6 +9,10 @@ if (profileAuth) {
 }
 
 async function bootProfile() {
+    const backToPanelBtn = document.getElementById("profileBackToPanelBtn");
+    if (backToPanelBtn) {
+        backToPanelBtn.href = PeerlinkApp.withLang(PeerlinkApp.panelForRole(profileAuth.role));
+    }
     document.getElementById("profileForm").addEventListener("submit", saveProfile);
     document.getElementById("passwordForm").addEventListener("submit", savePassword);
     await loadProfile();
@@ -19,8 +24,10 @@ async function loadProfile() {
         document.getElementById("perfilNombre").value = data.nombreCompleto || "";
         document.getElementById("perfilCorreo").value = data.correo || "";
         document.getElementById("perfilRol").value = data.rol || "";
+        profileFeedback.info("feedback_profile_loaded");
         profileConsole.print(data);
     } catch (error) {
+        profileFeedback.error(error);
         profileConsole.printError(error);
     }
 }
@@ -37,8 +44,10 @@ async function saveProfile(event) {
         });
         PeerlinkApp.updateStoredProfile(data);
         PeerlinkApp.renderNavbar("navbarContainer");
+        profileFeedback.success("feedback_profile_saved");
         profileConsole.print(data);
     } catch (error) {
+        profileFeedback.error(error);
         profileConsole.printError(error);
     }
 }
@@ -54,8 +63,10 @@ async function savePassword(event) {
             })
         });
         event.currentTarget.reset();
+        profileFeedback.success("password_updated");
         profileConsole.print({ message: "password_updated" });
     } catch (error) {
+        profileFeedback.error(error);
         profileConsole.printError(error);
     }
 }

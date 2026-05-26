@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Autenticación", description = "Servicios públicos para autenticación y emisión de JWT.")
+@Tag(name = "Autenticacion", description = "Servicios publicos para autenticacion y emision de JWT.")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -35,14 +35,14 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(
-            summary = "Iniciar sesión",
-            description = "Autentica un usuario con correo y contraseña. Si las credenciales son válidas, devuelve un JWT con vigencia de 24 horas."
+            summary = "Iniciar sesion",
+            description = "Autentica un usuario con correo y contrasena. Si las credenciales son validas, devuelve un JWT con vigencia de 24 horas y el rol obtenido desde usuarios_rol."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Autenticación exitosa",
+            @ApiResponse(responseCode = "200", description = "Autenticacion exitosa",
                     content = @Content(schema = @Schema(implementation = AuthResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-            @ApiResponse(responseCode = "401", description = "Credenciales inválidas")
+            @ApiResponse(responseCode = "400", description = "Solicitud invalida"),
+            @ApiResponse(responseCode = "401", description = "Credenciales invalidas")
     })
     public AuthResponseDTO login(@Valid @RequestBody AuthDTO authDTO) {
         Authentication authentication = authenticationManager.authenticate(
@@ -50,7 +50,7 @@ public class AuthController {
         );
 
         if (!(authentication.getPrincipal() instanceof AuthenticatedUser user)) {
-            throw new BadCredentialsException("Credenciales inválidas");
+            throw new BadCredentialsException("Credenciales invalidas");
         }
 
         return new AuthResponseDTO(

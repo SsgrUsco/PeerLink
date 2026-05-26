@@ -6,6 +6,7 @@ import co.edu.usco.peerlink.dto.TutorMateriaDTO;
 import co.edu.usco.peerlink.dto.TutorOfertaDTO;
 import co.edu.usco.peerlink.service.MateriaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/materias")
-@Tag(name = "Materias", description = "Gestión de materias y asignaciones entre tutores y materias.")
+@Tag(name = "Materias", description = "Gestion de materias, ofertas de tutores y asignaciones tutor-materia.")
 public class MateriaController {
 
     private final MateriaService materiaService;
@@ -46,13 +47,14 @@ public class MateriaController {
     @PostMapping
     @Operation(
             summary = "Crear materia",
-            description = "Crea una nueva materia. Requiere rol ADMIN. El nombre no puede estar en blanco ni repetido."
+            description = "Crea una nueva materia del catalogo. Requiere rol ADMIN. El idioma y la facultad se guardan como claves tecnicas estables para i18n manual."
     )
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Materia creada",
                     content = @Content(schema = @Schema(implementation = MateriaDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Validación fallida"),
+            @ApiResponse(responseCode = "400", description = "Validacion fallida"),
+            @ApiResponse(responseCode = "403", description = "Acceso restringido a ADMIN"),
             @ApiResponse(responseCode = "409", description = "La materia ya existe")
     })
     public ResponseEntity<MateriaDTO> crear(@Valid @RequestBody MateriaDTO dto) {
@@ -62,7 +64,7 @@ public class MateriaController {
     @GetMapping
     @Operation(
             summary = "Listar materias",
-            description = "Devuelve todas las materias registradas. Puede ser consumido por ADMIN, TUTOR y ESTUDIANTE autenticados."
+            description = "Devuelve todas las materias registradas con su idioma y facultad. Puede ser consumido por ADMIN, TUTOR y ESTUDIANTE autenticados."
     )
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponse(responseCode = "200", description = "Listado de materias",
@@ -74,7 +76,7 @@ public class MateriaController {
     @GetMapping("/tutores-materias")
     @Operation(
             summary = "Listar relaciones tutor-materia",
-            description = "Consulta la tabla puente tutores_materias para identificar qué tutorías pueden reservarse para cada materia."
+            description = "Consulta las ofertas/asignaciones tutor-materia, incluyendo tutor, materia, idioma, facultad y fecha/hora publicada."
     )
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponse(responseCode = "200", description = "Listado de relaciones tutor-materia",
@@ -84,7 +86,16 @@ public class MateriaController {
     }
 
     @GetMapping("/mis-materias")
+    @Operation(
+            summary = "Listar mis tutorias publicadas",
+            description = "Permite al TUTOR consultar las materias/tutorias que ha publicado, con fecha/hora, idioma y facultad."
+    )
     @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Listado de tutorias publicadas por el tutor",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = TutorMateriaDetalleDTO.class)))),
+            @ApiResponse(responseCode = "403", description = "Solo disponible para TUTOR")
+    })
     public ResponseEntity<List<TutorMateriaDetalleDTO>> listarMisMateriasTutor() {
         return ResponseEntity.ok(materiaService.listarMisMateriasTutor());
     }
@@ -92,15 +103,20 @@ public class MateriaController {
     @PutMapping("/{id}")
     @Operation(
             summary = "Actualizar materia",
-            description = "Actualiza el nombre de una materia existente. Requiere rol ADMIN."
+            description = "Actualiza nombre, idioma y facultad de una materia existente. Requiere rol ADMIN."
     )
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Materia actualizada",
                     content = @Content(schema = @Schema(implementation = MateriaDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Validacion fallida"),
+            @ApiResponse(responseCode = "403", description = "Acceso restringido a ADMIN"),
             @ApiResponse(responseCode = "404", description = "Materia no encontrada")
     })
-    public ResponseEntity<MateriaDTO> actualizar(@PathVariable Integer id, @Valid @RequestBody MateriaDTO dto) {
+    public ResponseEntity<MateriaDTO> actualizar(
+            @Parameter(description = "ID de la materia a actualizar.", example = "1")
+            @PathVariable Integer id,
+            @Valid @RequestBody MateriaDTO dto) {
         return ResponseEntity.ok(materiaService.actualizarMateria(id, dto));
     }
 
@@ -112,9 +128,12 @@ public class MateriaController {
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "Materia eliminada"),
+            @ApiResponse(responseCode = "403", description = "Acceso restringido a ADMIN"),
             @ApiResponse(responseCode = "404", description = "Materia no encontrada")
     })
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<Void> eliminar(
+            @Parameter(description = "ID de la materia a eliminar.", example = "1")
+            @PathVariable Integer id) {
         materiaService.eliminarMateria(id);
         return ResponseEntity.noContent().build();
     }
@@ -122,13 +141,14 @@ public class MateriaController {
     @PostMapping("/asignar-tutor")
     @Operation(
             summary = "Asignar tutor a materia",
-            description = "Crea una relación en la tabla puente tutores_materias. El tutor debe existir y tener rol TUTOR."
+            description = "Crea una relacion administrativa entre tutor y materia. El tutor debe existir y tener rol TUTOR."
     )
     @SecurityRequirement(name = "bearerAuth")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Tutor asignado a la materia"),
-            @ApiResponse(responseCode = "400", description = "Tutor inválido o datos incorrectos"),
-            @ApiResponse(responseCode = "409", description = "La relación ya existe")
+            @ApiResponse(responseCode = "400", description = "Tutor invalido o datos incorrectos"),
+            @ApiResponse(responseCode = "403", description = "Acceso restringido a ADMIN"),
+            @ApiResponse(responseCode = "409", description = "La relacion ya existe")
     })
     public ResponseEntity<Map<String, String>> asignarTutor(@Valid @RequestBody TutorMateriaDTO dto) {
         materiaService.asignarTutor(dto);
@@ -139,7 +159,16 @@ public class MateriaController {
     }
 
     @PostMapping("/mis-materias")
+    @Operation(
+            summary = "Crear tutoria como tutor",
+            description = "Permite al TUTOR publicar una tutoria seleccionando una materia existente y una fecha/hora futura. El idioma y la facultad se toman de la materia seleccionada."
+    )
     @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Tutoria publicada"),
+            @ApiResponse(responseCode = "400", description = "Validacion fallida o materia invalida"),
+            @ApiResponse(responseCode = "403", description = "Solo disponible para TUTOR")
+    })
     public ResponseEntity<Map<String, String>> crearOfertaTutor(@Valid @RequestBody TutorOfertaDTO dto) {
         materiaService.crearOfertaTutor(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
@@ -149,8 +178,19 @@ public class MateriaController {
     }
 
     @DeleteMapping("/mis-materias/{materiaId}")
+    @Operation(
+            summary = "Eliminar tutoria publicada",
+            description = "Permite al TUTOR retirar una tutoria/materia publicada de su propio horario."
+    )
     @SecurityRequirement(name = "bearerAuth")
-    public ResponseEntity<Void> eliminarOfertaTutor(@PathVariable Integer materiaId) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Tutoria retirada"),
+            @ApiResponse(responseCode = "403", description = "Solo disponible para TUTOR"),
+            @ApiResponse(responseCode = "404", description = "Tutoria no encontrada")
+    })
+    public ResponseEntity<Void> eliminarOfertaTutor(
+            @Parameter(description = "ID de la materia publicada por el tutor.", example = "1")
+            @PathVariable Integer materiaId) {
         materiaService.eliminarOfertaTutor(materiaId);
         return ResponseEntity.noContent().build();
     }

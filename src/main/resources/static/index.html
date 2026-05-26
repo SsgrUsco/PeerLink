@@ -3,124 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PeerLink | Plataforma de tutorias</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    <meta name="description" content="PeerLink: La comunidad donde los universitarios encuentran tutores, organizan sus horarios y mejoran sus calificaciones.">
+    <meta name="keywords" content="PeerLink, tutorias universitarias, aprobar materias, aprender, enseñar, agenda academica">
+    <meta property="og:title" content="PeerLink | Tu éxito académico, organizado">
+    <meta property="og:description" content="Encuentra al tutor ideal o comparte tus conocimientos. Agenda sesiones en segundos y mejora tu rendimiento académico.">
+    <meta property="og:image" content="/img/peerlink.svg">
+    <meta property="og:type" content="website">
+    <title>PeerLink | Tutorías Universitarias</title>
+    <link rel="icon" href="/img/peerlink.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+          crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+              crossorigin="anonymous">
+    </noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="peerlink-body" data-i18n-title="landing_title">
+<body class="peerlink-body bg-light" data-i18n-title="landing_title">
 <main class="container-xxl py-4 py-lg-5">
-    <header class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <a class="navbar-brand fw-bold text-success-emphasis fs-3 text-decoration-none" href="/">PeerLink</a>
-        <div class="d-flex align-items-center gap-2 flex-wrap">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Language selector">
-                <button class="btn btn-outline-success lang-btn" data-lang="es" type="button">ES</button>
-                <button class="btn btn-outline-success lang-btn" data-lang="en" type="button">EN</button>
-                <button class="btn btn-outline-success lang-btn" data-lang="pt" type="button">PT</button>
+
+    <nav class="landing-nav nav-blur d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3 sticky-top mb-5 bg-white bg-opacity-75 rounded-pill px-4 py-2 shadow-sm" style="backdrop-filter: blur(10px);" aria-label="Navegación principal">
+        <div class="d-flex align-items-center justify-content-between gap-4 flex-wrap w-100 w-xl-auto">
+            <a class="navbar-brand text-decoration-none" href="/">
+                <img src="/img/peerlink.svg" alt="PeerLink" class="brand-logo" width="140" height="35" fetchpriority="high">
+            </a>
+            <div class="landing-anchor-group small d-none d-md-flex gap-3 fw-medium text-secondary">
+                <a href="#features" class="text-decoration-none text-reset text-hover-success" data-i18n="landing_nav_features">Por qué PeerLink</a>
+                <a href="#how-it-works" class="text-decoration-none text-reset" data-i18n="landing_nav_how">Cómo funciona</a>
+                <a href="#testimonials" class="text-decoration-none text-reset" data-i18n="landing_nav_testimonials">Comunidad</a>
             </div>
-            <a id="landingLoginBtn" class="btn btn-outline-success" href="/login.html" data-i18n="landing_primary_cta">Iniciar sesion</a>
-            <a id="landingRegisterBtn" class="btn btn-success" href="/registro.html" data-i18n="landing_secondary_cta">Crear cuenta</a>
-            <a id="landingPanelBtn" class="btn btn-light hidden" href="/panel-estudiante.html" data-i18n="landing_panel_cta">Ir a mi panel</a>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap justify-content-center w-100 w-xl-auto mt-3 mt-xl-0">
+            <div id="landingLanguageSelect" class="peerlink-language-select me-2" data-language-dropdown>
+                <button class="btn btn-sm btn-light rounded-circle border shadow-sm" type="button" aria-label="Idioma" aria-expanded="false">
+                    <i class="bi bi-globe2 text-secondary"></i>
+                </button>
+            </div>
+            <a id="landingLoginBtn" class="btn btn-outline-dark rounded-pill px-4 fw-medium" href="/login.html" data-i18n="landing_primary_cta">Entrar</a>
+            <a id="landingRegisterBtn" class="btn btn-success rounded-pill px-4 fw-medium shadow-sm" href="/registro.html" data-i18n="landing_secondary_cta">Comenzar gratis</a>
+            <a id="landingPanelBtn" class="btn btn-dark rounded-pill px-4 hidden" href="/panel-estudiante.html" data-i18n="landing_panel_cta">Ir a mi espacio</a>
+        </div>
+    </nav>
+
+    <header class="row align-items-center mb-5 pb-5 pt-3" data-animation="fade-up">
+        <div class="col-lg-7 text-center text-lg-start pe-lg-5">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-success-subtle text-success border border-success-subtle mb-4">
+                <i class="bi bi-stars"></i>
+                <span class="small fw-semibold" data-i18n="landing_badge">La comunidad universitaria inteligente</span>
+            </div>
+            <h1 class="display-3 fw-bold mb-4 text-dark lh-sm" data-i18n="landing_heading">
+                Domina tus materias con el <span class="text-success">tutor ideal</span>.
+            </h1>
+            <p class="lead mb-4 text-secondary" data-i18n="landing_desc">
+                Olvídate de los grupos de mensajes desordenados y los cruces de horarios. Encuentra ayuda académica a tu medida, agenda en segundos y mejora tus calificaciones.
+            </p>
+            <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3 mb-4">
+                <a id="landingRegisterHeroBtn" class="btn btn-success btn-lg rounded-pill px-5 fw-semibold shadow" href="/registro.html" data-i18n="landing_cta_primary">Encontrar un tutor</a>
+                <a class="btn btn-white btn-lg rounded-pill px-5 fw-semibold border shadow-sm" href="/registro.html" data-i18n="landing_cta_secondary">Quiero enseñar</a>
+            </div>
+            <div class="text-muted small d-flex align-items-center justify-content-center justify-content-lg-start gap-2">
+                <i class="bi bi-check-circle-fill text-success"></i> <span data-i18n="landing_support_text">100% Gratis para la comunidad académica</span>
+            </div>
+        </div>
+        <div class="col-lg-5 mt-5 mt-lg-0 d-none d-md-block">
+            <div class="bg-white p-2 rounded-4 shadow-lg border position-relative" style="transform: rotate(2deg);">
+                <div class="bg-light rounded-4 p-5 text-center border-dashed">
+                    <i class="bi bi-calendar-check text-success opacity-50" style="font-size: 8rem;"></i>
+                    <h3 class="mt-3 h5 fw-bold text-secondary" data-i18n="landing_mock_agenda_title">Tu agenda, bajo control</h3>
+                </div>
+                <div class="position-absolute top-0 start-0 translate-middle bg-white rounded-pill shadow-sm border px-3 py-2 d-flex align-items-center gap-2">
+                    <span class="bg-success rounded-circle p-1"></span>
+                    <span class="small fw-bold" data-i18n="landing_mock_example">Calculo I - 10:00 AM</span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <section class="hero-card rounded-4 shadow-sm p-4 p-lg-5 mb-5">
-        <div class="row g-4 align-items-center">
-            <div class="col-lg-7">
-                <span class="badge text-bg-light border mb-3" data-i18n="landing_badge">Tutoria universitaria organizada</span>
-                <h1 class="display-4 fw-bold mb-3" data-i18n="landing_heading">Conecta estudiantes y tutores en un solo flujo claro.</h1>
-                <p class="lead mb-4" data-i18n="landing_desc">PeerLink centraliza materias, reservas, solicitudes y horarios semanales para que la experiencia academica sea simple, visible y ordenada.</p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a id="landingLoginHeroBtn" class="btn btn-light btn-lg fw-semibold" href="/login.html" data-i18n="landing_primary_cta">Iniciar sesion</a>
-                    <a id="landingRegisterHeroBtn" class="btn btn-outline-light btn-lg fw-semibold" href="/registro.html" data-i18n="landing_secondary_cta">Crear cuenta</a>
+    <section id="features" class="mb-5 pb-5" data-animation="fade-up">
+        <div class="text-center mb-5">
+            <h2 class="h1 fw-bold mb-3" data-i18n="landing_features_title">Diseñado para que te enfoques en aprender</h2>
+            <p class="text-secondary fs-5" data-i18n="landing_features_desc">Todo lo que necesitas para conectar con compañeros y superar ese examen difícil.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-4 hover-lift">
+                    <div class="bg-success-subtle text-success rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px;">
+                        <i class="bi bi-search fs-3"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3" data-i18n="landing_feature_card_1_title">Búsqueda Inteligente</h3>
+                    <p class="text-secondary mb-0" data-i18n="landing_feature_card_1_desc">Filtra por materia, idioma o disponibilidad. Encuentra exactamente lo que necesitas en un par de clics.</p>
                 </div>
             </div>
-            <div class="col-lg-5">
-                <section class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body p-4">
-                        <h2 class="h4 mb-3" data-i18n="landing_section_features">Lo esencial, sin desorden</h2>
-                        <div class="d-grid gap-3">
-                            <div class="p-3 rounded-4 border bg-white bg-opacity-75">
-                                <p class="mb-0" data-i18n="landing_feature_filters">Filtros por texto, idioma, facultad, fecha y hora para llegar rapido a la coincidencia correcta.</p>
-                            </div>
-                            <div class="p-3 rounded-4 border bg-white bg-opacity-75">
-                                <p class="mb-0" data-i18n="landing_feature_calendar">Horarios semanales por horas para ver claramente reservas, tutorias y disponibilidad.</p>
-                            </div>
-                            <div class="p-3 rounded-4 border bg-white bg-opacity-75">
-                                <p class="mb-0" data-i18n="landing_feature_i18n">Interfaz preparada para espanol, ingles y portugues con claves consistentes.</p>
-                            </div>
-                        </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-4 hover-lift">
+                    <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px;">
+                        <i class="bi bi-calendar2-week fs-3"></i>
                     </div>
-                </section>
+                    <h3 class="h5 fw-bold mb-3" data-i18n="landing_feature_card_2_title">Horario sin estrés</h3>
+                    <p class="text-secondary mb-0" data-i18n="landing_feature_card_2_desc">Visualiza tus tutorías en un calendario claro. Se acabaron los choques de horario y los olvidos.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 text-center p-4 hover-lift">
+                    <div class="bg-warning-subtle text-warning rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-4" style="width: 70px; height: 70px;">
+                        <i class="bi bi-shield-check fs-3"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3" data-i18n="landing_feature_card_3_title">Entorno Seguro</h3>
+                    <p class="text-secondary mb-0" data-i18n="landing_feature_card_3_desc">Conecta exclusivamente con miembros verificados de tu comunidad universitaria.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="mb-5">
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
-            <div>
-                <h2 class="h2 fw-bold mb-2" data-i18n="landing_section_roles">Una experiencia para cada rol</h2>
-                <p class="text-secondary mb-0" data-i18n="landing_section_roles_desc">Cada panel prioriza lo importante segun el trabajo real de estudiantes, tutores y administradores.</p>
+    <section id="how-it-works" class="mb-5 pb-5 bg-white rounded-5 shadow-sm p-4 p-lg-5 border" data-animation="fade-up">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <h2 class="h1 fw-bold mb-4" data-i18n="landing_how_title">Tres pasos para tu próxima buena nota</h2>
+                <p class="text-secondary mb-4 fs-5" data-i18n="landing_how_desc">Es tan fácil como pedir un café. Nosotros nos encargamos de la organización para que tú te enfoques en el conocimiento.</p>
+                <a class="btn btn-outline-dark rounded-pill px-4 fw-medium" href="/registro.html" data-i18n="landing_cta_primary">Empezar ahora <i class="bi bi-arrow-right ms-2"></i></a>
             </div>
+            <div class="col-lg-7">
+                <div class="d-flex flex-column gap-4">
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width: 40px; height: 40px;">1</div>
+                        <div>
+                            <h4 class="h5 fw-bold mb-1" data-i18n="landing_how_step_1_title">Busca tu materia</h4>
+                            <p class="text-secondary mb-0" data-i18n="landing_how_step_1_desc">Ingresa el tema que te cuesta entender y descubre quién está disponible para ayudarte hoy.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width: 40px; height: 40px;">2</div>
+                        <div>
+                            <h4 class="h5 fw-bold mb-1" data-i18n="landing_how_step_2_title">Elige el momento perfecto</h4>
+                            <p class="text-secondary mb-0" data-i18n="landing_how_step_2_desc">Selecciona la hora que mejor encaje en tu semana y envía la solicitud con un clic.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" style="width: 40px; height: 40px;">3</div>
+                        <div>
+                            <h4 class="h5 fw-bold mb-1" data-i18n="landing_how_step_3_title">¡Aprende y aprueba!</h4>
+                            <p class="text-secondary mb-0" data-i18n="landing_how_step_3_desc">Reúnete con tu tutor y resuelve todas tus dudas. Todo queda registrado en tu panel.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="mb-5 pb-5" data-animation="fade-up">
+        <div class="text-center mb-5">
+            <h2 class="h1 fw-bold mb-3" data-i18n="landing_testimonials_title">Lo que dice la comunidad</h2>
         </div>
         <div class="row g-4">
             <div class="col-lg-4">
-                <article class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <span class="badge text-bg-success-subtle border border-success-subtle mb-3" data-i18n="landing_role_student">Estudiantes</span>
-                        <h3 class="h4 mb-3" data-i18n="landing_role_student">Estudiantes</h3>
-                        <p class="text-secondary mb-0" data-i18n="landing_role_student_desc">Buscan tutorias, filtran coincidencias, solicitan apoyo y consultan su horario en calendario o lista.</p>
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white">
+                    <div class="d-flex gap-2 text-warning mb-3">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     </div>
-                </article>
+                    <p class="text-secondary fst-italic mb-4" data-i18n="landing_testimonial_1_quote">"Antes perdía horas buscando quién me explicara Cálculo antes del parcial. Ahora entro a PeerLink, elijo un tutor y agendo mi sesión en 2 minutos."</p>
+                    <div class="d-flex align-items-center gap-3 mt-auto">
+                        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 45px; height: 45px;">M</div>
+                        <div>
+                            <strong class="d-block text-dark" data-i18n="landing_testimonial_1_title">Para estudiantes que necesitan decidir rapido</strong>
+                            <small class="text-muted" data-i18n="landing_role_student">Estudiantes</small>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-4">
-                <article class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <span class="badge text-bg-success-subtle border border-success-subtle mb-3" data-i18n="landing_role_tutor">Tutores</span>
-                        <h3 class="h4 mb-3" data-i18n="landing_role_tutor">Tutores</h3>
-                        <p class="text-secondary mb-0" data-i18n="landing_role_tutor_desc">Publican tutorias, gestionan solicitudes recibidas y mantienen visible su agenda semanal.</p>
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-white">
+                    <div class="d-flex gap-2 text-warning mb-3">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     </div>
-                </article>
+                    <p class="text-secondary fst-italic mb-4" data-i18n="landing_testimonial_2_quote">"Me encanta enseñar, pero coordinar los horarios por WhatsApp era un caos. Esta plataforma me organizó la vida y me permite ayudar a más personas."</p>
+                    <div class="d-flex align-items-center gap-3 mt-auto">
+                        <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 45px; height: 45px;">L</div>
+                        <div>
+                            <strong class="d-block text-dark" data-i18n="landing_testimonial_2_title">Para tutores que quieren ordenar su semana</strong>
+                            <small class="text-muted" data-i18n="landing_role_tutor">Tutores</small>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-4">
-                <article class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <span class="badge text-bg-success-subtle border border-success-subtle mb-3" data-i18n="landing_role_admin">Administracion</span>
-                        <h3 class="h4 mb-3" data-i18n="landing_role_admin">Administracion</h3>
-                        <p class="text-secondary mb-0" data-i18n="landing_role_admin_desc">Controla materias, asignaciones, usuarios y documentacion tecnica protegida desde un solo lugar.</p>
+                <div class="card border-0 shadow-sm rounded-4 h-100 p-4 bg-success text-white">
+                    <div class="d-flex gap-2 text-light mb-3">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     </div>
-                </article>
+                    <p class="fst-italic mb-4 text-white-50" data-i18n="landing_testimonial_3_quote">"Tener un registro claro de qué materias necesitan más refuerzo nos ayuda muchísimo a mejorar la calidad educativa de la facultad."</p>
+                    <div class="d-flex align-items-center gap-3 mt-auto">
+                        <div class="bg-white text-success rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 45px; height: 45px;"><i class="bi bi-building"></i></div>
+                        <div>
+                            <strong class="d-block text-white" data-i18n="landing_testimonial_3_title">Para administracion que necesita trazabilidad</strong>
+                            <small class="text-white-50" data-i18n="landing_role_admin">Administracion</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 pt-4 border-top border-light-subtle">
-        <p class="text-secondary mb-0" data-i18n="landing_footer">Construido para coordinar tutorias con claridad, trazabilidad y buena experiencia de uso.</p>
-        <div class="d-flex flex-wrap gap-3 small">
-            <a class="link-secondary" href="/ayuda.html" data-i18n="navbar_help">Ayuda</a>
-            <a class="link-secondary" href="/terminos.html" data-i18n="legal_terms_heading">Terminos y condiciones</a>
-            <a class="link-secondary" href="/privacidad.html" data-i18n="legal_privacy_heading">Politica de privacidad</a>
+    <section id="faq" class="mb-5 pb-5" data-animation="fade-up">
+        <div class="text-center mb-5">
+            <h2 class="h1 fw-bold mb-2" data-i18n="landing_faq_title">Dudas frecuentes</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 d-grid gap-3">
+                <details class="card border-0 rounded-4 shadow-sm">
+                    <summary class="card-header bg-white p-4 cursor-pointer fw-semibold fs-5" data-i18n="landing_faq_q1">¿La plataforma tiene algún costo?</summary>
+                    <div class="card-body text-secondary pt-0 px-4 pb-4" data-i18n="landing_faq_a1">Totalmente gratis. PeerLink está diseñado como una herramienta de apoyo académico libre para todos los estudiantes y tutores de la institución.</div>
+                </details>
+                <details class="card border-0 rounded-4 shadow-sm">
+                    <summary class="card-header bg-white p-4 cursor-pointer fw-semibold fs-5" data-i18n="landing_faq_q2">¿Puedo ser estudiante y tutor al mismo tiempo?</summary>
+                    <div class="card-body text-secondary pt-0 px-4 pb-4" data-i18n="landing_faq_a2">¡Por supuesto! Puedes solicitar ayuda en las materias que te cuestan, y publicar tu disponibilidad para enseñar en las que eres experto.</div>
+                </details>
+                <details class="card border-0 rounded-4 shadow-sm">
+                    <summary class="card-header bg-white p-4 cursor-pointer fw-semibold fs-5" data-i18n="landing_faq_q3">¿Qué pasa si me surge un imprevisto?</summary>
+                    <div class="card-body text-secondary pt-0 px-4 pb-4" data-i18n="landing_faq_a3">No hay problema. Puedes cancelar o reprogramar tu reserva desde tu panel, y la otra persona será notificada inmediatamente.</div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-final mb-5 bg-dark text-white rounded-5 p-5 text-center shadow-lg position-relative overflow-hidden" data-animation="fade-up">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-success opacity-10" style="clip-path: circle(50% at 90% -20%);"></div>
+        <div class="position-relative z-1">
+            <h2 class="display-5 fw-bold mb-3" data-i18n="landing_final_cta_title">¿Listo para mejorar tus notas?</h2>
+            <p class="lead mb-4 text-white-50 mx-auto" style="max-width: 600px;" data-i18n="landing_final_cta_desc">Únete a cientos de estudiantes que ya están aprovechando PeerLink para hacer su vida académica mucho más fácil.</p>
+            <a id="landingFinalCtaBtn" class="btn btn-success btn-lg rounded-pill px-5 py-3 fw-bold shadow" href="/registro.html" data-i18n="landing_cta_primary">Crear cuenta gratis</a>
+        </div>
+    </section>
+
+    <footer class="pt-5 pb-4 border-top">
+        <div class="row gy-4 mb-4">
+            <div class="col-lg-4">
+                <img src="/img/peerlink.svg" alt="PeerLink" class="brand-logo mb-3" width="140" height="35" loading="lazy">
+                <p class="text-secondary pe-lg-4" data-i18n="landing_footer_brand">Haciendo la vida universitaria más simple, conectada y colaborativa para todos.</p>
+            </div>
+            <div class="col-6 col-lg-2 offset-lg-1">
+                <strong class="d-block mb-3 text-dark" data-i18n="landing_footer_nav">Plataforma</strong>
+                <ul class="list-unstyled d-flex flex-column gap-2 small">
+                    <li><a href="#features" class="text-secondary text-decoration-none text-hover-success" data-i18n="landing_nav_features">Beneficios</a></li>
+                    <li><a href="#how-it-works" class="text-secondary text-decoration-none text-hover-success" data-i18n="landing_nav_how">Como funciona</a></li>
+                    <li><a href="/login.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="landing_primary_cta">Iniciar sesion</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-2">
+                <strong class="d-block mb-3 text-dark" data-i18n="landing_footer_support">Soporte</strong>
+                <ul class="list-unstyled d-flex flex-column gap-2 small">
+                    <li><a href="#faq" class="text-secondary text-decoration-none text-hover-success">FAQ</a></li>
+                    <li><a href="/terminos.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="legal_terms_heading">Terminos</a></li>
+                    <li><a href="/privacidad.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="legal_privacy_heading">Privacidad</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                <strong class="d-block mb-3 text-dark" data-i18n="landing_footer_contact">Contacto</strong>
+                <ul class="list-unstyled d-flex flex-column gap-2 small text-secondary">
+                    <li><i class="bi bi-envelope me-2"></i> soporte@peerlink.edu.co</li>
+                    <li><i class="bi bi-info-circle me-2"></i> admin@peerlink.edu.co</li>
+                </ul>
+            </div>
+        </div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-4 border-top text-secondary small">
+            <p class="mb-2 mb-md-0" data-i18n="landing_copyright">© 2026 PeerLink. Todos los derechos reservados.</p>
+            <div class="d-flex gap-3 fs-5">
+                <a href="#" class="text-secondary text-hover-success"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="text-secondary text-hover-success"><i class="bi bi-linkedin"></i></a>
+            </div>
         </div>
     </footer>
 </main>
-<script src="/js/common.js"></script>
-<script src="/js/page-shell.js"></script>
+<script src="/js/common.js" defer></script>
+<script src="/js/page-shell.js" defer></script>
 <script>
-    const auth = PeerlinkApp.getAuth();
-    const loginHref = PeerlinkApp.withLang("/login.html");
-    const registerHref = PeerlinkApp.withLang("/registro.html");
-    document.getElementById("landingLoginBtn").href = loginHref;
-    document.getElementById("landingRegisterBtn").href = registerHref;
-    document.getElementById("landingLoginHeroBtn").href = loginHref;
-    document.getElementById("landingRegisterHeroBtn").href = registerHref;
+    document.addEventListener("DOMContentLoaded", () => {
+        const auth = PeerlinkApp.getAuth();
+        const loginHref = PeerlinkApp.withLang("/login.html");
+        const registerHref = PeerlinkApp.withLang("/registro.html");
+        const registerTargets = [
+            "landingRegisterBtn",
+            "landingRegisterHeroBtn",
+            "landingFinalCtaBtn"
+        ];
 
-    if (auth.token && auth.role) {
-        const panelHref = PeerlinkApp.withLang(PeerlinkApp.panelForRole(auth.role));
-        const panelBtn = document.getElementById("landingPanelBtn");
-        panelBtn.href = panelHref;
-        panelBtn.classList.remove("hidden");
-    }
+        document.getElementById("landingLoginBtn").href = loginHref;
+        registerTargets.forEach((id) => {
+            const node = document.getElementById(id);
+            if (node) {
+                node.href = registerHref;
+            }
+        });
+
+        if (auth.token && auth.role) {
+            const panelHref = PeerlinkApp.withLang(PeerlinkApp.panelForRole(auth.role));
+            const panelBtn = document.getElementById("landingPanelBtn");
+            if(panelBtn){
+                panelBtn.href = panelHref;
+                panelBtn.classList.remove("hidden");
+                panelBtn.classList.remove("d-none");
+            }
+        }
+    });
 </script>
 </body>
 </html>

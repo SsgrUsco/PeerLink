@@ -61,6 +61,7 @@ async function bootStudent() {
         renderStudentSchedule();
     });
     document.getElementById("refreshReservasBtn").addEventListener("click", loadMyReservations);
+    document.getElementById("downloadStudentReportBtn").addEventListener("click", downloadStudentReport);
 
     document.getElementById("studentCalendarViewBtn").addEventListener("click", () => setStudentScheduleView("calendar"));
     document.getElementById("studentListViewBtn").addEventListener("click", () => setStudentScheduleView("list"));
@@ -84,6 +85,35 @@ async function bootStudent() {
     await Promise.all([loadStudentSources(), loadMyReservations()]);
 }
 
+async function downloadStudentReport() {
+    try {
+        await PeerlinkApp.downloadFile(
+            `/api/reportes/mis-reservas.pdf${buildStudentReportQuery()}`,
+            "peerlink-mis-reservas.pdf"
+        );
+        studentFeedback.success("feedback_report_downloaded");
+    } catch (error) {
+        studentFeedback.error(error);
+    }
+}
+
+function buildStudentReportQuery() {
+    const params = new URLSearchParams();
+    const idioma = document.getElementById("horarioIdioma").value;
+    const facultad = document.getElementById("horarioFacultad").value;
+    const fecha = document.getElementById("horarioFecha").value;
+    if (idioma) params.set("idioma", idioma);
+    if (facultad) params.set("facultad", facultad);
+    if (fecha) {
+        params.set("desde", `${fecha}T00:00:00`);
+        const hasta = new Date(`${fecha}T00:00:00`);
+        hasta.setDate(hasta.getDate() + 1);
+        params.set("hasta", toDateTimeLocalValue(hasta));
+    }
+    const query = params.toString();
+    return query ? `?${query}` : "";
+}
+
 function showStudentTab(tab) {
     const tutoriasTab = document.getElementById("studentTutoriasTab");
     const horarioTab = document.getElementById("studentHorarioTab");
@@ -92,8 +122,8 @@ function showStudentTab(tab) {
 
     tutoriasTab.classList.toggle("hidden", tab !== "tutorias");
     horarioTab.classList.toggle("hidden", tab !== "horario");
-    tutoriasBtn.className = tab === "tutorias" ? "btn btn-success" : "btn btn-outline-success";
-    horarioBtn.className = tab === "horario" ? "btn btn-success" : "btn btn-outline-success";
+    setToggleButtonState(tutoriasBtn, tab === "tutorias");
+    setToggleButtonState(horarioBtn, tab === "horario");
 }
 
 function showStudentTutoriasSubtab(tab) {
@@ -104,8 +134,22 @@ function showStudentTutoriasSubtab(tab) {
 
     solicitarTab.classList.toggle("hidden", tab !== "solicitar");
     aceptarTab.classList.toggle("hidden", tab !== "aceptar");
-    solicitarBtn.className = tab === "solicitar" ? "btn btn-success" : "btn btn-outline-success";
-    aceptarBtn.className = tab === "aceptar" ? "btn btn-success" : "btn btn-outline-success";
+    setToggleButtonState(solicitarBtn, tab === "solicitar");
+    setToggleButtonState(aceptarBtn, tab === "aceptar");
+}
+
+function setToggleButtonState(button, active) {
+    if (!button) {
+        return;
+    }
+    if (!button.dataset.baseClass) {
+        button.dataset.baseClass = button.className;
+    }
+    button.classList.toggle("btn-success", active);
+    button.classList.toggle("btn-outline-success", !active);
+    button.classList.toggle("btn-white", !active && button.dataset.baseClass.includes("btn-white"));
+    button.classList.toggle("text-secondary", !active && button.dataset.baseClass.includes("text-secondary"));
+    button.classList.toggle("text-hover-success", !active && button.dataset.baseClass.includes("text-hover-success"));
 }
 
 function fillLanguageSelect(elementId, includeAllOption) {
@@ -502,8 +546,8 @@ function setStudentScheduleView(view) {
     studentScheduleView = view;
     document.getElementById("studentCalendarPanel").classList.toggle("hidden", view !== "calendar");
     document.getElementById("studentListPanel").classList.toggle("hidden", view !== "list");
-    document.getElementById("studentCalendarViewBtn").className = view === "calendar" ? "btn btn-success" : "btn btn-outline-success";
-    document.getElementById("studentListViewBtn").className = view === "list" ? "btn btn-success" : "btn btn-outline-success";
+    setToggleButtonState(document.getElementById("studentCalendarViewBtn"), view === "calendar");
+    setToggleButtonState(document.getElementById("studentListViewBtn"), view === "list");
 }
 
 function changeWeek(days) {
