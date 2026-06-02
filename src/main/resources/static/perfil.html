@@ -99,7 +99,7 @@
                 </div>
 
                 <div class="card-body p-4 p-lg-5">
-                    <form id="passwordForm" class="row g-4">
+                    <form id="passwordForm" class="row g-4 needs-validation" novalidate>
                         <div class="col-12">
                             <div class="form-floating">
                                 <input id="passwordActual" type="password" class="form-control rounded-4 bg-light" placeholder="Contraseña actual" required>
@@ -109,8 +109,9 @@
 
                         <div class="col-12">
                             <div class="form-floating">
-                                <input id="passwordNueva" type="password" class="form-control rounded-4 bg-light" placeholder="Nueva contraseña" required>
+                                <input id="passwordNueva" type="password" class="form-control rounded-4 bg-light" placeholder="Nueva contraseña" required minlength="10" maxlength="72" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+">
                                 <label for="passwordNueva" class="text-secondary" data-i18n="profile_new_password">Nueva contraseña</label>
+                                <div class="invalid-feedback px-2" data-i18n="validation_password_policy">Usa entre 10 y 72 caracteres, con minúscula, mayúscula y número.</div>
                             </div>
                         </div>
 

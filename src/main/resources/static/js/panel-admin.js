@@ -5,6 +5,9 @@ let materiasCache = [];
 let usuariosCache = [];
 let relacionesCache = [];
 let selectedMateriaCardId = null;
+const pendingMateriaDeletes = new Map();
+const pendingUserDeletes = new Map();
+const UNDO_DELETE_DELAY_MS = 12000;
 
 if (adminAuth) {
     PeerlinkApp.renderNavbar("navbarContainer");
@@ -40,6 +43,8 @@ async function bootAdmin() {
     document.getElementById("tutorSearch").addEventListener("input", fillTutorSelect);
     document.getElementById("materiaSearch").addEventListener("input", fillMateriaSelect);
     document.getElementById("usuarioForm").addEventListener("submit", saveUsuario);
+    document.getElementById("adminPasswordResetForm").addEventListener("submit", resetUserPassword);
+    document.getElementById("cancelAdminPasswordResetBtn").addEventListener("click", hidePasswordResetForm);
     document.getElementById("usuariosSearchForm").addEventListener("submit", (event) => {
         event.preventDefault();
         renderUsuariosTable();
@@ -53,7 +58,7 @@ async function bootAdmin() {
     resetMateriaForm();
     showAdminTab("materias");
     showMateriaSubtab("crear");
-    await Promise.all([loadMaterias(), loadUsuarios(), loadTutorMaterias()]);
+    await Promise.all([loadMaterias({ silent: true }), loadUsuarios({ silent: true }), loadTutorMaterias()]);
 }
 
 async function downloadAdminReport() {
@@ -95,6 +100,22 @@ function showAdminTab(tab) {
     setToggleButtonState(document.getElementById("adminMateriasTabBtn"), tab === "materias");
     setToggleButtonState(document.getElementById("adminTutoresTabBtn"), tab === "tutores");
     setToggleButtonState(document.getElementById("adminUsuariosTabBtn"), tab === "usuarios");
+    updateAdminTopbarTitle(tab);
+}
+
+function updateAdminTopbarTitle(tab) {
+    const title = document.getElementById("adminTopbarTitle");
+    if (!title) {
+        return;
+    }
+    const titleKeyByTab = {
+        materias: "admin_hero_title",
+        tutores: "admin_hero_title_tutors",
+        usuarios: "admin_hero_title_users"
+    };
+    const titleKey = titleKeyByTab[tab] || "admin_hero_title";
+    title.dataset.i18n = titleKey;
+    title.textContent = PeerlinkApp.t(titleKey);
 }
 
 function showMateriaSubtab(tab) {
@@ -118,6 +139,7 @@ function setToggleButtonState(button, active) {
     button.classList.toggle("btn-white", !active && button.dataset.baseClass.includes("btn-white"));
     button.classList.toggle("text-secondary", !active && button.dataset.baseClass.includes("text-secondary"));
     button.classList.toggle("text-hover-success", !active && button.dataset.baseClass.includes("text-hover-success"));
+    button.setAttribute("aria-pressed", String(active));
 }
 
 function fillLanguageSelect(elementId, includeAllOption) {
@@ -131,6 +153,9 @@ function fillLanguageSelect(elementId, includeAllOption) {
     });
 
     select.innerHTML = options.join("");
+    if (includeAllOption) {
+        select.value = "";
+    }
 }
 
 function fillFacultySelect(elementId, includeAllOption) {
@@ -146,12 +171,14 @@ function fillFacultySelect(elementId, includeAllOption) {
     select.innerHTML = options.join("");
 }
 
-async function loadMaterias() {
+async function loadMaterias(options = {}) {
     try {
         materiasCache = await PeerlinkApp.api("/api/materias");
         fillMateriaSelect();
         renderMateriasMatches();
-        adminFeedback.info("feedback_loaded_admin_data");
+        if (!options.silent) {
+            adminFeedback.info("feedback_loaded_admin_data");
+        }
     } catch (error) {
         adminFeedback.error(error);
         adminConsole.printError(error);
@@ -240,17 +267,47 @@ function renderMateriasMatches() {
             if (!confirm(PeerlinkApp.t("confirm_delete_subject"))) {
                 return;
             }
-            try {
-                await PeerlinkApp.api(`/api/materias/${button.dataset.deleteMateria}`, { method: "DELETE" });
-                adminFeedback.success("feedback_subject_deleted");
-                selectedMateriaCardId = null;
-                await Promise.all([loadMaterias(), loadTutorMaterias()]);
-            } catch (error) {
-                adminFeedback.error(error);
-                adminConsole.printError(error);
-            }
+            scheduleMateriaDelete(Number(button.dataset.deleteMateria));
         });
     });
+}
+
+function scheduleMateriaDelete(materiaId) {
+    const materia = materiasCache.find((item) => Number(item.id) === Number(materiaId));
+    if (!materia) {
+        return;
+    }
+
+    clearPendingDelete(pendingMateriaDeletes, materiaId);
+    materiasCache = materiasCache.filter((item) => Number(item.id) !== Number(materiaId));
+    selectedMateriaCardId = null;
+    renderMateriasMatches();
+    showPendingDeleteUndo({
+        containerId: "adminMateriaUndoFeedback",
+        messageKey: "feedback_subject_deleted",
+        detail: materia.nombre,
+        onUndo: () => {
+            clearPendingDelete(pendingMateriaDeletes, materiaId);
+            materiasCache.push(materia);
+            materiasCache.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            renderMateriasMatches();
+            showRestoredMessage("adminMateriaUndoFeedback");
+        }
+    });
+
+    const timeoutId = window.setTimeout(async () => {
+        pendingMateriaDeletes.delete(materiaId);
+        try {
+            await PeerlinkApp.api(`/api/materias/${materiaId}`, { method: "DELETE" });
+            await Promise.all([loadMaterias(), loadTutorMaterias()]);
+        } catch (error) {
+            materiasCache.push(materia);
+            renderMateriasMatches();
+            adminFeedback.error(error);
+            adminConsole.printError(error);
+        }
+    }, UNDO_DELETE_DELAY_MS);
+    pendingMateriaDeletes.set(materiaId, timeoutId);
 }
 
 function clearMateriaSearch() {
@@ -378,12 +435,14 @@ function renderTutorMateriasTable() {
     `).join("");
 }
 
-async function loadUsuarios() {
+async function loadUsuarios(options = {}) {
     try {
         usuariosCache = await PeerlinkApp.api("/api/usuarios");
         fillTutorSelect();
         renderUsuariosTable();
-        adminFeedback.info("feedback_loaded_admin_data");
+        if (!options.silent) {
+            adminFeedback.info("feedback_loaded_admin_data");
+        }
     } catch (error) {
         adminFeedback.error(error);
         adminConsole.printError(error);
@@ -415,27 +474,147 @@ function renderUsuariosTable() {
                 <td>${PeerlinkApp.escapeHtml(usuario.nombreCompleto || "")}</td>
                 <td>${PeerlinkApp.escapeHtml(usuario.correo || "")}</td>
                 <td><span class="badge text-bg-light border">${PeerlinkApp.escapeHtml(usuario.rol || "")}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-danger" data-delete-user-id="${usuario.id}" data-delete-user-name="${PeerlinkApp.escapeHtml(usuario.nombreCompleto || usuario.correo || "")}" type="button">${PeerlinkApp.t("action_delete")}</button>
+                <td class="text-end">
+                    <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                        <button class="btn btn-sm btn-outline-success" data-reset-user-id="${usuario.id}" data-reset-user-name="${PeerlinkApp.escapeHtml(usuario.nombreCompleto || usuario.correo || "")}" type="button">${PeerlinkApp.t("action_reset_password")}</button>
+                        <button class="btn btn-sm btn-outline-danger" data-delete-user-id="${usuario.id}" data-delete-user-name="${PeerlinkApp.escapeHtml(usuario.nombreCompleto || usuario.correo || "")}" type="button">${PeerlinkApp.t("action_delete")}</button>
+                    </div>
                 </td>
             </tr>
         `).join("");
 
-        tbody.querySelectorAll("[data-delete-user-id]").forEach((button) => {
-            button.addEventListener("click", async () => {
-                if (!confirm(PeerlinkApp.t("confirm_delete_user", { name: button.dataset.deleteUserName }))) {
-                    return;
-                }
-                try {
-                    await PeerlinkApp.api(`/api/usuarios/${button.dataset.deleteUserId}`, { method: "DELETE" });
-                    adminFeedback.success("feedback_user_deleted");
-                    await Promise.all([loadUsuarios(), loadTutorMaterias()]);
-                } catch (error) {
-                    adminFeedback.error(error);
-                    adminConsole.printError(error);
-                }
-            });
+    tbody.querySelectorAll("[data-reset-user-id]").forEach((button) => {
+        button.addEventListener("click", () => {
+            showPasswordResetForm(Number(button.dataset.resetUserId), button.dataset.resetUserName);
         });
+    });
+
+    tbody.querySelectorAll("[data-delete-user-id]").forEach((button) => {
+        button.addEventListener("click", () => {
+            if (!confirm(PeerlinkApp.t("confirm_delete_user", { name: button.dataset.deleteUserName }))) {
+                return;
+            }
+            scheduleUserDelete(Number(button.dataset.deleteUserId));
+        });
+    });
+}
+
+function showPasswordResetForm(userId, userName) {
+    const form = document.getElementById("adminPasswordResetForm");
+    document.getElementById("adminPasswordResetUserId").value = userId;
+    document.getElementById("adminPasswordResetValue").value = "";
+    document.getElementById("adminPasswordResetTarget").textContent = PeerlinkApp.t("admin_password_reset_target", { name: userName });
+    form.classList.remove("hidden");
+    form.classList.remove("was-validated");
+    document.getElementById("adminPasswordResetFeedback").classList.add("hidden");
+    document.getElementById("adminPasswordResetValue").focus();
+}
+
+function hidePasswordResetForm() {
+    const form = document.getElementById("adminPasswordResetForm");
+    form.reset();
+    form.classList.add("hidden");
+    form.classList.remove("was-validated");
+    document.getElementById("adminPasswordResetFeedback").classList.add("hidden");
+}
+
+async function resetUserPassword(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    if (!form.checkValidity()) {
+        form.classList.add("was-validated");
+        return;
+    }
+
+    const userId = document.getElementById("adminPasswordResetUserId").value;
+    const passwordNueva = document.getElementById("adminPasswordResetValue").value;
+    try {
+        await PeerlinkApp.api(`/api/usuarios/${userId}/password`, {
+            method: "PATCH",
+            body: JSON.stringify({ passwordNueva })
+        });
+        adminFeedback.success("feedback_password_reset");
+        hidePasswordResetForm();
+    } catch (error) {
+        document.getElementById("adminPasswordResetFeedback").className = "alert alert-danger border shadow-sm";
+        document.getElementById("adminPasswordResetFeedback").textContent = error.message || PeerlinkApp.t("error_internal");
+        document.getElementById("adminPasswordResetFeedback").classList.remove("hidden");
+        adminConsole.printError(error);
+    }
+}
+
+function scheduleUserDelete(userId) {
+    const usuario = usuariosCache.find((item) => Number(item.id) === Number(userId));
+    if (!usuario) {
+        return;
+    }
+
+    clearPendingDelete(pendingUserDeletes, userId);
+    usuariosCache = usuariosCache.filter((item) => Number(item.id) !== Number(userId));
+    renderUsuariosTable();
+    showPendingDeleteUndo({
+        containerId: "adminUserUndoFeedback",
+        messageKey: "feedback_user_deleted",
+        detail: usuario.nombreCompleto || usuario.correo,
+        onUndo: () => {
+            clearPendingDelete(pendingUserDeletes, userId);
+            usuariosCache.push(usuario);
+            usuariosCache.sort((a, b) => (a.nombreCompleto || "").localeCompare(b.nombreCompleto || ""));
+            renderUsuariosTable();
+            showRestoredMessage("adminUserUndoFeedback");
+        }
+    });
+
+    const timeoutId = window.setTimeout(async () => {
+        pendingUserDeletes.delete(userId);
+        try {
+            await PeerlinkApp.api(`/api/usuarios/${userId}`, { method: "DELETE" });
+            await Promise.all([loadUsuarios(), loadTutorMaterias()]);
+        } catch (error) {
+            usuariosCache.push(usuario);
+            renderUsuariosTable();
+            adminFeedback.error(error);
+            adminConsole.printError(error);
+        }
+    }, UNDO_DELETE_DELAY_MS);
+    pendingUserDeletes.set(userId, timeoutId);
+}
+
+function clearPendingDelete(map, id) {
+    const timeoutId = map.get(id);
+    if (timeoutId) {
+        window.clearTimeout(timeoutId);
+        map.delete(id);
+    }
+}
+
+function showPendingDeleteUndo({ containerId, messageKey, detail, onUndo }) {
+    const node = document.getElementById(containerId) || document.getElementById("adminFeedback");
+    if (!node) {
+        return;
+    }
+
+    node.className = "alert alert-warning border shadow-sm d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3";
+    node.innerHTML = `
+        <div>
+            <strong>${PeerlinkApp.escapeHtml(PeerlinkApp.t(messageKey))}</strong>
+            <div class="small text-secondary">${PeerlinkApp.escapeHtml(detail || "")}</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-success" data-admin-undo-delete>${PeerlinkApp.escapeHtml(PeerlinkApp.t("action_undo"))}</button>
+    `;
+    node.classList.remove("hidden");
+    node.querySelector("[data-admin-undo-delete]").addEventListener("click", onUndo, { once: true });
+}
+
+function showRestoredMessage(containerId) {
+    const node = document.getElementById(containerId) || document.getElementById("adminFeedback");
+    if (!node) {
+        return;
+    }
+
+    node.className = "alert alert-success border shadow-sm";
+    node.textContent = PeerlinkApp.t("feedback_action_restored");
+    node.classList.remove("hidden");
 }
 
 function clearUsuariosSearch() {
@@ -446,6 +625,10 @@ function clearUsuariosSearch() {
 async function saveUsuario(event) {
     event.preventDefault();
     const formElement = event.currentTarget;
+    if (!formElement.checkValidity()) {
+        formElement.classList.add("was-validated");
+        return;
+    }
     const payload = {
         nombreCompleto: document.getElementById("usuarioNombre").value.trim(),
         correo: document.getElementById("usuarioCorreo").value.trim(),
@@ -461,6 +644,7 @@ async function saveUsuario(event) {
         adminFeedback.success("feedback_user_saved");
         adminConsole.print(response);
         formElement.reset();
+        formElement.classList.remove("was-validated");
         await loadUsuarios();
     } catch (error) {
         adminFeedback.error(error);

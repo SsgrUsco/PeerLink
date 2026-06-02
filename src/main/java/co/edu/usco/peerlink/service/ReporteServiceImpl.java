@@ -6,6 +6,7 @@ import co.edu.usco.peerlink.dto.TutorMateriaDetalleDTO;
 import co.edu.usco.peerlink.dto.UsuarioDTO;
 import co.edu.usco.peerlink.exception.BusinessException;
 import co.edu.usco.peerlink.security.AuthenticatedUser;
+import co.edu.usco.peerlink.security.SecurityUtils;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -29,7 +30,6 @@ import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.awt.Color;
@@ -41,6 +41,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Genera reportes PDF mediante JasperReports para estudiantes, tutores y administradores.
+ */
 @Service
 public class ReporteServiceImpl implements ReporteService {
 
@@ -55,6 +58,13 @@ public class ReporteServiceImpl implements ReporteService {
     private final MateriaService materiaService;
     private final UsuarioService usuarioService;
 
+    /**
+     * Inyecta los servicios de datos usados para construir reportes.
+     *
+     * @param reservaService servicio de reservas
+     * @param materiaService servicio de materias y asignaciones
+     * @param usuarioService servicio de usuarios
+     */
     public ReporteServiceImpl(ReservaService reservaService,
                               MateriaService materiaService,
                               UsuarioService usuarioService) {
@@ -64,6 +74,15 @@ public class ReporteServiceImpl implements ReporteService {
     }
 
     @Override
+    /**
+     * Genera el PDF de reservas del estudiante autenticado.
+     *
+     * @param idioma filtro por idioma
+     * @param facultad filtro por facultad
+     * @param desde fecha inicial
+     * @param hasta fecha final
+     * @return bytes del PDF generado
+     */
     public byte[] generarReporteMisReservas(String idioma, String facultad, LocalDateTime desde, LocalDateTime hasta) {
         AuthenticatedUser usuario = currentUser();
         List<ReservaDetalleDTO> reservas = reservaService.obtenerMisReservas(idioma, facultad, desde, hasta);
@@ -88,6 +107,15 @@ public class ReporteServiceImpl implements ReporteService {
     }
 
     @Override
+    /**
+     * Genera el PDF de tutorias del tutor autenticado.
+     *
+     * @param idioma filtro por idioma
+     * @param facultad filtro por facultad
+     * @param desde fecha inicial
+     * @param hasta fecha final
+     * @return bytes del PDF generado
+     */
     public byte[] generarReporteMisTutorias(String idioma, String facultad, LocalDateTime desde, LocalDateTime hasta) {
         AuthenticatedUser usuario = currentUser();
         List<ReservaDetalleDTO> reservas = reservaService.obtenerMisTutorias(idioma, facultad, desde, hasta);
@@ -112,6 +140,11 @@ public class ReporteServiceImpl implements ReporteService {
     }
 
     @Override
+    /**
+     * Genera un reporte administrativo resumido de materias.
+     *
+     * @return bytes del PDF generado
+     */
     public byte[] generarReporteAdminResumen() {
         List<UsuarioDTO> usuarios = usuarioService.obtenerTodos();
         List<MateriaDTO> materias = materiaService.obtenerTodas();
@@ -130,6 +163,11 @@ public class ReporteServiceImpl implements ReporteService {
     }
 
     @Override
+    /**
+     * Genera un reporte administrativo de asignaciones tutor-materia.
+     *
+     * @return bytes del PDF generado
+     */
     public byte[] generarReporteAdminTutores() {
         List<UsuarioDTO> tutores = usuarioService.obtenerTodos().stream()
                 .filter(usuario -> "TUTOR".equalsIgnoreCase(usuario.getRol()))
@@ -174,6 +212,11 @@ public class ReporteServiceImpl implements ReporteService {
     }
 
     @Override
+    /**
+     * Genera un reporte administrativo de usuarios.
+     *
+     * @return bytes del PDF generado
+     */
     public byte[] generarReporteAdminUsuarios() {
         List<UsuarioDTO> usuarios = usuarioService.obtenerTodos();
         List<ReportColumn> columns = List.of(
@@ -330,7 +373,7 @@ public class ReporteServiceImpl implements ReporteService {
     }
 
     private AuthenticatedUser currentUser() {
-        return (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return SecurityUtils.currentUser();
     }
 
     private String formatDateTime(LocalDateTime value) {

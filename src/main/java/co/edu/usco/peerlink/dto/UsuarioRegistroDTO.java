@@ -3,9 +3,13 @@ package co.edu.usco.peerlink.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * Modelo de entrada para el registro publico de estudiantes y tutores.
+ */
 @Data
 @Schema(description = "Registro publico de estudiantes y tutores.")
 public class UsuarioRegistroDTO {
@@ -20,7 +24,9 @@ public class UsuarioRegistroDTO {
     private String correo;
 
     @NotBlank(message = "{validation.usuario.password.notBlank}")
-    @Schema(example = "password123", writeOnly = true)
+    @Size(min = 10, max = 72, message = "{validation.usuario.password.size}")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "{validation.usuario.password.pattern}")
+    @Schema(example = "Seguro1234", writeOnly = true)
     private String password;
 
     @NotBlank(message = "{validation.usuario.rol.notBlank}")

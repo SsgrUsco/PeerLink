@@ -31,6 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controlador REST para el catalogo de materias y publicaciones de tutores.
+ *
+ * <p>Permite a ADMIN administrar materias y asignaciones, y a TUTOR publicar
+ * o retirar tutorias disponibles sobre materias existentes.</p>
+ */
 @RestController
 @RequestMapping("/api/materias")
 @Tag(name = "Materias", description = "Gestion de materias, ofertas de tutores y asignaciones tutor-materia.")
@@ -58,7 +64,7 @@ public class MateriaController {
             @ApiResponse(responseCode = "409", description = "La materia ya existe")
     })
     public ResponseEntity<MateriaDTO> crear(@Valid @RequestBody MateriaDTO dto) {
-        return new ResponseEntity<>(materiaService.crearMateria(dto), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(materiaService.crearMateria(dto));
     }
 
     @GetMapping

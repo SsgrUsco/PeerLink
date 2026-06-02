@@ -17,17 +17,32 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
+/**
+ * Devuelve respuestas JSON uniformes cuando una solicitud no esta autenticada.
+ */
 @Component
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper = JsonMapper.builder().findAndAddModules().build();
     private final MessageSource messageSource;
 
+    /**
+     * @param messageSource fuente de mensajes i18n para el error 401
+     */
     public RestAuthenticationEntryPoint(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
     @Override
+    /**
+     * Escribe la respuesta 401 en formato JSON.
+     *
+     * @param request solicitud HTTP
+     * @param response respuesta HTTP
+     * @param authException excepcion de autenticacion
+     * @throws IOException si falla la escritura de la respuesta
+     * @throws ServletException si el contenedor no puede completar el manejo
+     */
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

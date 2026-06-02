@@ -17,17 +17,32 @@ import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
+/**
+ * Devuelve respuestas JSON uniformes cuando un usuario autenticado no tiene permisos.
+ */
 @Component
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper = JsonMapper.builder().findAndAddModules().build();
     private final MessageSource messageSource;
 
+    /**
+     * @param messageSource fuente de mensajes i18n para el error 403
+     */
     public RestAccessDeniedHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
     @Override
+    /**
+     * Escribe la respuesta 403 en formato JSON.
+     *
+     * @param request solicitud HTTP
+     * @param response respuesta HTTP
+     * @param accessDeniedException excepcion de acceso denegado
+     * @throws IOException si falla la escritura de la respuesta
+     * @throws ServletException si el contenedor no puede completar el manejo
+     */
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
         response.setStatus(HttpStatus.FORBIDDEN.value());

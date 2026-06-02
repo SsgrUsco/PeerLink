@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
+/**
+ * Recibe la materia y fecha/hora que un tutor desea publicar como tutoria disponible.
+ */
 @Data
 @Schema(description = "Datos para que un tutor publique una tutoria disponible sobre una materia existente.")
 public class TutorOfertaDTO {

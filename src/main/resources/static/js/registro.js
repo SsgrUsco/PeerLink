@@ -24,6 +24,7 @@ togglePasswordBtn.addEventListener("click", () => {
 registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     hideAlert();
+    registerFeedback.clear();
     if (!registerForm.checkValidity()) {
         registerForm.classList.add("was-validated");
         return;
@@ -40,6 +41,7 @@ registerForm.addEventListener("submit", async (event) => {
             body: JSON.stringify(payload)
         }, false);
         registerFeedback.success("feedback_register_success");
+        focusRegisterFeedback();
         registerConsole.print(response);
         formElement.reset();
         registerForm.classList.remove("was-validated");
@@ -65,4 +67,14 @@ function showAlert(message) {
 function hideAlert() {
     registerAlert.textContent = "";
     registerAlert.classList.add("d-none");
+}
+
+function focusRegisterFeedback() {
+    const feedback = document.getElementById("registerFeedback");
+    if (!feedback || feedback.classList.contains("hidden")) {
+        return;
+    }
+    feedback.setAttribute("tabindex", "-1");
+    feedback.scrollIntoView({ behavior: "smooth", block: "center" });
+    feedback.focus({ preventScroll: true });
 }

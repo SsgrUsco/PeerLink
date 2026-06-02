@@ -5,6 +5,9 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * Describe una materia del catalogo junto con sus claves tecnicas de idioma y facultad.
+ */
 @Data
 @Schema(description = "Materia academica con claves tecnicas de idioma y facultad asociadas al catalogo.")
 public class MateriaDTO {

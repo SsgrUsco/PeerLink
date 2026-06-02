@@ -9,7 +9,7 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
           crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/app.css">
 </head>
 <body class="peerlink-body bg-light" data-i18n-title="login_title">
 
@@ -21,10 +21,11 @@
 
 <div class="position-absolute top-0 end-0 p-3 p-md-4 z-3">
     <div id="loginLanguageSelect" class="peerlink-language-select" data-language-dropdown>
-        <button class="btn btn-sm btn-white rounded-circle shadow-sm border p-2" type="button" aria-label="Language selector" data-i18n-aria-label="aria_language_selector" aria-haspopup="menu" aria-expanded="false">
-            <i class="bi bi-globe2 text-secondary"></i>
+        <button class="peerlink-language-toggle" type="button" aria-label="Language selector" data-i18n-aria-label="aria_language_selector" aria-haspopup="menu" aria-expanded="false">
+            <i class="bi bi-translate peerlink-language-icon" aria-hidden="true"></i>
+            <span data-language-current>ES</span>
         </button>
-        <div class="peerlink-language-menu shadow-lg border-0 rounded-3 mt-2" role="menu">
+        <div class="peerlink-language-menu" role="menu">
             <button class="peerlink-language-option" type="button" role="menuitem" data-lang="es">ES</button>
             <button class="peerlink-language-option" type="button" role="menuitem" data-lang="en">EN</button>
             <button class="peerlink-language-option" type="button" role="menuitem" data-lang="pt">PT</button>
@@ -32,33 +33,33 @@
     </div>
 </div>
 
-<main class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5 auth-page-surface bg-light">
+<main class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-3 py-md-4 auth-page-surface bg-light">
 
     <section class="card border-0 shadow-lg rounded-5 login-card-shell" style="max-width: 450px; width: 100%;">
-        <div class="card-body p-4 p-sm-5">
+        <div class="card-body p-3 p-sm-4">
 
-            <div class="d-flex justify-content-center align-items-center mb-4">
-                <a class="text-decoration-none" href="/" aria-label="PeerLink" data-i18n-aria-label="aria_peerlink_home">
+            <div class="d-flex justify-content-center align-items-center mb-3">
+                <a class="auth-brand-link text-decoration-none" href="/" aria-label="PeerLink" data-i18n-aria-label="aria_peerlink_home">
                     <img src="/img/peerlink.svg" alt="PeerLink" class="brand-logo brand-logo-auth" width="180" height="45" fetchpriority="high">
                 </a>
             </div>
 
-            <header class="text-center mb-5">
+            <header class="text-center mb-3">
                 <h1 class="h3 fw-bold mb-2 text-dark" data-i18n="login_welcome_title">Te damos la bienvenida</h1>
                 <p class="text-secondary small mb-0" data-i18n="login_welcome_desc">Ingresa tus credenciales para continuar.</p>
             </header>
 
             <div id="loginAlert" class="alert alert-danger d-none rounded-4 text-center small" role="alert"></div>
 
-            <form id="loginForm" class="needs-validation" novalidate>
+            <form id="loginForm" class="needs-validation auth-neutral-validation" novalidate>
 
-                <div class="form-floating mb-4">
+                <div class="form-floating mb-3">
                     <input id="correo" name="correo" type="email" class="form-control rounded-4" data-i18n-placeholder="placeholder_login_email" placeholder="correo@ejemplo.com" autocomplete="username" required>
                     <label for="correo" class="text-secondary" data-i18n="label_email">Correo electrónico</label>
                     <div class="invalid-feedback px-2" data-i18n="validation_email_required">Ingresa un correo válido para continuar.</div>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-3">
                     <div class="input-group has-validation">
                         <div class="form-floating flex-grow-1">
                             <input id="password" name="password" type="password" class="form-control rounded-start-4 border-end-0" data-i18n-placeholder="placeholder_password" placeholder="Contraseña" autocomplete="current-password" required>
@@ -71,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="row align-items-center g-2 mb-4 px-1">
+                <div class="row align-items-center g-2 mb-3 px-1">
                     <div class="col-6">
                         <div class="form-check">
                             <input id="rememberMe" class="form-check-input" type="checkbox">
@@ -83,14 +84,14 @@
                     </div>
                 </div>
 
-                <button id="loginSubmitBtn" type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow-sm mt-2">
+                <button id="loginSubmitBtn" type="submit" class="btn btn-success w-100 py-2 rounded-pill fw-bold shadow-sm mt-1">
                     <span id="loginSubmitSpinner" class="spinner-border spinner-border-sm me-2 d-none" aria-hidden="true"></span>
                     <span data-i18n="action_login">Iniciar sesión</span>
                 </button>
             </form>
         </div>
 
-        <div class="card-footer bg-light border-top-0 px-4 py-4 text-center rounded-bottom-5">
+        <div class="card-footer bg-light border-top-0 px-4 py-3 text-center rounded-bottom-5">
             <p class="mb-0 text-secondary small">
                 <span data-i18n="login_no_account">¿No tienes una cuenta?</span>
                 <a id="goRegisterLink" href="/registro.html" class="link-success fw-bold text-decoration-none ms-1" data-i18n="login_register_here">Regístrate aquí</a>
@@ -99,6 +100,7 @@
     </section>
 </main>
 
-<script src="/js/login-lite.js" defer></script>
+<script src="/js/common.js" defer></script>
+<script src="/js/login.js" defer></script>
 </body>
 </html>

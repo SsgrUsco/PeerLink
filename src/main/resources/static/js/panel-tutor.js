@@ -8,6 +8,9 @@ let materiasCatalog = [];
 let selectedTutorMateria = null;
 let tutorWeekStart = startOfWeek(new Date());
 let tutorScheduleView = "calendar";
+let showTutorCanceledSchedule = false;
+let lastRemovedTutorOffer = null;
+let lastTutorRequestStateChange = null;
 const hiddenRespondedRequests = new Set();
 
 if (tutorAuth) {
@@ -58,8 +61,12 @@ async function bootTutor() {
         document.getElementById("filtrosHorarioTutorForm").reset();
         renderTutorSchedule();
     });
-    document.getElementById("refreshHorarioBtn").addEventListener("click", loadTutorias);
+    document.getElementById("refreshHorarioBtn").addEventListener("click", loadTutorScheduleData);
     document.getElementById("downloadTutorReportBtn").addEventListener("click", downloadTutorReport);
+    document.getElementById("toggleTutorCanceledBtn").addEventListener("click", () => {
+        showTutorCanceledSchedule = !showTutorCanceledSchedule;
+        renderTutorSchedule();
+    });
 
     document.getElementById("tutorCalendarViewBtn").addEventListener("click", () => setTutorScheduleView("calendar"));
     document.getElementById("tutorListViewBtn").addEventListener("click", () => setTutorScheduleView("list"));
@@ -68,18 +75,37 @@ async function bootTutor() {
     document.getElementById("thisWeekBtn").addEventListener("click", () => {
         tutorWeekStart = startOfWeek(new Date());
         syncTutorWeekPicker();
-        renderTutorCalendar(getFilteredTutorScheduleItems());
+        renderTutorCalendar(getFilteredTutorCalendarItems());
     });
     document.getElementById("weekPicker").addEventListener("change", (event) => {
         tutorWeekStart = startOfWeek(event.target.value ? new Date(`${event.target.value}T00:00:00`) : new Date());
         syncTutorWeekPicker();
-        renderTutorCalendar(getFilteredTutorScheduleItems());
+        renderTutorCalendar(getFilteredTutorCalendarItems());
     });
+    document.getElementById("weekPickerBtn").addEventListener("click", () => openTutorWeekPicker("weekPicker"));
 
     setInitialOfferDateTime();
     syncTutorWeekPicker();
     showTutorTab("solicitudes");
-    await Promise.all([loadTutorias(), loadTutorSources()]);
+    await Promise.all([loadTutorias({ silent: true }), loadTutorSources({ silent: true })]);
+}
+
+function openTutorWeekPicker(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) {
+        return;
+    }
+
+    if (typeof input.showPicker === "function") {
+        try {
+            input.showPicker();
+            return;
+        } catch (error) {
+            input.focus();
+        }
+    }
+
+    input.click();
 }
 
 async function downloadTutorReport() {
@@ -125,6 +151,22 @@ function showTutorTab(tab) {
     setToggleButtonState(solicitudesBtn, tab === "solicitudes");
     setToggleButtonState(crearBtn, tab === "crear");
     setToggleButtonState(horarioBtn, tab === "horario");
+    updateTutorTopbarTitle(tab);
+}
+
+function updateTutorTopbarTitle(tab) {
+    const title = document.getElementById("tutorTopbarTitle");
+    if (!title) {
+        return;
+    }
+    const titleKeyByTab = {
+        solicitudes: "tutor_tab_requests",
+        crear: "tutor_tab_create",
+        horario: "tutor_tab_schedule"
+    };
+    const titleKey = titleKeyByTab[tab] || "tutor_tab_requests";
+    title.dataset.i18n = titleKey;
+    title.textContent = PeerlinkApp.t(titleKey);
 }
 
 function setToggleButtonState(button, active) {
@@ -139,6 +181,7 @@ function setToggleButtonState(button, active) {
     button.classList.toggle("btn-white", !active && button.dataset.baseClass.includes("btn-white"));
     button.classList.toggle("text-secondary", !active && button.dataset.baseClass.includes("text-secondary"));
     button.classList.toggle("text-hover-success", !active && button.dataset.baseClass.includes("text-hover-success"));
+    button.setAttribute("aria-pressed", String(active));
 }
 
 function fillLanguageSelect(elementId, includeAllOption) {
@@ -152,6 +195,9 @@ function fillLanguageSelect(elementId, includeAllOption) {
     });
 
     select.innerHTML = options.join("");
+    if (includeAllOption) {
+        select.value = "";
+    }
 }
 
 function fillFacultySelect(elementId, includeAllOption) {
@@ -175,19 +221,21 @@ function setInitialOfferDateTime() {
     input.value = toDateTimeLocalValue(minDate);
 }
 
-async function loadTutorias() {
+async function loadTutorias(options = {}) {
     try {
         tutorReservations = await PeerlinkApp.api("/api/reservas/mis-tutorias");
         renderTutoriasTable();
         renderTutorSchedule();
-        tutorFeedback.info("feedback_loaded_tutor_data");
+        if (!options.silent) {
+            tutorFeedback.info("feedback_loaded_tutor_data");
+        }
     } catch (error) {
         tutorFeedback.error(error);
         tutorConsole.printError(error);
     }
 }
 
-async function loadTutorSources() {
+async function loadTutorSources(options = {}) {
     try {
         const [materias, offers] = await Promise.all([
             PeerlinkApp.api("/api/materias"),
@@ -197,11 +245,18 @@ async function loadTutorSources() {
         tutorOffers = offers.filter((item) => item.fechaHora);
         renderCrearMaterias();
         renderTutorOffersTable();
-        tutorFeedback.info("feedback_loaded_tutor_data");
+        renderTutorSchedule();
+        if (!options.silent) {
+            tutorFeedback.info("feedback_loaded_tutor_data");
+        }
     } catch (error) {
         tutorFeedback.error(error);
         tutorConsole.printError(error);
     }
+}
+
+async function loadTutorScheduleData() {
+    await Promise.all([loadTutorias(), loadTutorSources()]);
 }
 
 function getFilteredTutorRequests() {
@@ -278,15 +333,76 @@ function renderTutoriasTable() {
 }
 
 async function updateEstado(id, estado) {
+    const reserva = tutorReservations.find((item) => Number(item.id) === Number(id));
+    const previousEstado = reserva?.estado;
     try {
         const response = await PeerlinkApp.api(`/api/reservas/${id}/estado`, {
             method: "PATCH",
             body: JSON.stringify({ estado })
         });
         hiddenRespondedRequests.delete(Number(id));
-        tutorFeedback.success("feedback_tutor_request_updated");
+        lastTutorRequestStateChange = previousEstado && previousEstado !== estado
+            ? { id: Number(id), previousEstado, newEstado: estado, materiaNombre: reserva?.materiaNombre, estudianteNombre: reserva?.estudianteNombre }
+            : null;
         tutorConsole.print(response);
         await loadTutorias();
+        if (lastTutorRequestStateChange && estado !== "PENDIENTE") {
+            showTutorRequestUndo(lastTutorRequestStateChange);
+        } else {
+            tutorFeedback.success("feedback_tutor_request_updated");
+        }
+    } catch (error) {
+        tutorFeedback.error(error);
+        tutorConsole.printError(error);
+    }
+}
+
+function showTutorRequestUndo(change) {
+    const node = document.getElementById("tutorRequestUndoFeedback") || document.getElementById("tutorFeedback");
+    if (!node) {
+        return;
+    }
+
+    node.className = "alert alert-warning border shadow-sm mb-3 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3";
+    node.innerHTML = `
+        <div>
+            <strong>${PeerlinkApp.escapeHtml(PeerlinkApp.t("feedback_tutor_request_updated"))}</strong>
+            <div class="small text-secondary">
+                ${PeerlinkApp.escapeHtml(change.materiaNombre || "")}
+                ${change.estudianteNombre ? ` · ${PeerlinkApp.escapeHtml(change.estudianteNombre)}` : ""}
+            </div>
+        </div>
+        <button id="undoTutorRequestBtn" type="button" class="btn btn-sm btn-outline-success">${PeerlinkApp.escapeHtml(PeerlinkApp.t("action_undo"))}</button>
+    `;
+    node.classList.remove("hidden");
+
+    document.getElementById("undoTutorRequestBtn").addEventListener("click", () => restoreTutorRequestState(change), { once: true });
+}
+
+async function restoreTutorRequestState(change) {
+    if (!change?.id || !change?.previousEstado) {
+        return;
+    }
+
+    try {
+        const undoButton = document.getElementById("undoTutorRequestBtn");
+        if (undoButton) {
+            undoButton.disabled = true;
+        }
+        const response = await PeerlinkApp.api(`/api/reservas/${change.id}/estado`, {
+            method: "PATCH",
+            body: JSON.stringify({ estado: change.previousEstado })
+        });
+        lastTutorRequestStateChange = null;
+        tutorConsole.print(response);
+        await loadTutorias();
+        const node = document.getElementById("tutorRequestUndoFeedback");
+        if (node) {
+            node.className = "alert alert-success border shadow-sm mb-3";
+            node.textContent = PeerlinkApp.t("feedback_action_restored");
+        } else {
+            tutorFeedback.success("feedback_action_restored");
+        }
     } catch (error) {
         tutorFeedback.error(error);
         tutorConsole.printError(error);
@@ -405,30 +521,112 @@ function renderTutorOffersTable() {
         `).join("");
 
     tbody.querySelectorAll("[data-remove-materia]").forEach((button) => {
-        button.addEventListener("click", () => removeTutorOffer(Number(button.dataset.removeMateria)));
+        button.addEventListener("click", () => {
+            const materiaId = Number(button.dataset.removeMateria);
+            const offer = tutorOffers.find((item) => Number(item.materiaId) === materiaId);
+            removeTutorOffer(offer || { materiaId });
+        });
     });
 }
 
-async function removeTutorOffer(materiaId) {
+async function removeTutorOffer(offer) {
+    const materiaId = Number(offer?.materiaId ?? offer);
+    const removedOffer = tutorOffers.find((item) => Number(item.materiaId) === materiaId) || offer;
     try {
         await PeerlinkApp.api(`/api/materias/mis-materias/${materiaId}`, { method: "DELETE" });
-        tutorFeedback.success("feedback_tutor_offer_deleted");
+        lastRemovedTutorOffer = removedOffer?.fechaHora ? { ...removedOffer } : null;
         await loadTutorSources();
+        if (lastRemovedTutorOffer) {
+            showTutorOfferUndo(lastRemovedTutorOffer);
+        } else {
+            tutorFeedback.success("feedback_tutor_offer_deleted");
+        }
     } catch (error) {
         tutorFeedback.error(error);
         tutorConsole.printError(error);
     }
 }
 
-function getFilteredTutorScheduleItems() {
+function showTutorOfferUndo(offer) {
+    const node = document.getElementById("tutorOfferUndoFeedback") || document.getElementById("tutorFeedback");
+    if (!node) {
+        return;
+    }
+
+    node.className = "alert alert-warning border shadow-sm mb-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3";
+    node.innerHTML = `
+        <div>
+            <strong>${PeerlinkApp.escapeHtml(PeerlinkApp.t("feedback_tutor_offer_deleted"))}</strong>
+            <div class="small text-secondary">
+                ${PeerlinkApp.escapeHtml(offer.materiaNombre || "")}
+                ${offer.fechaHora ? ` · ${PeerlinkApp.escapeHtml(PeerlinkApp.formatDateTime(offer.fechaHora))}` : ""}
+            </div>
+        </div>
+        <button id="undoTutorOfferBtn" type="button" class="btn btn-sm btn-outline-success">${PeerlinkApp.escapeHtml(PeerlinkApp.t("action_undo"))}</button>
+    `;
+    node.classList.remove("hidden");
+
+    document.getElementById("undoTutorOfferBtn").addEventListener("click", () => restoreTutorOffer(offer), { once: true });
+}
+
+async function restoreTutorOffer(offer) {
+    if (!offer?.materiaId || !offer?.fechaHora) {
+        return;
+    }
+
+    try {
+        const undoButton = document.getElementById("undoTutorOfferBtn");
+        if (undoButton) {
+            undoButton.disabled = true;
+        }
+        const response = await PeerlinkApp.api("/api/materias/mis-materias", {
+            method: "POST",
+            body: JSON.stringify({
+                materiaId: offer.materiaId,
+                fechaHora: offer.fechaHora
+            })
+        });
+        lastRemovedTutorOffer = null;
+        tutorConsole.print(response);
+        await loadTutorSources();
+        const undoFeedback = document.getElementById("tutorOfferUndoFeedback");
+        if (undoFeedback) {
+            undoFeedback.className = "alert alert-success border shadow-sm mb-3";
+            undoFeedback.textContent = PeerlinkApp.t("feedback_tutor_offer_restored");
+        } else {
+            tutorFeedback.success("feedback_tutor_offer_restored");
+        }
+    } catch (error) {
+        tutorFeedback.error(error);
+        tutorConsole.printError(error);
+    }
+}
+
+function getFilteredTutorScheduleItems({ includeCanceled = false } = {}) {
     const search = normalizeText(document.getElementById("horarioBusquedaTutor").value);
     const idioma = document.getElementById("materiaTutorIdioma").value;
     const facultad = document.getElementById("materiaTutorFacultad").value;
     const fecha = document.getElementById("materiaTutorFecha").value;
     const hora = document.getElementById("materiaTutorHora").value;
 
-    return tutorReservations.filter((item) => {
-        if (item.estado === "CANCELADA") {
+    const reservationItems = tutorReservations.map((item) => ({
+        ...item,
+        scheduleType: "RESERVA",
+        participantName: item.estudianteNombre,
+        scheduleStatus: item.estado
+    }));
+    const offerItems = tutorOffers.map((item) => ({
+        ...item,
+        id: `offer-${item.materiaId}-${item.fechaHora}`,
+        scheduleType: "OFERTA",
+        participantName: PeerlinkApp.t("schedule_available"),
+        estudianteNombre: PeerlinkApp.t("schedule_available"),
+        estado: "PUBLICADA",
+        scheduleStatus: PeerlinkApp.t("schedule_published")
+    }));
+
+    return [...reservationItems, ...offerItems].filter((item) => {
+        if (!includeCanceled && item.estado === "CANCELADA") {
             return false;
         }
         const itemDate = new Date(item.fechaHora);
@@ -436,7 +634,8 @@ function getFilteredTutorScheduleItems() {
         const sameHour = !hora || `${String(itemDate.getHours()).padStart(2, "0")}:${String(itemDate.getMinutes()).padStart(2, "0")}` === hora;
         const sameSearch = !search
             || normalizeText(item.materiaNombre).includes(search)
-            || normalizeText(item.estudianteNombre).includes(search);
+            || normalizeText(item.estudianteNombre).includes(search)
+            || normalizeText(item.participantName).includes(search);
         return sameSearch
             && (!idioma || item.idioma === idioma)
             && (!facultad || item.facultad === facultad)
@@ -445,11 +644,21 @@ function getFilteredTutorScheduleItems() {
     }).sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora));
 }
 
+function getFilteredTutorCalendarItems() {
+    return getFilteredTutorScheduleItems({ includeCanceled: false });
+}
+
 function renderTutorSchedule() {
-    const items = getFilteredTutorScheduleItems();
+    const items = getFilteredTutorScheduleItems({ includeCanceled: showTutorCanceledSchedule });
     document.getElementById("tutorHorarioCount").textContent = PeerlinkApp.t("reservations_count", { count: items.length });
+    updateTutorCanceledToggle();
     renderTutorScheduleList(items);
-    renderTutorCalendar(items);
+    renderTutorCalendar(getFilteredTutorCalendarItems());
+}
+
+function updateTutorCanceledToggle() {
+    const button = document.getElementById("toggleTutorCanceledBtn");
+    button.textContent = PeerlinkApp.t(showTutorCanceledSchedule ? "action_hide_canceled" : "action_show_canceled");
 }
 
 function renderTutorScheduleList(items) {
@@ -462,11 +671,11 @@ function renderTutorScheduleList(items) {
     tbody.innerHTML = items.map((item) => `
         <tr>
             <td>${PeerlinkApp.escapeHtml(item.materiaNombre)}</td>
-            <td>${PeerlinkApp.escapeHtml(item.estudianteNombre)}</td>
+            <td>${PeerlinkApp.escapeHtml(item.participantName || item.estudianteNombre || PeerlinkApp.t("schedule_available"))}</td>
             <td>${PeerlinkApp.escapeHtml(PeerlinkApp.formatDateTime(item.fechaHora))}</td>
             <td>${PeerlinkApp.escapeHtml(PeerlinkApp.labelForLanguage(item.idioma))}</td>
             <td>${PeerlinkApp.escapeHtml(PeerlinkApp.labelForFaculty(item.facultad))}</td>
-            <td><span class="badge text-bg-light border">${PeerlinkApp.escapeHtml(item.estado)}</span></td>
+            <td><span class="badge text-bg-light border">${PeerlinkApp.escapeHtml(item.scheduleStatus || item.estado)}</span></td>
         </tr>
     `).join("");
 }
@@ -484,7 +693,7 @@ function changeTutorWeek(days) {
     next.setDate(next.getDate() + days);
     tutorWeekStart = startOfWeek(next);
     syncTutorWeekPicker();
-    renderTutorCalendar(getFilteredTutorScheduleItems());
+    renderTutorCalendar(getFilteredTutorCalendarItems());
 }
 
 function syncTutorWeekPicker() {
@@ -548,18 +757,15 @@ function renderTutorSlot(item) {
     return `
         <article class="weekly-slot">
             <div class="weekly-slot-title">${PeerlinkApp.escapeHtml(item.materiaNombre)}</div>
-            <div class="weekly-slot-meta">${PeerlinkApp.escapeHtml(item.estudianteNombre)}</div>
+            <div class="weekly-slot-meta">${PeerlinkApp.escapeHtml(item.participantName || item.estudianteNombre || PeerlinkApp.t("schedule_available"))}</div>
             <div class="weekly-slot-meta">${PeerlinkApp.escapeHtml(PeerlinkApp.formatTime(item.fechaHora))}</div>
-            <div class="weekly-slot-meta">${PeerlinkApp.escapeHtml(item.estado)}</div>
+            <div class="weekly-slot-meta">${PeerlinkApp.escapeHtml(item.scheduleStatus || item.estado)}</div>
         </article>
     `;
 }
 
 function buildHourRange(items) {
-    const hours = items.map((item) => new Date(item.fechaHora).getHours());
-    const start = Math.min(6, ...hours);
-    const end = Math.max(21, ...hours);
-    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
+    return Array.from({ length: 24 }, (_, index) => index);
 }
 
 function startOfWeek(dateInput) {

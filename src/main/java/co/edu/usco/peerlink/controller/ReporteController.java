@@ -21,6 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 
+/**
+ * Controlador REST para descarga de reportes PDF.
+ *
+ * <p>Entrega reportes generados con JasperReports para estudiantes, tutores y
+ * administradores, aplicando las restricciones de rol definidas en seguridad.</p>
+ */
 @RestController
 @RequestMapping("/api/reportes")
 @Tag(name = "Reportes", description = "Generacion de reportes PDF con JasperReports Library.")
@@ -42,6 +48,7 @@ public class ReporteController {
             @ApiResponse(responseCode = "200", description = "Reporte PDF generado",
                     content = @Content(mediaType = MediaType.APPLICATION_PDF_VALUE,
                             schema = @Schema(type = "string", format = "binary"))),
+            @ApiResponse(responseCode = "401", description = "Sesion ausente o token invalido"),
             @ApiResponse(responseCode = "403", description = "Solo disponible para ESTUDIANTE")
     })
     public ResponseEntity<byte[]> misReservas(
@@ -67,6 +74,7 @@ public class ReporteController {
             @ApiResponse(responseCode = "200", description = "Reporte PDF generado",
                     content = @Content(mediaType = MediaType.APPLICATION_PDF_VALUE,
                             schema = @Schema(type = "string", format = "binary"))),
+            @ApiResponse(responseCode = "401", description = "Sesion ausente o token invalido"),
             @ApiResponse(responseCode = "403", description = "Solo disponible para TUTOR")
     })
     public ResponseEntity<byte[]> misTutorias(
@@ -92,6 +100,7 @@ public class ReporteController {
             @ApiResponse(responseCode = "200", description = "Reporte PDF generado",
                     content = @Content(mediaType = MediaType.APPLICATION_PDF_VALUE,
                             schema = @Schema(type = "string", format = "binary"))),
+            @ApiResponse(responseCode = "401", description = "Sesion ausente o token invalido"),
             @ApiResponse(responseCode = "403", description = "Acceso restringido a ADMIN")
     })
     public ResponseEntity<byte[]> adminResumen() {
@@ -108,6 +117,7 @@ public class ReporteController {
             @ApiResponse(responseCode = "200", description = "Reporte PDF generado",
                     content = @Content(mediaType = MediaType.APPLICATION_PDF_VALUE,
                             schema = @Schema(type = "string", format = "binary"))),
+            @ApiResponse(responseCode = "401", description = "Sesion ausente o token invalido"),
             @ApiResponse(responseCode = "403", description = "Acceso restringido a ADMIN")
     })
     public ResponseEntity<byte[]> adminTutores() {
@@ -124,6 +134,7 @@ public class ReporteController {
             @ApiResponse(responseCode = "200", description = "Reporte PDF generado",
                     content = @Content(mediaType = MediaType.APPLICATION_PDF_VALUE,
                             schema = @Schema(type = "string", format = "binary"))),
+            @ApiResponse(responseCode = "401", description = "Sesion ausente o token invalido"),
             @ApiResponse(responseCode = "403", description = "Acceso restringido a ADMIN")
     })
     public ResponseEntity<byte[]> adminUsuarios() {

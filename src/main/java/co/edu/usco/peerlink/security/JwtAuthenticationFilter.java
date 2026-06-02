@@ -15,6 +15,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Filtro de autenticacion JWT ejecutado una vez por peticion.
+ *
+ * <p>Busca el token primero en el encabezado {@code Authorization: Bearer}
+ * para pruebas tecnicas y Swagger, y luego en la cookie HttpOnly
+ * {@code AUTH_TOKEN}, que es el mecanismo usado por el frontend.</p>
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

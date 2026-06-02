@@ -14,9 +14,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Configura la internacionalizacion manual de PeerLink para espanol, ingles y portugues.
+ */
 @Configuration
 public class I18nConfig implements WebMvcConfigurer {
 
+    /**
+     * Define el resolvedor de idioma basado en el parametro {@code lang}.
+     *
+     * @return resolvedor con idioma por defecto espanol
+     */
     @Bean
     public LocaleResolver localeResolver() {
         QueryParamLocaleResolver localeResolver = new QueryParamLocaleResolver();
@@ -30,6 +38,11 @@ public class I18nConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    /**
+     * Interceptor que permite cambiar el idioma con el parametro {@code lang}.
+     *
+     * @return interceptor de cambio de idioma
+     */
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
         interceptor.setParamName("lang");
@@ -37,6 +50,11 @@ public class I18nConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    /**
+     * Fuente de mensajes para validaciones y errores traducibles.
+     *
+     * @return message source basado en archivos {@code messages_*.properties}
+     */
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
         source.setBasename("classpath:messages");
@@ -46,6 +64,12 @@ public class I18nConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    /**
+     * Integra Bean Validation con los mensajes i18n del proyecto.
+     *
+     * @param messageSource fuente de mensajes configurada
+     * @return validador localizado
+     */
     public LocalValidatorFactoryBean getValidator(MessageSource messageSource) {
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.setValidationMessageSource(messageSource);
@@ -53,6 +77,11 @@ public class I18nConfig implements WebMvcConfigurer {
     }
 
     @Override
+    /**
+     * Registra el interceptor de idioma en Spring MVC.
+     *
+     * @param registry registro de interceptores MVC
+     */
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }

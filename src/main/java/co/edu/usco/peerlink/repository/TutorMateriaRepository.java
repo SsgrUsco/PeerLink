@@ -8,8 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+/**
+ * Repositorio para la relacion tutor-materia y sus tablas satelite de publicacion.
+ */
 public interface TutorMateriaRepository extends JpaRepository<TutorMateria, TutorMateriaId> {
 
+    /**
+     * Lista todas las relaciones tutor-materia con datos de tutor, materia e informacion publicada.
+     *
+     * @return asignaciones detalladas para administracion y filtros
+     */
     @Query("""
             select distinct tm
             from TutorMateria tm
@@ -24,6 +32,12 @@ public interface TutorMateriaRepository extends JpaRepository<TutorMateria, Tuto
             """)
     List<TutorMateria> findAllDetailed();
 
+    /**
+     * Lista las materias asociadas a un tutor especifico.
+     *
+     * @param tutorId identificador del tutor autenticado o administrado
+     * @return relaciones detalladas del tutor
+     */
     @Query("""
             select distinct tm
             from TutorMateria tm
@@ -39,6 +53,11 @@ public interface TutorMateriaRepository extends JpaRepository<TutorMateria, Tuto
             """)
     List<TutorMateria> findAllByTutorIdDetailed(Integer tutorId);
 
+    /**
+     * Elimina todas las relaciones tutor-materia de un tutor.
+     *
+     * @param tutorId identificador del tutor
+     */
     @Modifying
     @Query("delete from TutorMateria tm where tm.tutor.id = :tutorId")
     void deleteAllByTutorId(Integer tutorId);

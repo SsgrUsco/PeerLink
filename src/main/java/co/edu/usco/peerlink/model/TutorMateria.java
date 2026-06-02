@@ -1,9 +1,23 @@
 package co.edu.usco.peerlink.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+/**
+ * Entidad puente que representa la relacion entre un tutor y una materia.
+ */
+@Getter
+@Setter
 @Entity
 @Table(name = "tutores_materias")
 public class TutorMateria {

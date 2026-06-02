@@ -84,7 +84,7 @@
             <a href="/ayuda.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="navbar_help">Ayuda</a>
             <a href="/privacidad.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="legal_privacy_heading">Privacidad</a>
         </div>
-        <p data-i18n="legal_terms_footer">© 2026 PeerLink. Fomentando el orden y la colaboracion academica.</p>
+        <p data-i18n="legal_terms_footer">© 2026 PeerLink. Fomentando el orden y la colaboración académica.</p>
     </footer>
 
 </main>
@@ -98,7 +98,7 @@
             if(typeof PeerlinkApp !== 'undefined') {
                 const auth = PeerlinkApp.getAuth();
                 const backBtn = document.getElementById("termsBackBtn");
-                if (backBtn && auth.token && auth.role) {
+                if (backBtn && auth.role) {
                     backBtn.href = PeerlinkApp.withLang(PeerlinkApp.panelForRole(auth.role));
                     backBtn.innerHTML = `<i class="bi bi-columns-gap me-2"></i><span>${PeerlinkApp.t("landing_panel_cta")}</span>`;
                 }

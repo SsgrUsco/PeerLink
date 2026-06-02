@@ -15,16 +15,28 @@ import java.time.OffsetDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Manejador global que transforma excepciones del backend en respuestas JSON uniformes.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
 
+    /**
+     * @param messageSource fuente de mensajes para internacionalizacion de errores
+     */
     public GlobalExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    /**
+     * Convierte errores de validacion Bean Validation en respuesta 400.
+     *
+     * @param exception excepcion de validacion
+     * @return respuesta con detalles por campo
+     */
     public ResponseEntity<ApiErrorResponse> handleValidation(MethodArgumentNotValidException exception) {
         Map<String, String> details = new LinkedHashMap<>();
         for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
@@ -41,6 +53,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BusinessException.class)
+    /**
+     * Convierte excepciones de negocio en el estado HTTP definido por el servicio.
+     *
+     * @param exception excepcion de negocio
+     * @return respuesta traducida para el cliente
+     */
     public ResponseEntity<ApiErrorResponse> handleBusiness(BusinessException exception) {
         HttpStatus status = exception.getStatus();
         return ResponseEntity.status(status).body(ApiErrorResponse.builder()
@@ -53,6 +71,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
+    /**
+     * Responde a credenciales invalidas sin revelar informacion sensible.
+     *
+     * @param exception excepcion de autenticacion
+     * @return respuesta 401
+     */
     public ResponseEntity<ApiErrorResponse> handleBadCredentials(BadCredentialsException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiErrorResponse.builder()
                 .timestamp(OffsetDateTime.now())
@@ -64,6 +88,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
+    /**
+     * Responde a intentos autenticados sin permisos suficientes.
+     *
+     * @param exception excepcion de autorizacion
+     * @return respuesta 403
+     */
     public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException exception) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiErrorResponse.builder()
                 .timestamp(OffsetDateTime.now())
@@ -75,16 +105,29 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
+    /**
+     * Captura errores no controlados y devuelve un mensaje generico.
+     *
+     * @param exception excepcion inesperada
+     * @return respuesta 500
+     */
     public ResponseEntity<ApiErrorResponse> handleGeneral(Exception exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiErrorResponse.builder()
                 .timestamp(OffsetDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                 .message(resolveMessage("error.internal"))
-                .details(Map.of("exception", exception.getClass().getSimpleName()))
+                .details(Map.of())
                 .build());
     }
 
+    /**
+     * Resuelve una clave i18n con el idioma actual de la solicitud.
+     *
+     * @param key clave del mensaje
+     * @param args argumentos opcionales
+     * @return mensaje localizado
+     */
     private String resolveMessage(String key, Object... args) {
         return messageSource.getMessage(key, args, key, LocaleContextHolder.getLocale());
     }

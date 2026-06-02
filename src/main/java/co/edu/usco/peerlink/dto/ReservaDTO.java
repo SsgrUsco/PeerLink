@@ -1,10 +1,15 @@
 package co.edu.usco.peerlink.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * Representa una reserva de tutoria y sus datos minimos de relacion.
+ */
 @Data
 @Schema(description = "Reserva de tutoria creada por un estudiante o publicada como resultado de una oferta aceptada.")
 public class ReservaDTO {
@@ -14,12 +19,15 @@ public class ReservaDTO {
     private Integer estudianteId;
 
     @Schema(description = "ID del tutor asociado.", example = "5")
+    @NotNull(message = "{validation.reserva.tutorId.notNull}")
     private Integer tutorId;
 
     @Schema(description = "ID de la materia reservada.", example = "1")
+    @NotNull(message = "{validation.reserva.materiaId.notNull}")
     private Integer materiaId;
 
     @Schema(description = "Fecha y hora programada para la tutoria.", example = "2026-06-01T14:00:00")
+    @Future(message = "{validation.reserva.fechaHora.future}")
     private LocalDateTime fechaHora;
 
     @Schema(description = "Idioma tecnico de la tutoria.", example = "es", allowableValues = {"es", "en", "pt"})

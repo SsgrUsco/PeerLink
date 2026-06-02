@@ -17,14 +17,18 @@ import co.edu.usco.peerlink.repository.ReservaRepository;
 import co.edu.usco.peerlink.repository.TutorMateriaRepository;
 import co.edu.usco.peerlink.repository.UsuarioRepository;
 import co.edu.usco.peerlink.security.AuthenticatedUser;
+import co.edu.usco.peerlink.security.SecurityAuditLogger;
+import co.edu.usco.peerlink.security.SecurityUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Implementa la logica de creacion, consulta y cambio de estado de reservas.
+ */
 @Service
 public class ReservaServiceImpl implements ReservaService {
     private static final LocalDateTime FILTER_MIN_DATE = LocalDateTime.of(1900, 1, 1, 0, 0);
@@ -33,17 +37,32 @@ public class ReservaServiceImpl implements ReservaService {
     private final ReservaRepository reservaRepository;
     private final UsuarioRepository usuarioRepository;
     private final TutorMateriaRepository tutorMateriaRepository;
+    private final SecurityAuditLogger auditLogger;
+    private final ReservaEmailService reservaEmailService;
 
+    /**
+     * Inyecta repositorios, auditoria de seguridad y servicio de correo.
+     */
     public ReservaServiceImpl(ReservaRepository reservaRepository,
                               UsuarioRepository usuarioRepository,
-                              TutorMateriaRepository tutorMateriaRepository) {
+                              TutorMateriaRepository tutorMateriaRepository,
+                              SecurityAuditLogger auditLogger,
+                              ReservaEmailService reservaEmailService) {
         this.reservaRepository = reservaRepository;
         this.usuarioRepository = usuarioRepository;
         this.tutorMateriaRepository = tutorMateriaRepository;
+        this.auditLogger = auditLogger;
+        this.reservaEmailService = reservaEmailService;
     }
 
     @Override
     @Transactional
+    /**
+     * Crea una reserva en estado pendiente para el estudiante autenticado.
+     *
+     * @param dto datos de tutor, materia y fecha/hora cuando aplica
+     * @return reserva creada
+     */
     public ReservaDTO crearReserva(ReservaDTO dto) {
         AuthenticatedUser currentUser = getCurrentUser();
         if (!"ESTUDIANTE".equals(currentUser.getRol())) {
@@ -69,11 +88,15 @@ public class ReservaServiceImpl implements ReservaService {
         reservaTutorMateria.setReserva(reserva);
         reserva.setReservaTutorMateria(reservaTutorMateria);
 
-        LocalDateTime fechaHoraReserva = dto.getFechaHora() != null
-                ? dto.getFechaHora()
-                : tutorMateria.getTutorMateriaFecha() == null ? null : tutorMateria.getTutorMateriaFecha().getFechaHora();
+        LocalDateTime fechaHoraPublicada = tutorMateria.getTutorMateriaFecha() == null
+                ? null
+                : tutorMateria.getTutorMateriaFecha().getFechaHora();
+        LocalDateTime fechaHoraReserva = fechaHoraPublicada != null ? fechaHoraPublicada : dto.getFechaHora();
         if (fechaHoraReserva == null) {
             throw new BusinessException("error.reserva.tutorMateriaInvalida", HttpStatus.BAD_REQUEST);
+        }
+        if (!fechaHoraReserva.isAfter(LocalDateTime.now())) {
+            throw new BusinessException("error.reserva.fechaHoraPasada", HttpStatus.BAD_REQUEST);
         }
 
         ReservaFecha reservaFecha = new ReservaFecha();
@@ -96,11 +119,18 @@ public class ReservaServiceImpl implements ReservaService {
         reservaFacultad.setReserva(reserva);
         reserva.setReservaFacultad(reservaFacultad);
 
-        return toDto(reservaRepository.save(reserva));
+        Reserva reservaGuardada = reservaRepository.save(reserva);
+        reservaEmailService.notifyReservationCreated(reservaGuardada);
+        return toDto(reservaGuardada);
     }
 
     @Override
     @Transactional(readOnly = true)
+    /**
+     * Obtiene reservas resumidas segun el rol del usuario autenticado.
+     *
+     * @return reservas del estudiante o tutor actual
+     */
     public List<ReservaDTO> obtenerReservasDelUsuario() {
         AuthenticatedUser currentUser = getCurrentUser();
         List<Reserva> reservas = switch (currentUser.getRol()) {
@@ -114,6 +144,15 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     @Transactional(readOnly = true)
+    /**
+     * Consulta reservas detalladas del estudiante con filtros opcionales.
+     *
+     * @param idioma filtro por idioma
+     * @param facultad filtro por facultad
+     * @param desde fecha inicial
+     * @param hasta fecha final
+     * @return reservas detalladas del estudiante
+     */
     public List<ReservaDetalleDTO> obtenerMisReservas(String idioma, String facultad,
                                                       LocalDateTime desde, LocalDateTime hasta) {
         AuthenticatedUser currentUser = getCurrentUser();
@@ -134,6 +173,15 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     @Transactional(readOnly = true)
+    /**
+     * Consulta solicitudes y tutorias del tutor autenticado con filtros opcionales.
+     *
+     * @param idioma filtro por idioma
+     * @param facultad filtro por facultad
+     * @param desde fecha inicial
+     * @param hasta fecha final
+     * @return reservas detalladas asociadas al tutor
+     */
     public List<ReservaDetalleDTO> obtenerMisTutorias(String idioma, String facultad,
                                                       LocalDateTime desde, LocalDateTime hasta) {
         AuthenticatedUser currentUser = getCurrentUser();
@@ -154,6 +202,13 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     @Transactional
+    /**
+     * Actualiza el estado de una reserva perteneciente al tutor autenticado.
+     *
+     * @param reservaId identificador de la reserva
+     * @param nuevoEstado estado solicitado
+     * @return reserva actualizada
+     */
     public ReservaDTO actualizarEstado(Integer reservaId, String nuevoEstado) {
         AuthenticatedUser currentUser = getCurrentUser();
         if (!"TUTOR".equals(currentUser.getRol())) {
@@ -168,8 +223,16 @@ public class ReservaServiceImpl implements ReservaService {
             throw new BusinessException("error.reserva.tutorNoAutorizado", HttpStatus.FORBIDDEN);
         }
 
+        String estadoAnterior = reserva.getReservaEstado().getEstado();
         reserva.getReservaEstado().setEstado(nuevoEstado);
-        return toDto(reservaRepository.save(reserva));
+        auditLogger.log(
+                "RESERVATION_STATUS_CHANGED",
+                currentUser.getUsername(),
+                "reservaId=%s from=%s to=%s".formatted(reservaId, estadoAnterior, nuevoEstado)
+        );
+        Reserva reservaGuardada = reservaRepository.save(reserva);
+        reservaEmailService.notifyReservationStatusChanged(reservaGuardada, estadoAnterior, nuevoEstado);
+        return toDto(reservaGuardada);
     }
 
     private ReservaDTO toDto(Reserva reserva) {
@@ -202,7 +265,7 @@ public class ReservaServiceImpl implements ReservaService {
     }
 
     private AuthenticatedUser getCurrentUser() {
-        return (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return SecurityUtils.currentUser();
     }
 
     private String normalizeFilter(String value) {

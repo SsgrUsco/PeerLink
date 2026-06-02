@@ -5,6 +5,9 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * Solicitud para cambiar el estado operativo de una reserva existente.
+ */
 @Data
 @Schema(description = "Cambio de estado realizado por el tutor propietario de la reserva.")
 public class ReservaEstadoUpdateDTO {

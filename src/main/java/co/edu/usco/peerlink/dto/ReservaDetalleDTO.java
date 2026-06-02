@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * Vista enriquecida de una reserva para listados, horarios semanales y reportes.
+ */
 @Data
 @Schema(description = "Vista detallada de una reserva para horarios, listas y reportes.")
 public class ReservaDetalleDTO {

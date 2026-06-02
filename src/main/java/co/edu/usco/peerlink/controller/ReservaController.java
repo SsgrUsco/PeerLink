@@ -29,6 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Controlador REST para reservas y solicitudes de tutorias.
+ *
+ * <p>Expone operaciones para crear reservas, consultar horarios filtrados y
+ * permitir que el tutor confirme, cancele o deshaga respuestas segun la regla
+ * de negocio vigente.</p>
+ */
 @RestController
 @RequestMapping("/api/reservas")
 @Tag(name = "Reservas", description = "Gestion de reservas, solicitudes, filtros y horarios semanales.")
@@ -53,7 +60,7 @@ public class ReservaController {
             @ApiResponse(responseCode = "403", description = "Solo disponible para ESTUDIANTE")
     })
     public ResponseEntity<ReservaDTO> crear(@Valid @RequestBody ReservaDTO dto) {
-        return new ResponseEntity<>(reservaService.crearReserva(dto), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservaService.crearReserva(dto));
     }
 
     @GetMapping

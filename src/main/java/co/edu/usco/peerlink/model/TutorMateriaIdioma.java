@@ -6,10 +6,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumns;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+/**
+ * Tabla satelite que almacena el idioma de una tutoria publicada por tutor.
+ */
+@Getter
+@Setter
 @Entity
 @Table(name = "tutores_materias_idioma")
 public class TutorMateriaIdioma {

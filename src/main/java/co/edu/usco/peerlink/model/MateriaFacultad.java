@@ -7,10 +7,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+/**
+ * Tabla satelite que asocia una materia con su facultad tecnica.
+ */
+@Getter
+@Setter
 @Entity
 @Table(name = "materias_facultad")
 public class MateriaFacultad {

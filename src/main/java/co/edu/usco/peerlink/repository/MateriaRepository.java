@@ -6,8 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+/**
+ * Repositorio JPA para consultar y persistir materias del catalogo academico.
+ */
 public interface MateriaRepository extends JpaRepository<Materia, Integer> {
 
+    /**
+     * Obtiene las materias con idioma y facultad cargados para evitar consultas adicionales.
+     *
+     * @return materias ordenadas por nombre
+     */
     @Query("""
             select distinct m
             from Materia m
@@ -17,6 +25,14 @@ public interface MateriaRepository extends JpaRepository<Materia, Integer> {
             """)
     List<Materia> findAllDetailed();
 
+    /**
+     * Verifica si ya existe una materia con la misma combinacion de nombre, idioma y facultad.
+     *
+     * @param nombre nombre de la materia
+     * @param idioma clave tecnica del idioma
+     * @param facultad clave tecnica de la facultad
+     * @return {@code true} si la combinacion ya existe
+     */
     @Query("""
             select count(m) > 0
             from Materia m

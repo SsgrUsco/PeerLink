@@ -3,6 +3,9 @@ package co.edu.usco.peerlink.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * Expone el detalle de una tutoria publicada o asignacion tutor-materia.
+ */
 @Data
 @Schema(description = "Detalle de una relacion tutor-materia, incluyendo horario publicado, idioma y facultad.")
 public class TutorMateriaDetalleDTO {

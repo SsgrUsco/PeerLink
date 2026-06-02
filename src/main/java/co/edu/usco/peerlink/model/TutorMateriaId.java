@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
+/**
+ * Clave compuesta para identificar de forma unica una relacion tutor-materia.
+ */
 @Data
 @Embeddable
 @NoArgsConstructor

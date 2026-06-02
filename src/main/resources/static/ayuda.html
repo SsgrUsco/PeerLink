@@ -119,7 +119,7 @@
     </section>
 
     <footer class="pt-5 mt-4 text-center text-secondary small">
-        <p data-i18n="help_footer">© 2026 PeerLink. Haciendo la vida universitaria mas simple.</p>
+        <p data-i18n="help_footer">© 2026 PeerLink. Haciendo la vida universitaria más simple.</p>
     </footer>
 
 </main>
@@ -133,7 +133,7 @@
             if(typeof PeerlinkApp !== 'undefined') {
                 const auth = PeerlinkApp.getAuth();
                 const backBtn = document.getElementById("helpBackBtn");
-                if (backBtn && auth.token && auth.role) {
+                if (backBtn && auth.role) {
                     backBtn.href = PeerlinkApp.withLang(PeerlinkApp.panelForRole(auth.role));
                     backBtn.innerHTML = `<i class="bi bi-columns-gap me-2"></i><span>${PeerlinkApp.t("landing_panel_cta")}</span>`;
                 }

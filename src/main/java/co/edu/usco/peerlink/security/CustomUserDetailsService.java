@@ -7,6 +7,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Adaptador entre el modelo 6NF de usuarios y Spring Security.
+ *
+ * <p>Carga correo, password, rol y nombre desde las tablas satelite
+ * {@code usuarios_correo}, {@code usuarios_password}, {@code usuarios_rol}
+ * y {@code usuarios_nombre} para construir el principal autenticado.</p>
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

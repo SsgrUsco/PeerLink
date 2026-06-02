@@ -54,6 +54,10 @@ async function saveProfile(event) {
 
 async function savePassword(event) {
     event.preventDefault();
+    if (!event.currentTarget.checkValidity()) {
+        event.currentTarget.classList.add("was-validated");
+        return;
+    }
     try {
         await PeerlinkApp.api("/api/usuarios/me/password", {
             method: "PATCH",
@@ -63,6 +67,7 @@ async function savePassword(event) {
             })
         });
         event.currentTarget.reset();
+        event.currentTarget.classList.remove("was-validated");
         profileFeedback.success("password_updated");
         profileConsole.print({ message: "password_updated" });
     } catch (error) {

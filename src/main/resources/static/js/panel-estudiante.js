@@ -10,6 +10,7 @@ let selectedOffer = null;
 let selectedSolicitudGroupKey = null;
 let selectedWeekStart = startOfWeek(new Date());
 let studentScheduleView = "calendar";
+let showStudentCanceledSchedule = false;
 
 if (studentAuth) {
     PeerlinkApp.renderNavbar("navbarContainer");
@@ -62,6 +63,10 @@ async function bootStudent() {
     });
     document.getElementById("refreshReservasBtn").addEventListener("click", loadMyReservations);
     document.getElementById("downloadStudentReportBtn").addEventListener("click", downloadStudentReport);
+    document.getElementById("toggleStudentCanceledBtn").addEventListener("click", () => {
+        showStudentCanceledSchedule = !showStudentCanceledSchedule;
+        renderStudentSchedule();
+    });
 
     document.getElementById("studentCalendarViewBtn").addEventListener("click", () => setStudentScheduleView("calendar"));
     document.getElementById("studentListViewBtn").addEventListener("click", () => setStudentScheduleView("list"));
@@ -70,19 +75,38 @@ async function bootStudent() {
     document.getElementById("thisWeekBtn").addEventListener("click", () => {
         selectedWeekStart = startOfWeek(new Date());
         syncWeekPicker();
-        renderStudentCalendar(getFilteredStudentReservations());
+        renderStudentCalendar(getFilteredStudentCalendarReservations());
     });
     document.getElementById("weekPicker").addEventListener("change", (event) => {
         selectedWeekStart = startOfWeek(event.target.value ? new Date(`${event.target.value}T00:00:00`) : new Date());
         syncWeekPicker();
-        renderStudentCalendar(getFilteredStudentReservations());
+        renderStudentCalendar(getFilteredStudentCalendarReservations());
     });
+    document.getElementById("weekPickerBtn").addEventListener("click", () => openWeekPicker("weekPicker"));
 
     setInitialSolicitudDateTime();
     syncWeekPicker();
     showStudentTab("tutorias");
-    showStudentTutoriasSubtab("solicitar");
-    await Promise.all([loadStudentSources(), loadMyReservations()]);
+    showStudentTutoriasSubtab("aceptar");
+    await Promise.all([loadStudentSources({ silent: true }), loadMyReservations({ silent: true })]);
+}
+
+function openWeekPicker(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) {
+        return;
+    }
+
+    if (typeof input.showPicker === "function") {
+        try {
+            input.showPicker();
+            return;
+        } catch (error) {
+            input.focus();
+        }
+    }
+
+    input.click();
 }
 
 async function downloadStudentReport() {
@@ -124,6 +148,21 @@ function showStudentTab(tab) {
     horarioTab.classList.toggle("hidden", tab !== "horario");
     setToggleButtonState(tutoriasBtn, tab === "tutorias");
     setToggleButtonState(horarioBtn, tab === "horario");
+    updateStudentTopbarTitle(tab);
+}
+
+function updateStudentTopbarTitle(tab) {
+    const title = document.getElementById("studentTopbarTitle");
+    if (!title) {
+        return;
+    }
+    const titleKeyByTab = {
+        tutorias: "student_tab_tutoring",
+        horario: "student_tab_schedule"
+    };
+    const titleKey = titleKeyByTab[tab] || "student_tab_tutoring";
+    title.dataset.i18n = titleKey;
+    title.textContent = PeerlinkApp.t(titleKey);
 }
 
 function showStudentTutoriasSubtab(tab) {
@@ -131,11 +170,19 @@ function showStudentTutoriasSubtab(tab) {
     const aceptarTab = document.getElementById("studentAceptarTab");
     const solicitarBtn = document.getElementById("studentSolicitarTabBtn");
     const aceptarBtn = document.getElementById("studentAceptarTabBtn");
+    const activeTab = tab === "solicitar" ? "solicitar" : "aceptar";
 
-    solicitarTab.classList.toggle("hidden", tab !== "solicitar");
-    aceptarTab.classList.toggle("hidden", tab !== "aceptar");
-    setToggleButtonState(solicitarBtn, tab === "solicitar");
-    setToggleButtonState(aceptarBtn, tab === "aceptar");
+    solicitarTab.classList.toggle("hidden", activeTab !== "solicitar");
+    aceptarTab.classList.toggle("hidden", activeTab !== "aceptar");
+    setToggleButtonState(solicitarBtn, activeTab === "solicitar");
+    setToggleButtonState(aceptarBtn, activeTab === "aceptar");
+
+    if (activeTab === "solicitar") {
+        selectOffer(null);
+    } else {
+        selectSolicitudGroup(null);
+        document.getElementById("solicitudReservaForm").classList.remove("was-validated");
+    }
 }
 
 function setToggleButtonState(button, active) {
@@ -150,6 +197,7 @@ function setToggleButtonState(button, active) {
     button.classList.toggle("btn-white", !active && button.dataset.baseClass.includes("btn-white"));
     button.classList.toggle("text-secondary", !active && button.dataset.baseClass.includes("text-secondary"));
     button.classList.toggle("text-hover-success", !active && button.dataset.baseClass.includes("text-hover-success"));
+    button.setAttribute("aria-pressed", String(active));
 }
 
 function fillLanguageSelect(elementId, includeAllOption) {
@@ -163,6 +211,9 @@ function fillLanguageSelect(elementId, includeAllOption) {
     });
 
     select.innerHTML = options.join("");
+    if (includeAllOption) {
+        select.value = "";
+    }
 }
 
 function fillFacultySelect(elementId, includeAllOption) {
@@ -187,7 +238,7 @@ function setInitialSolicitudDateTime() {
     input.value = toDateTimeLocalValue(initialDate);
 }
 
-async function loadStudentSources() {
+async function loadStudentSources(options = {}) {
     try {
         const [materias, asignaciones] = await Promise.all([
             PeerlinkApp.api("/api/materias"),
@@ -198,7 +249,9 @@ async function loadStudentSources() {
         availableOffers = tutorAssignments.filter((item) => item.fechaHora);
         renderSolicitarMatches();
         renderAvailableOffers();
-        studentFeedback.info("feedback_loaded_student_data");
+        if (!options.silent) {
+            studentFeedback.info("feedback_loaded_student_data");
+        }
     } catch (error) {
         studentFeedback.error(error);
         studentConsole.printError(error);
@@ -349,6 +402,7 @@ function syncSolicitudTutorOptions() {
 async function createDirectReservation(event) {
     event.preventDefault();
 
+    const submitButton = document.getElementById("confirmSolicitudBtn");
     const materiaId = Number(document.getElementById("solicitudIdioma").value);
     const tutorId = Number(document.getElementById("solicitudTutor").value);
     const fechaHora = document.getElementById("solicitudFechaHora").value;
@@ -357,6 +411,7 @@ async function createDirectReservation(event) {
     }
 
     try {
+        setButtonLoading(submitButton, true);
         const response = await PeerlinkApp.api("/api/reservas", {
             method: "POST",
             body: JSON.stringify({
@@ -365,13 +420,15 @@ async function createDirectReservation(event) {
                 fechaHora
             })
         });
-        studentFeedback.success("feedback_request_created");
         studentConsole.print(response);
-        await loadMyReservations();
+        await loadMyReservations({ silent: true });
         showStudentTab("horario");
+        studentFeedback.success("feedback_request_created");
     } catch (error) {
         studentFeedback.error(error);
         studentConsole.printError(error);
+    } finally {
+        setButtonLoading(submitButton, false);
     }
 }
 
@@ -401,7 +458,7 @@ function renderAvailableOffers() {
                     <div class="mt-3 d-flex flex-wrap gap-2">
                         <span class="badge text-bg-light border">${PeerlinkApp.escapeHtml(PeerlinkApp.labelForLanguage(offer.idioma))}</span>
                         <span class="badge text-bg-light border">${PeerlinkApp.escapeHtml(PeerlinkApp.labelForFaculty(offer.facultad))}</span>
-                        <span class="badge text-bg-success-subtle border border-success-subtle">${PeerlinkApp.escapeHtml(PeerlinkApp.formatDateTime(offer.fechaHora))}</span>
+                        <span class="badge offer-date-badge bg-success-subtle text-success-emphasis border border-success-subtle">${PeerlinkApp.escapeHtml(PeerlinkApp.formatDateTime(offer.fechaHora))}</span>
                     </div>
                 </div>
             </article>
@@ -465,7 +522,9 @@ async function createReservationFromSelectedOffer() {
         return;
     }
 
+    const submitButton = document.getElementById("confirmReservaBtn");
     try {
+        setButtonLoading(submitButton, true);
         const response = await PeerlinkApp.api("/api/reservas", {
             method: "POST",
             body: JSON.stringify({
@@ -473,21 +532,33 @@ async function createReservationFromSelectedOffer() {
                 materiaId: selectedOffer.materiaId
             })
         });
-        studentFeedback.success("feedback_reservation_created");
         studentConsole.print(response);
-        await loadMyReservations();
+        await loadMyReservations({ silent: true });
         showStudentTab("horario");
+        studentFeedback.success("feedback_reservation_created");
     } catch (error) {
         studentFeedback.error(error);
         studentConsole.printError(error);
+    } finally {
+        setButtonLoading(submitButton, false);
     }
 }
 
-async function loadMyReservations() {
+function setButtonLoading(button, loading) {
+    if (!button) {
+        return;
+    }
+    button.disabled = loading;
+    button.classList.toggle("disabled", loading);
+}
+
+async function loadMyReservations(options = {}) {
     try {
         studentReservations = await PeerlinkApp.api("/api/reservas/mis-reservas");
         renderStudentSchedule();
-        studentFeedback.info("feedback_schedule_loaded");
+        if (!options.silent) {
+            studentFeedback.info("feedback_schedule_loaded");
+        }
     } catch (error) {
         studentFeedback.error(error);
         studentConsole.printError(error);
@@ -495,13 +566,14 @@ async function loadMyReservations() {
 }
 
 function renderStudentSchedule() {
-    const filtered = getFilteredStudentReservations();
+    const filtered = getFilteredStudentReservations({ includeCanceled: showStudentCanceledSchedule });
     document.getElementById("reservasResultsCount").textContent = PeerlinkApp.t("reservations_count", { count: filtered.length });
+    updateStudentCanceledToggle();
     renderReservationsList(filtered);
-    renderStudentCalendar(filtered);
+    renderStudentCalendar(getFilteredStudentCalendarReservations());
 }
 
-function getFilteredStudentReservations() {
+function getFilteredStudentReservations({ includeCanceled = false } = {}) {
     const search = normalizeText(document.getElementById("horarioBusqueda").value);
     const idioma = document.getElementById("horarioIdioma").value;
     const facultad = document.getElementById("horarioFacultad").value;
@@ -509,6 +581,9 @@ function getFilteredStudentReservations() {
     const hora = document.getElementById("horarioHora").value;
 
     return studentReservations.filter((item) => {
+        if (!includeCanceled && item.estado === "CANCELADA") {
+            return false;
+        }
         const itemDate = new Date(item.fechaHora);
         const sameDate = !fecha || toDateInputValue(itemDate) === fecha;
         const sameHour = !hora || `${String(itemDate.getHours()).padStart(2, "0")}:${String(itemDate.getMinutes()).padStart(2, "0")}` === hora;
@@ -521,6 +596,15 @@ function getFilteredStudentReservations() {
             && sameDate
             && sameHour;
     }).sort((a, b) => new Date(a.fechaHora) - new Date(b.fechaHora));
+}
+
+function getFilteredStudentCalendarReservations() {
+    return getFilteredStudentReservations({ includeCanceled: false });
+}
+
+function updateStudentCanceledToggle() {
+    const button = document.getElementById("toggleStudentCanceledBtn");
+    button.textContent = PeerlinkApp.t(showStudentCanceledSchedule ? "action_hide_canceled" : "action_show_canceled");
 }
 
 function renderReservationsList(reservas) {
@@ -555,7 +639,7 @@ function changeWeek(days) {
     next.setDate(next.getDate() + days);
     selectedWeekStart = startOfWeek(next);
     syncWeekPicker();
-    renderStudentCalendar(getFilteredStudentReservations());
+    renderStudentCalendar(getFilteredStudentCalendarReservations());
 }
 
 function syncWeekPicker() {
@@ -628,10 +712,7 @@ function renderStudentSlot(item) {
 }
 
 function buildHourRange(items) {
-    const hours = items.map((item) => new Date(item.fechaHora).getHours());
-    const start = Math.min(6, ...hours);
-    const end = Math.max(21, ...hours);
-    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
+    return Array.from({ length: 24 }, (_, index) => index);
 }
 
 function startOfWeek(dateInput) {

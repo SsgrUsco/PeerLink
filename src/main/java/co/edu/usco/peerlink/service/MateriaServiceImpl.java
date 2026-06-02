@@ -16,30 +16,46 @@ import co.edu.usco.peerlink.repository.MateriaRepository;
 import co.edu.usco.peerlink.repository.TutorMateriaRepository;
 import co.edu.usco.peerlink.repository.UsuarioRepository;
 import co.edu.usco.peerlink.security.AuthenticatedUser;
+import co.edu.usco.peerlink.security.SecurityAuditLogger;
+import co.edu.usco.peerlink.security.SecurityUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Implementa la logica de catalogo, asignaciones tutor-materia y ofertas publicadas.
+ */
 @Service
 public class MateriaServiceImpl implements MateriaService {
 
     private final MateriaRepository materiaRepository;
     private final UsuarioRepository usuarioRepository;
     private final TutorMateriaRepository tutorMateriaRepository;
+    private final SecurityAuditLogger auditLogger;
 
+    /**
+     * Inyecta los repositorios necesarios para operar materias y tutores.
+     */
     public MateriaServiceImpl(MateriaRepository materiaRepository,
                               UsuarioRepository usuarioRepository,
-                              TutorMateriaRepository tutorMateriaRepository) {
+                              TutorMateriaRepository tutorMateriaRepository,
+                              SecurityAuditLogger auditLogger) {
         this.materiaRepository = materiaRepository;
         this.usuarioRepository = usuarioRepository;
         this.tutorMateriaRepository = tutorMateriaRepository;
+        this.auditLogger = auditLogger;
     }
 
     @Override
     @Transactional
+    /**
+     * Crea una materia de catalogo con idioma y facultad en tablas satelite.
+     *
+     * @param dto datos de la materia
+     * @return materia creada
+     */
     public MateriaDTO crearMateria(MateriaDTO dto) {
         String nombre = dto.getNombre().trim();
         if (materiaRepository.existsByNombreIdiomaFacultad(nombre, dto.getIdioma(), dto.getFacultad())) {
@@ -64,6 +80,11 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     @Transactional(readOnly = true)
+    /**
+     * Obtiene todas las materias disponibles para administracion y filtros.
+     *
+     * @return lista de materias
+     */
     public List<MateriaDTO> obtenerTodas() {
         return materiaRepository.findAllDetailed().stream()
                 .map(this::toDto)
@@ -72,6 +93,13 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     @Transactional
+    /**
+     * Actualiza nombre, idioma y facultad de una materia existente.
+     *
+     * @param id identificador de la materia
+     * @param dto nuevos datos
+     * @return materia actualizada
+     */
     public MateriaDTO actualizarMateria(Integer id, MateriaDTO dto) {
         Materia materia = materiaRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("error.materia.noEncontrada", HttpStatus.NOT_FOUND));
@@ -92,14 +120,25 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     @Transactional
+    /**
+     * Elimina una materia del catalogo si no rompe reglas de negocio.
+     *
+     * @param id identificador de la materia
+     */
     public void eliminarMateria(Integer id) {
         Materia materia = materiaRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("error.materia.noEncontrada", HttpStatus.NOT_FOUND));
         materiaRepository.delete(materia);
+        auditLogger.log("SUBJECT_DELETED", getCurrentUser().getUsername(), "materiaId=%s nombre=%s".formatted(id, materia.getNombre()));
     }
 
     @Override
     @Transactional
+    /**
+     * Asocia administrativamente un tutor con una materia existente.
+     *
+     * @param dto identificadores de tutor y materia
+     */
     public void asignarTutor(TutorMateriaDTO dto) {
         Usuario tutor = usuarioRepository.findById(dto.getTutorId())
                 .orElseThrow(() -> new BusinessException("error.tutor.noEncontrado", HttpStatus.NOT_FOUND));
@@ -123,6 +162,11 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     @Transactional(readOnly = true)
+    /**
+     * Lista asignaciones tutor-materia para el panel administrador.
+     *
+     * @return asignaciones detalladas
+     */
     public List<TutorMateriaDetalleDTO> listarAsignacionesTutorMateria() {
         return tutorMateriaRepository.findAllDetailed().stream()
                 .map(this::toDetalleDto)
@@ -131,6 +175,11 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     @Transactional(readOnly = true)
+    /**
+     * Lista las materias y ofertas publicadas del tutor autenticado.
+     *
+     * @return materias del tutor actual
+     */
     public List<TutorMateriaDetalleDTO> listarMisMateriasTutor() {
         AuthenticatedUser currentUser = getCurrentUser();
         if (!"TUTOR".equals(currentUser.getRol())) {
@@ -144,6 +193,11 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     @Transactional
+    /**
+     * Permite al tutor publicar una tutoria disponible sobre una materia del catalogo.
+     *
+     * @param dto materia y fecha/hora ofrecida
+     */
     public void crearOfertaTutor(TutorOfertaDTO dto) {
         AuthenticatedUser currentUser = getCurrentUser();
         if (!"TUTOR".equals(currentUser.getRol())) {
@@ -178,6 +232,11 @@ public class MateriaServiceImpl implements MateriaService {
 
     @Override
     @Transactional
+    /**
+     * Retira una tutoria publicada por el tutor autenticado.
+     *
+     * @param materiaId materia publicada que se desea retirar
+     */
     public void eliminarOfertaTutor(Integer materiaId) {
         AuthenticatedUser currentUser = getCurrentUser();
         if (!"TUTOR".equals(currentUser.getRol())) {
@@ -213,6 +272,6 @@ public class MateriaServiceImpl implements MateriaService {
     }
 
     private AuthenticatedUser getCurrentUser() {
-        return (AuthenticatedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return SecurityUtils.currentUser();
     }
 }

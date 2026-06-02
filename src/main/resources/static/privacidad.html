@@ -56,7 +56,7 @@
                         <i class="bi bi-database-lock fs-4"></i>
                     </div>
                     <div>
-                        <h2 class="h4 fw-bold text-dark mb-3" data-i18n="legal_privacy_section_data">Uso de la informacion</h2>
+                        <h2 class="h4 fw-bold text-dark mb-3" data-i18n="legal_privacy_section_data">Uso de la información</h2>
                         <p class="text-secondary lh-lg mb-0" data-i18n="legal_privacy_body_1">La información almacenada se limita estrictamente a los datos necesarios para operar la plataforma y asegurar que te conectes exclusivamente con miembros verificados de tu comunidad universitaria. Cero rastreos innecesarios y cero exposición de tu número o perfil en grupos públicos de mensajería.</p>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="mt-5 p-4 bg-light rounded-4 border text-center text-secondary small">
-                    <i class="bi bi-info-circle me-2"></i><span data-i18n="legal_privacy_notice">Esta politica esta disenada para garantizar un entorno academico seguro, confiable y libre de distracciones.</span>
+                    <i class="bi bi-info-circle me-2"></i><span data-i18n="legal_privacy_notice">Esta política está diseñada para garantizar un entorno académico seguro, confiable y libre de distracciones.</span>
                 </div>
             </section>
         </div>
@@ -83,7 +83,7 @@
             <a href="/ayuda.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="navbar_help">Ayuda</a>
             <a href="/terminos.html" class="text-secondary text-decoration-none text-hover-success" data-i18n="legal_terms_heading">Términos</a>
         </div>
-        <p data-i18n="legal_privacy_footer">© 2026 PeerLink. Haciendo la vida universitaria mas segura y conectada.</p>
+        <p data-i18n="legal_privacy_footer">© 2026 PeerLink. Haciendo la vida universitaria más segura y conectada.</p>
     </footer>
 
 </main>
@@ -97,7 +97,7 @@
             if(typeof PeerlinkApp !== 'undefined') {
                 const auth = PeerlinkApp.getAuth();
                 const backBtn = document.getElementById("privacyBackBtn");
-                if (backBtn && auth.token && auth.role) {
+                if (backBtn && auth.role) {
                     backBtn.href = PeerlinkApp.withLang(PeerlinkApp.panelForRole(auth.role));
                     backBtn.innerHTML = `<i class="bi bi-columns-gap me-2"></i><span>${PeerlinkApp.t("landing_panel_cta")}</span>`;
                 }

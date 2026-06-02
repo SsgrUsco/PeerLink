@@ -14,7 +14,7 @@ document.getElementById("goRecoveryLink").href = PeerlinkApp.withLang("/recupera
 PeerlinkApp.bindLanguageSelect("loginLanguageSelect");
 
 const auth = PeerlinkApp.getAuth();
-if (auth.token && auth.role) {
+if (auth.role) {
     PeerlinkApp.redirectToPanel(auth.role);
 }
 

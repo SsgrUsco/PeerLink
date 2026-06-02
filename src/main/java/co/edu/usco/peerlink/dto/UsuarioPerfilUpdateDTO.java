@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * Contiene los campos editables del perfil personal del usuario autenticado.
+ */
 @Data
 @Schema(description = "Datos editables del perfil del usuario autenticado.")
 public class UsuarioPerfilUpdateDTO {
